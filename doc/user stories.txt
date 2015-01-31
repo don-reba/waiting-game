@@ -1,0 +1,37 @@
+Game
+====
+
+Main
+----
+
+* When the game starts, go to the apartment.
+* When the amount of money changes, the total display is updated.
+* When "перезапустить" is clicked, start a new game.
+
+Queue
+-----
+
+* When entering queue, a number is received.
+* When current number changes, the display is updated.
+* When a character enters, a message is displayed, and characters updated.
+* When a character leaves, a message is displayed, and characters updated.
+* When "покинуть" is clicked, go to the apartment.
+* When a character is clicked, begin a dialog with that character.
+
+Dialogue
+--------
+
+Apartment
+---------
+
+* When "очередь" is clicked, go to the queue.
+* When "подарок" is clicked, go to the store.
+
+Store
+-----
+
+* When an item is clicked, display its description and the "купить" button.
+* Enable the button iff the item is affordable.
+* When an item is clicked, ask for whom to buy it.
+* When an item is purchased, set a global flag that it has been bought for that person.
+* When "покинуть" button is clicked, go to the apartment.
