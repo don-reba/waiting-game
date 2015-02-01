@@ -10,8 +10,8 @@ class ApartmentPresenter
 		, private mainView       : IMainView
 		)
 	{
-		apartmentView.GoToQueue.Add(this, this.OnGoToQueue);
-		apartmentView.GoToStore.Add(this, this.OnGoToStore);
+		apartmentView.GoToQueue.Add(this.OnGoToQueue.bind(this));
+		apartmentView.GoToStore.Add(this.OnGoToStore.bind(this));
 	}
 
 	private OnGoToQueue() : void

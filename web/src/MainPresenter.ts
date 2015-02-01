@@ -8,9 +8,9 @@ class MainPresenter
 		, private mainView  : IMainView
 		)
 	{
-		mainModel.GameStarted.Add(this, this.OnGameStarted);
+		mainModel.GameStarted.Add(this.OnGameStarted.bind(this));
 
-		mainView.Reset.Add(this, this.OnReset);
+		mainView.Reset.Add(this.OnReset.bind(this));
 	}
 
 	Start() : void

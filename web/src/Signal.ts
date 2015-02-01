@@ -1,30 +1,15 @@
-class Callback
-{
-	constructor
-		( private x : Object
-		, private f : () => void
-		)
-	{
-	}
-
-	Call() : void
-	{
-		this.f.apply(this.x);
-	}
-}
-
 class Signal
 {
-	private listeners : Callback[] = [];
+	private listeners : (()=>void)[] = [];
 
-	Add(context : Object, listener : () => void) : void
+	Add(listener : () => void) : void
 	{
-		this.listeners[this.listeners.length] = new Callback(context, listener);
+		this.listeners[this.listeners.length] = listener;
 	}
 
 	Call() : void
 	{
 		for (var i = 0, length = this.listeners.length; i != length; ++i)
-			this.listeners[i].Call();
+			this.listeners[i]();
 	}
 }
