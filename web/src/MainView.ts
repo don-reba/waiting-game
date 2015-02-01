@@ -46,6 +46,6 @@ class MainView implements IMainView
 
 	SetMoney(money : number) : void
 	{
-		$("#game > #money").text(money);
+		$("#game > #money").text(Math.floor(money) + " ₽");
 	}
 }

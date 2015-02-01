@@ -4,7 +4,7 @@ class Signal
 
 	Add(listener : () => void) : void
 	{
-		this.listeners[this.listeners.length] = listener;
+		this.listeners.push(listener);
 	}
 
 	Call() : void

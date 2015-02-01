@@ -2,9 +2,9 @@
 
 interface IMainModel
 {
-	GameStarted : Signal;
+	MoneyChanged : Signal;
 
 	GetMoney() : number;
 
-	NewGame() : void;
+	SetMoney(money : number) : void;
 }

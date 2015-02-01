@@ -10,6 +10,7 @@
 /// <reference path="StoreModel.ts"         />
 /// <reference path="StorePresenter.ts"     />
 /// <reference path="StoreView.ts"          />
+/// <reference path="Timer.ts"              />
 
 function main()
 {
@@ -24,12 +25,15 @@ function main()
 
 	var mainView = new MainView([ apartmentView, queueView, storeView ]);
 
+	var timer = new Timer();
+
 	var apartmentPresenter = new ApartmentPresenter(apartmentModel, apartmentView, mainView);
-	var mainPresenter      = new MainPresenter(mainModel, mainView);
+	var mainPresenter      = new MainPresenter(mainModel, mainView, timer);
 	var queuePresenter     = new QueuePresenter(queueModel, queueView, mainView);
 	var storePresenter     = new StorePresenter(storeModel, storeView, mainView);
 
 	mainPresenter.Start();
+	timer.Start(100);
 }
 
 main();

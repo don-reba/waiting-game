@@ -6,11 +6,14 @@ class MainPresenter
 	constructor
 		( private mainModel : IMainModel
 		, private mainView  : IMainView
+		, private timer     : Timer
 		)
 	{
-		mainModel.GameStarted.Add(this.OnGameStarted.bind(this));
+		mainModel.MoneyChanged.Add(this.OnMoneyChanged.bind(this));
 
 		mainView.Reset.Add(this.OnReset.bind(this));
+
+		timer.AddEvent(this.OnPay.bind(this), 10);
 	}
 
 	Start() : void
@@ -18,9 +21,15 @@ class MainPresenter
 		this.StartNewGame();
 	}
 
-	private OnGameStarted() : void
+	private OnMoneyChanged() : void
 	{
 		this.mainView.SetMoney(this.mainModel.GetMoney());
+	}
+
+	private OnPay() : void
+	{
+		var money = this.mainModel.GetMoney();
+		this.mainModel.SetMoney(money + 1);
 	}
 
 	private OnReset() : void
@@ -32,6 +41,6 @@ class MainPresenter
 	{
 		this.mainView.Initialize();
 		this.mainView.SetClientView(ClientViewType.Apartment);
-		this.mainModel.NewGame();
+		this.mainModel.SetMoney(0);
 	}
 }
