@@ -1,6 +1,8 @@
+/// <reference path="Signal.ts" />
+
 interface IMainModel
 {
-	GameStarted : () => void;
+	GameStarted : Signal;
 
 	GetMoney() : number;
 

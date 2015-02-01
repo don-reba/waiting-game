@@ -5,8 +5,8 @@ class ApartmentView implements IApartmentView, IClientView
 {
 	// IApartmentView implementation
 
-	GoToQueue : () => void;
-	GoToStore : () => void;
+	GoToQueue = new Signal();
+	GoToStore = new Signal();
 
 	// IClientView implementation
 
@@ -25,12 +25,12 @@ class ApartmentView implements IApartmentView, IClientView
 
 		var button = $("<button id='goQueue' type='button' />");
 		button.text("в очередь");
-		button.click(() => { this.GoToQueue(); });
+		button.click(() => { this.GoToQueue.Call(); });
 		e.append(button);
 
 		var button = $("<button id='goStore' type='button' />");
 		button.text("в магазин");
-		button.click(() => { this.GoToStore(); });
+		button.click(() => { this.GoToStore.Call(); });
 		e.append(button);
 	}
 }

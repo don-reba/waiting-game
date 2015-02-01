@@ -1,4 +1,4 @@
 interface IStoreView
 {
-	GoToApartment : () => void;
+	GoToApartment : Signal;
 }

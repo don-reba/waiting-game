@@ -10,7 +10,7 @@ class StorePresenter
 		, private mainView   : IMainView
 		)
 	{
-		storeView.GoToApartment = () => { this.OnGoToApartment(); };
+		storeView.GoToApartment.Add(this, this.OnGoToApartment);
 	}
 
 	private OnGoToApartment() : void

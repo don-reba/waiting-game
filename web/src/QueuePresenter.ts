@@ -10,7 +10,7 @@ class QueuePresenter
 		, private mainView   : IMainView
 		)
 	{
-		queueView.GoToApartment = () => { this.OnGoToApartment(); };
+		queueView.GoToApartment.Add(this, this.OnGoToApartment);
 	}
 
 	private OnGoToApartment() : void

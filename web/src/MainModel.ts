@@ -6,13 +6,13 @@ class MainModel implements IMainModel
 
 	// IMainModel implementation
 
-	GameStarted : () => void;
+	GameStarted = new Signal();
 
 	GetMoney() : number { return this.money; }
 
 	NewGame() : void
 	{
 		this.money = 0;
-		this.GameStarted();
+		this.GameStarted.Call();
 	}
 }

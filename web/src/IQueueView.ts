@@ -1,4 +1,4 @@
 interface IQueueView
 {
-	GoToApartment : () => void;
+	GoToApartment : Signal;
 }

@@ -5,7 +5,7 @@ class StoreView implements IStoreView, IClientView
 {
 	// IStoreView implementation
 
-	GoToApartment : () => void;
+	GoToApartment = new Signal();
 
 	// IClientView implementation
 
@@ -24,7 +24,7 @@ class StoreView implements IStoreView, IClientView
 
 		var button = $("<button id='goApartment' type='button' />");
 		button.text("вернуться домой");
-		button.click(() => { this.GoToApartment(); });
+		button.click(() => { this.GoToApartment.Call(); });
 		e.append(button);
 	}
 }

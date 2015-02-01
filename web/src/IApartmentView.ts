@@ -1,5 +1,5 @@
 interface IApartmentView
 {
-	GoToQueue : () => void;
-	GoToStore : () => void;
+	GoToQueue : Signal;
+	GoToStore : Signal;
 }

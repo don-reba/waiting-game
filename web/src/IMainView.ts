@@ -2,7 +2,7 @@
 
 interface IMainView
 {
-	Reset : () => void;
+	Reset : Signal;
 
 	Initialize() : void;
 
