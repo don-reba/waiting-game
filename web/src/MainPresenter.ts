@@ -1,3 +1,6 @@
+/// <reference path="IMainModel.ts" />
+/// <reference path="IMainView.ts"  />
+
 class MainPresenter
 {
 	constructor
@@ -12,8 +15,7 @@ class MainPresenter
 
 	Start() : void
 	{
-		this.mainView.Initialize();
-		this.mainModel.NewGame();
+		this.StartNewGame();
 	}
 
 	private OnGameStarted() : void
@@ -23,7 +25,13 @@ class MainPresenter
 
 	private OnReset() : void
 	{
+		this.StartNewGame();
+	}
+
+	private StartNewGame() : void
+	{
 		this.mainView.Initialize();
+		this.mainView.SetClientView(ClientViewType.Apartment);
 		this.mainModel.NewGame();
 	}
 }

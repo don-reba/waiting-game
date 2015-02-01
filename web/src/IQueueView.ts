@@ -1,0 +1,4 @@
+interface IQueueView
+{
+	GoToApartment : () => void;
+}

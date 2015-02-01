@@ -1,0 +1,4 @@
+interface IStoreView
+{
+	GoToApartment : () => void;
+}

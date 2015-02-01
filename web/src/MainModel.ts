@@ -1,3 +1,5 @@
+/// <reference path="IMainModel.ts" />
+
 class MainModel implements IMainModel
 {
 	private money : number;
