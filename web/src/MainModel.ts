@@ -20,9 +20,9 @@ class MainModel implements IMainModel
 		return this.money;
 	}
 
-	SetMoney(money : number) : void
+	Reset() : void
 	{
-		this.money = money;
+		this.money = 0;
 		this.MoneyChanged.Call();
 	}
 

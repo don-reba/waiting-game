@@ -6,5 +6,5 @@ interface IMainModel
 
 	GetMoney() : number;
 
-	SetMoney(money : number) : void;
+	Reset() : void;
 }

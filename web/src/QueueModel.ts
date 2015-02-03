@@ -39,15 +39,17 @@ class QueueModel implements IQueueModel
 
 	EnterQueue() : void
 	{
-		if (this.player)
-			return;
-		this.AddPlayerPosition();
+		if (this.queue.every((p) => { return p.character != null; }))
+			this.AddPlayerPosition();
 	}
 
 	GetPlayerTicket() : string
 	{
-		if (this.player)
-			return this.player.ticket;
+		for (var i = 0; i != this.queue.length; ++i)
+		{
+			if (!this.queue[i].character)
+				return this.queue[i].ticket;
+		}
 		return null;
 	}
 
@@ -61,8 +63,32 @@ class QueueModel implements IQueueModel
 	GetPeopleNames() : string[]
 	{
 		return this.queue
-			.filter((p) => { return p != this.player; })
+			.filter((p) => { return p.character != null; })
 			.map((p) => { return p.character.name; });
+	}
+
+	Reset() : void
+	{
+		this.stock =
+			[ new Character("Alice")
+			, new Character("Bob")
+			, new Character("Charlie")
+			, new Character("Dan")
+			, new Character("Ellie")
+			, new Character("Fate")
+			, new Character("George")
+			, new Character("Hope")
+			, new Character("Ian")
+			, new Character("Jack")
+			, new Character("Ken")
+			];
+
+		this.ticket = 0;
+
+		this.queue = [];
+		for (var i = 0; i != this.maxLength; ++i)
+			this.AddStockPosition();
+		this.ProcessNext();
 	}
 
 	// private implementation
@@ -84,13 +110,23 @@ class QueueModel implements IQueueModel
 		var ticket = String(this.ticket++);
 		var p      = new QueuePosition(null, delay, ticket);
 
-		this.player = p;
 		this.queue.push(p);
 	}
 
 	private OnAdvance() : void
 	{
 		this.ProcessNext();
+
+		this.PlayerTicketChanged.Call();
+		this.CurrentTicketChanged.Call();
+		this.PeopleChanged.Call();
+	}
+
+	private OnNewcomer() : void
+	{
+		this.AddStockPosition();
+
+		this.PeopleChanged.Call();
 	}
 
 	private ProcessNext() : void
@@ -98,43 +134,13 @@ class QueueModel implements IQueueModel
 		if (this.queue.length == 0)
 			return;
 		var p = this.queue[0];
-
-		this.timer.AddOneTimeEvent(this.OnAdvance.bind(this), p.delay);
 		this.queue.shift();
 
-		if (p == this.player)
-			this.player = null;
-		else
+		if (p.character)
 			this.stock.push(p.character);
 
-		this.PlayerTicketChanged.Call();
-		this.CurrentTicketChanged.Call();
-		this.PeopleChanged.Call();
-	}
-
-	private Reset() : void
-	{
-		this.stock =
-			[ new Character("Alice")
-			, new Character("Bob")
-			, new Character("Charlie")
-			, new Character("Don")
-			, new Character("Ellie")
-			, new Character("Fate")
-			, new Character("George")
-			, new Character("Hope")
-			, new Character("Ian")
-			, new Character("Jack")
-			, new Character("Ken")
-			];
-
-		this.ticket = 0;
-
-		this.queue = [];
-		for (var i = 0; i != this.maxLength; ++i)
-			this.AddStockPosition();
-		this.ProcessNext();
-
-		this.player = null;
+		this.timer.AddOneTimeEvent(this.OnAdvance.bind(this), p.delay);
+		var noise = Math.floor(Math.random() * 40) - 20;
+		this.timer.AddOneTimeEvent(this.OnNewcomer.bind(this), Math.max(1, p.delay + noise));
 	}
 }

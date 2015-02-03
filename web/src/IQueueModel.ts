@@ -11,4 +11,6 @@ interface IQueueModel
 	GetCurrentTicket() : string;
 
 	GetPeopleNames() : string[];
+
+	Reset() : void;
 }

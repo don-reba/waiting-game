@@ -16,6 +16,8 @@ class QueuePresenter
 
 		queueView.GoToApartment.Add(this.OnGoToApartment.bind(this));
 		queueView.Shown.Add(this.OnQueueShown.bind(this));
+
+		mainView.DoReset.Add(this.OnDoReset.bind(this));
 	}
 
 	private OnGoToApartment() : void
@@ -53,5 +55,10 @@ class QueuePresenter
 	private OnPeopleChanged() : void
 	{
 		this.queueView.SetPeopleNames(this.queueModel.GetPeopleNames());
+	}
+
+	private OnDoReset() : void
+	{
+		this.queueModel.Reset();
 	}
 }

@@ -10,9 +10,9 @@ class MainView implements IMainView
 
 	// IMainView implementation
 
-	Reset = new Signal();
+	DoReset = new Signal();
 
-	Initialize() : void
+	Reset() : void
 	{
 		var game = $("#game");
 		game.empty();
@@ -21,7 +21,7 @@ class MainView implements IMainView
 
 		var button = $("<button id='reset' type='button' />");
 		button.text("начать заново");
-		button.click(() => { this.Reset.Call(); });
+		button.click(() => { this.DoReset.Call(); });
 		game.append(button);
 
 		game.append("<div id='clientArea' />");
