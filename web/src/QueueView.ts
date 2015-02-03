@@ -20,11 +20,16 @@ class QueueView implements IQueueView, IClientView
 
 	Show(e : JQuery) : void
 	{
-		e.text("Queue");
+		var header = $("<div>");
+		e.append(header);
 
 		var button = $("<button id='goApartment' type='button' />");
 		button.text("вернуться домой");
 		button.click(() => { this.GoToApartment.Call(); });
-		e.append(button);
+		header.append(button);
+
+		var text = $("<p>");
+		text.text("Привет, очередь!");
+		e.append(text);
 	}
 }

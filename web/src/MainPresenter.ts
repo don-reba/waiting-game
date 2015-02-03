@@ -13,7 +13,7 @@ class MainPresenter
 
 		mainView.Reset.Add(this.OnReset.bind(this));
 
-		timer.AddEvent(this.OnPay.bind(this), 10);
+		timer.AddEvent(this.OnPay.bind(this), 20);
 	}
 
 	Start() : void
