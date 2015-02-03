@@ -14,9 +14,11 @@
 
 function main()
 {
+	var timer = new Timer();
+
 	var apartmentModel = new ApartmentModel();
-	var mainModel      = new MainModel();
-	var queueModel     = new QueueModel();
+	var mainModel      = new MainModel(timer);
+	var queueModel     = new QueueModel(timer, 8);
 	var storeModel     = new StoreModel();
 
 	var apartmentView = new ApartmentView();
@@ -25,10 +27,8 @@ function main()
 
 	var mainView = new MainView([ apartmentView, queueView, storeView ]);
 
-	var timer = new Timer();
-
 	var apartmentPresenter = new ApartmentPresenter(apartmentModel, apartmentView, mainView);
-	var mainPresenter      = new MainPresenter(mainModel, mainView, timer);
+	var mainPresenter      = new MainPresenter(mainModel, mainView);
 	var queuePresenter     = new QueuePresenter(queueModel, queueView, mainView);
 	var storePresenter     = new StorePresenter(storeModel, storeView, mainView);
 

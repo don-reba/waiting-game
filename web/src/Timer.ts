@@ -4,6 +4,7 @@ class TimerEvent
 		( public handler   : () => void
 		, public frequency : number
 		, public remaining : number
+		, public recurring : boolean
 		)
 	{
 	}
@@ -18,9 +19,14 @@ class Timer
 		setInterval(this.OnTick.bind(this), tickMilliseconds);
 	}
 
-	AddEvent(e : () => void, frequency : number)
+	AddEvent(e : () => void, delay : number)
 	{
-		this.events.push(new TimerEvent(e, frequency, frequency));
+		this.events.push(new TimerEvent(e, delay, delay, true));
+	}
+
+	AddOneTimeEvent(e : () => void, delay : number)
+	{
+		this.events.push(new TimerEvent(e, delay, delay, false));
 	}
 
 	private OnTick() : void
@@ -31,7 +37,10 @@ class Timer
 			if (e.remaining <= 0)
 			{
 				e.handler();
-				e.remaining = e.frequency;
+				if (e.recurring)
+					e.remaining = e.frequency;
+				else
+					this.events.splice(i--, 1);
 			}
 			--e.remaining;
 		}
