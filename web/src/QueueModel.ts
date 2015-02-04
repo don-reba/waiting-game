@@ -1,4 +1,5 @@
 /// <reference path="IQueueModel.ts" />
+/// <reference path="IPersistent.ts" />
 
 class Character
 {
@@ -11,6 +12,18 @@ class QueuePosition
 		( public character : Character
 		, public remaining : number
 		, public ticket    : string
+		)
+	{
+	}
+}
+
+class QueueModelState
+{
+	constructor
+		( public queue  : QueuePosition[]
+		, public stock  : Character[]
+		, public player : QueuePosition
+		, public ticket : number
 		)
 	{
 	}
@@ -97,6 +110,30 @@ class QueueModel implements IQueueModel
 		for (var i = 0; i != this.maxLength; ++i)
 			this.AddStockPosition();
 	}
+	// IPersistent implementation
+
+	FromPersistentString(str : string) : void
+	{
+		var state = <QueueModelState>JSON.parse(str);
+		this.queue  = state.queue;
+		this.stock  = state.stock;
+		this.player = state.player;
+		this.ticket = state.ticket;
+		this.PlayerTicketChanged.Call();
+		this.CurrentTicketChanged.Call();
+		this.PeopleChanged.Call();
+	}
+
+	ToPersistentString() : string
+	{
+		var state = new QueueModelState
+			( this.queue
+			, this.stock
+			, this.player
+			, this.ticket
+			);
+		return JSON.stringify(state);
+	}
 
 	// private implementation
 
@@ -126,8 +163,9 @@ class QueueModel implements IQueueModel
 			return;
 
 		var p = this.queue[0];
+		--p.remaining;
 
-		if (--p.remaining <= 0)
+		if (p.remaining <= 0)
 		{
 			this.queue.shift();
 			if (p.character)
@@ -145,7 +183,7 @@ class QueueModel implements IQueueModel
 
 	private OnKnock() : void
 	{
-		if (this.queue.length < this.maxLength && Math.random() < 0.2)
+		if (this.queue.length < this.maxLength && Math.random() < 0.25)
 		{
 			this.AddStockPosition();
 			this.PeopleChanged.Call();

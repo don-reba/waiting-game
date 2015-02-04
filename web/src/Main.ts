@@ -4,6 +4,7 @@
 /// <reference path="MainModel.ts"          />
 /// <reference path="MainPresenter.ts"      />
 /// <reference path="MainView.ts"           />
+/// <reference path="PersistentState.ts"    />
 /// <reference path="QueueModel.ts"         />
 /// <reference path="QueuePresenter.ts"     />
 /// <reference path="QueueView.ts"          />
@@ -27,13 +28,23 @@ function main()
 
 	var mainView = new MainView([ apartmentView, queueView, storeView ]);
 
-	var apartmentPresenter = new ApartmentPresenter(apartmentModel, apartmentView, mainView);
+	var apartmentPresenter = new ApartmentPresenter(apartmentModel, mainModel, apartmentView);
 	var mainPresenter      = new MainPresenter(mainModel, mainView);
-	var queuePresenter     = new QueuePresenter(queueModel, queueView, mainView);
-	var storePresenter     = new StorePresenter(storeModel, storeView, mainView);
+	var queuePresenter     = new QueuePresenter(mainModel, queueModel, queueView);
+	var storePresenter     = new StorePresenter(mainModel, storeModel, storeView);
+
+	var persistentItems = <[string, IPersistent][]>
+		[ [ "main",  mainModel  ]
+		, [ "queue", queueModel ]
+		, [ "timer", timer      ]
+		];
+	var persistentState = new PersistentState(persistentItems);
+	timer.AddEvent(persistentState.Save.bind(persistentState), 20);
 
 	mainPresenter.Start();
 	timer.Start(100);
+
+	persistentState.Load();
 }
 
 main();

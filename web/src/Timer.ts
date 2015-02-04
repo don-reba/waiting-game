@@ -1,3 +1,10 @@
+/// <reference path="IPersistent.ts" />
+
+class TimerState
+{
+	constructor(public ticks : number) { }
+}
+
 class TimerEvent
 {
 	constructor
@@ -8,12 +15,14 @@ class TimerEvent
 	}
 }
 
-class Timer
+class Timer implements IPersistent
 {
 	private events : TimerEvent[] = [];
 
 	// if we started at 0, all the events would go off at start
 	private ticks : number = 1;
+
+	// public interface
 
 	Start(tickMilliseconds : number) : void
 	{
@@ -24,6 +33,21 @@ class Timer
 	{
 		this.events.push(new TimerEvent(e, delay));
 	}
+
+	// IPersistent implementation
+
+	FromPersistentString(str : string) : void
+	{
+		var state = <TimerState>JSON.parse(str);
+		this.ticks = state.ticks;
+	}
+
+	ToPersistentString() : string
+	{
+		return JSON.stringify(new TimerState(this.ticks));
+	}
+
+	// private implementation
 
 	private OnTick() : void
 	{

@@ -6,14 +6,6 @@ class MainView implements IMainView
 
 	constructor(private clientViews : IClientView[])
 	{
-	}
-
-	// IMainView implementation
-
-	DoReset = new Signal();
-
-	Reset() : void
-	{
 		var game = $("#game");
 		game.empty();
 
@@ -21,13 +13,15 @@ class MainView implements IMainView
 
 		var button = $("<button id='reset' type='button' />");
 		button.text("начать заново");
-		button.click(() => { this.DoReset.Call(); });
+		button.click(() => { this.ResetRequested.Call(); });
 		game.append(button);
 
 		game.append("<div id='clientArea' />");
-
-		this.activeView = null;
 	}
+
+	// IMainView implementation
+
+	ResetRequested = new Signal();
 
 	SetClientView(viewType : ClientViewType): void
 	{

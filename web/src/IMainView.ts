@@ -2,9 +2,7 @@
 
 interface IMainView
 {
-	DoReset : Signal;
-
-	Reset() : void;
+	ResetRequested : Signal;
 
 	SetClientView(view : ClientViewType) : void;
 

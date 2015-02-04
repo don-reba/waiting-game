@@ -1,13 +1,13 @@
+/// <reference path="IMainModel.ts"  />
 /// <reference path="IQueueModel.ts" />
 /// <reference path="IQueueView.ts"  />
-/// <reference path="IMainView.ts"  />
 
 class QueuePresenter
 {
 	constructor
-		( private queueModel : IQueueModel
+		( private mainModel  : IMainModel
+		, private queueModel : IQueueModel
 		, private queueView  : IQueueView
-		, private mainView   : IMainView
 		)
 	{
 		queueModel.PlayerTicketChanged.Add(this.OnPlayerTicketChanged.bind(this));
@@ -17,12 +17,12 @@ class QueuePresenter
 		queueView.GoToApartment.Add(this.OnGoToApartment.bind(this));
 		queueView.Shown.Add(this.OnQueueShown.bind(this));
 
-		mainView.DoReset.Add(this.OnDoReset.bind(this));
+		mainModel.ResetActivated.Add(this.OnResetActivated.bind(this));
 	}
 
 	private OnGoToApartment() : void
 	{
-		this.mainView.SetClientView(ClientViewType.Apartment);
+		this.mainModel.SetView(ClientViewType.Apartment);
 	}
 
 	private OnQueueShown() : void
@@ -57,7 +57,7 @@ class QueuePresenter
 		this.queueView.SetPeopleNames(this.queueModel.GetPeopleNames());
 	}
 
-	private OnDoReset() : void
+	private OnResetActivated() : void
 	{
 		this.queueModel.Reset();
 	}

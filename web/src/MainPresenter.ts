@@ -9,13 +9,15 @@ class MainPresenter
 		)
 	{
 		mainModel.MoneyChanged.Add(this.OnMoneyChanged.bind(this));
+		mainModel.ResetActivated.Add(this.OnResetActivated.bind(this));
+		mainModel.ViewChanged.Add(this.OnViewChanged.bind(this));
 
-		mainView.DoReset.Add(this.OnDoReset.bind(this));
+		mainView.ResetRequested.Add(this.OnResetRequested.bind(this));
 	}
 
 	Start() : void
 	{
-		this.StartNewGame();
+		this.mainModel.Reset();
 	}
 
 	private OnMoneyChanged() : void
@@ -23,15 +25,18 @@ class MainPresenter
 		this.mainView.SetMoney(this.mainModel.GetMoney());
 	}
 
-	private OnDoReset() : void
+	private OnResetActivated() : void
 	{
-		this.StartNewGame();
+		//this.mainView.Reset();
 	}
 
-	private StartNewGame() : void
+	private OnResetRequested() : void
 	{
-		this.mainView.Reset();
-		this.mainView.SetClientView(ClientViewType.Apartment);
 		this.mainModel.Reset();
+	}
+
+	private OnViewChanged() : void
+	{
+		this.mainView.SetClientView(this.mainModel.GetView());
 	}
 }

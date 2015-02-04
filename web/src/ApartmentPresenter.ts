@@ -1,13 +1,13 @@
 /// <reference path="IApartmentModel.ts" />
 /// <reference path="IApartmentView.ts"  />
-/// <reference path="IMainView.ts"  />
+/// <reference path="IMainModel.ts"      />
 
 class ApartmentPresenter
 {
 	constructor
 		( private apartmentModel : IApartmentModel
+		, private mainModel      : IMainModel
 		, private apartmentView  : IApartmentView
-		, private mainView       : IMainView
 		)
 	{
 		apartmentView.GoToQueue.Add(this.OnGoToQueue.bind(this));
@@ -16,11 +16,11 @@ class ApartmentPresenter
 
 	private OnGoToQueue() : void
 	{
-		this.mainView.SetClientView(ClientViewType.Queue);
+		this.mainModel.SetView(ClientViewType.Queue);
 	}
 
 	private OnGoToStore() : void
 	{
-		this.mainView.SetClientView(ClientViewType.Store);
+		this.mainModel.SetView(ClientViewType.Store);
 	}
 }
