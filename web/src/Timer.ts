@@ -1,10 +1,8 @@
 class TimerEvent
 {
 	constructor
-		( public handler   : () => void
-		, public frequency : number
-		, public remaining : number
-		, public recurring : boolean
+		( public handler : () => void
+		, public delay   : number
 		)
 	{
 	}
@@ -14,6 +12,9 @@ class Timer
 {
 	private events : TimerEvent[] = [];
 
+	// if we started at 0, all the events would go off at start
+	private ticks : number = 1;
+
 	Start(tickMilliseconds : number) : void
 	{
 		setInterval(this.OnTick.bind(this), tickMilliseconds);
@@ -21,12 +22,7 @@ class Timer
 
 	AddEvent(e : () => void, delay : number)
 	{
-		this.events.push(new TimerEvent(e, delay, delay, true));
-	}
-
-	AddOneTimeEvent(e : () => void, delay : number)
-	{
-		this.events.push(new TimerEvent(e, delay, delay, false));
+		this.events.push(new TimerEvent(e, delay));
 	}
 
 	private OnTick() : void
@@ -34,15 +30,9 @@ class Timer
 		for (var i = 0; i != this.events.length; ++i)
 		{
 			var e = this.events[i];
-			if (e.remaining <= 0)
-			{
+			if (this.ticks % e.delay == 0)
 				e.handler();
-				if (e.recurring)
-					e.remaining = e.frequency;
-				else
-					this.events.splice(i--, 1);
-			}
-			--e.remaining;
 		}
+		++this.ticks;
 	}
 }

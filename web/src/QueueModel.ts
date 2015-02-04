@@ -9,7 +9,7 @@ class QueuePosition
 {
 	constructor
 		( public character : Character
-		, public delay     : number
+		, public remaining : number
 		, public ticket    : string
 		)
 	{
@@ -28,6 +28,8 @@ class QueueModel implements IQueueModel
 		, private maxLength : number
 		)
 	{
+		timer.AddEvent(this.OnAdvance.bind(this), 20);
+		timer.AddEvent(this.OnKnock.bind(this),   19);
 		this.Reset();
 	}
 
@@ -70,17 +72,23 @@ class QueueModel implements IQueueModel
 	Reset() : void
 	{
 		this.stock =
-			[ new Character("Alice")
-			, new Character("Bob")
-			, new Character("Charlie")
-			, new Character("Dan")
-			, new Character("Ellie")
-			, new Character("Fate")
-			, new Character("George")
-			, new Character("Hope")
-			, new Character("Ian")
-			, new Character("Jack")
-			, new Character("Ken")
+			[ new Character("Аня")
+			, new Character("Боря")
+			, new Character("Вера")
+			, new Character("Гоша")
+			, new Character("Даша")
+			, new Character("Елена")
+			, new Character("Жора")
+			, new Character("Зоя")
+			, new Character("Инна")
+			, new Character("Костик")
+			, new Character("Лёша")
+			, new Character("Маша")
+			, new Character("Настя")
+			, new Character("Оля")
+			, new Character("Пётр")
+			, new Character("Родриг")
+			, new Character("Света")
 			];
 
 		this.ticket = 0;
@@ -88,25 +96,24 @@ class QueueModel implements IQueueModel
 		this.queue = [];
 		for (var i = 0; i != this.maxLength; ++i)
 			this.AddStockPosition();
-		this.ProcessNext();
 	}
 
 	// private implementation
 
 	private AddStockPosition() : void
 	{
-		var j      = Math.floor(Math.random() * this.stock.length);
-		var delay  = Math.floor(20 + Math.random() * 80);
+		var i      = Math.floor(Math.random() * this.stock.length);
+		var delay  = Math.floor(2 + Math.random() * 8);
 		var ticket = String(this.ticket++);
-		var p      = new QueuePosition(this.stock[j], delay, ticket);
+		var p      = new QueuePosition(this.stock[i], delay, ticket);
 
-		this.stock.splice(j, 1);
+		this.stock.splice(i, 1);
 		this.queue.push(p);
 	}
 
 	private AddPlayerPosition() : void
 	{
-		var delay  = Math.floor(20 + Math.random() * 80);
+		var delay  = Math.floor(2 + Math.random() * 8);
 		var ticket = String(this.ticket++);
 		var p      = new QueuePosition(null, delay, ticket);
 
@@ -115,32 +122,33 @@ class QueueModel implements IQueueModel
 
 	private OnAdvance() : void
 	{
-		this.ProcessNext();
-
-		this.PlayerTicketChanged.Call();
-		this.CurrentTicketChanged.Call();
-		this.PeopleChanged.Call();
-	}
-
-	private OnNewcomer() : void
-	{
-		this.AddStockPosition();
-
-		this.PeopleChanged.Call();
-	}
-
-	private ProcessNext() : void
-	{
 		if (this.queue.length == 0)
 			return;
+
 		var p = this.queue[0];
-		this.queue.shift();
 
-		if (p.character)
-			this.stock.push(p.character);
+		if (--p.remaining <= 0)
+		{
+			this.queue.shift();
+			if (p.character)
+			{
+				this.stock.push(p.character);
+				this.PeopleChanged.Call();
+			}
+			else
+			{
+				this.PlayerTicketChanged.Call();
+			}
+			this.CurrentTicketChanged.Call();
+		}
+	}
 
-		this.timer.AddOneTimeEvent(this.OnAdvance.bind(this), p.delay);
-		var noise = Math.floor(Math.random() * 40) - 20;
-		this.timer.AddOneTimeEvent(this.OnNewcomer.bind(this), Math.max(1, p.delay + noise));
+	private OnKnock() : void
+	{
+		if (this.queue.length < this.maxLength && Math.random() < 0.2)
+		{
+			this.AddStockPosition();
+			this.PeopleChanged.Call();
+		}
 	}
 }
