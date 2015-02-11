@@ -59,7 +59,6 @@ class QueuePresenter
 		this.queueView.SetPlayerTicket(this.queueModel.GetPlayerTicket());
 		this.queueView.SetCurrentTicket(this.queueModel.GetCurrentTicket());
 		this.queueView.SetPeopleNames(this.queueModel.GetPeopleNames());
-		this.queueView.SetDialog(this.dialogManager.GetDialog(0));
 	}
 
 	private OnPersonClicked() : void

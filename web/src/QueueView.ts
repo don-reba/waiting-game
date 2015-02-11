@@ -3,7 +3,8 @@
 
 class QueueView implements IQueueView, IClientView
 {
-	selectedReply : number = -1;
+	selectedPerson : string = null;
+	selectedReply  : number = -1;
 
 	// IQueueView implementation
 
@@ -40,9 +41,7 @@ class QueueView implements IQueueView, IClientView
 		if (!dialog)
 			return;
 
-		var mainText = $("<p>");
-		mainText.text(dialog.text);
-		div.append(mainText);
+		div.append($("<p><strong>" + this.selectedPerson + "</strong>: " + dialog.text + "</p>"));
 
 		var ol = $("<ol>");
 		for (var i = 0; i != dialog.replies.length; ++i)
@@ -72,9 +71,14 @@ class QueueView implements IQueueView, IClientView
 
 		for (var i = 0; i != names.length; ++i)
 		{
+			var OnClick = function(e)
+			{
+				this.selectedPerson = e.data;
+				this.PersonClicked.Call();
+			}
 			var button = $("<button>");
 			button.text(names[i]);
-			button.click(() => { this.PersonClicked.Call(); });
+			button.click(names[i], OnClick.bind(this));
 			people.append(button);
 		}
 	}
