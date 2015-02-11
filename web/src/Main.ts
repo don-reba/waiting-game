@@ -1,6 +1,7 @@
 /// <reference path="ApartmentModel.ts"     />
 /// <reference path="ApartmentPresenter.ts" />
 /// <reference path="ApartmentView.ts"      />
+/// <reference path="DialogManager.ts"      />
 /// <reference path="MainModel.ts"          />
 /// <reference path="MainPresenter.ts"      />
 /// <reference path="MainView.ts"           />
@@ -13,8 +14,10 @@
 /// <reference path="StoreView.ts"          />
 /// <reference path="Timer.ts"              />
 
-function main()
+function Main(dialogs : IDialog[])
 {
+	var dialogManager = new DialogManager(dialogs);
+
 	var timer = new Timer();
 
 	var apartmentModel = new ApartmentModel();
@@ -30,7 +33,7 @@ function main()
 
 	var apartmentPresenter = new ApartmentPresenter(apartmentModel, mainModel, apartmentView);
 	var mainPresenter      = new MainPresenter(mainModel, mainView);
-	var queuePresenter     = new QueuePresenter(mainModel, queueModel, queueView);
+	var queuePresenter     = new QueuePresenter(mainModel, queueModel, queueView, dialogManager);
 	var storePresenter     = new StorePresenter(mainModel, storeModel, storeView);
 
 	var persistentItems = <[string, IPersistent][]>
@@ -47,4 +50,7 @@ function main()
 	persistentState.Load();
 }
 
-main();
+$.getJSON("js/dialogs.json", function(dialogs : IDialog[], textStatus: string, jqXHR: JQueryXHR)
+{
+	Main(dialogs);
+})

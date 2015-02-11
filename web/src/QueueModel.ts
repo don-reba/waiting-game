@@ -86,9 +86,9 @@ class QueueModel implements IQueueModel
 	{
 		this.stock =
 			[ new Character("Аня")
-			, new Character("Боря")
+			, new Character("Борис")
 			, new Character("Вера")
-			, new Character("Гоша")
+			, new Character("Григорий")
 			, new Character("Даша")
 			, new Character("Елена")
 			, new Character("Жора")
@@ -102,6 +102,16 @@ class QueueModel implements IQueueModel
 			, new Character("Пётр")
 			, new Character("Родриг")
 			, new Character("Света")
+			, new Character("Тамара")
+			, new Character("Усач")
+			, new Character("Фёдр")
+			, new Character("Хосе")
+			, new Character("Цезарь")
+			, new Character("Чарли")
+			, new Character("Шарик")
+			, new Character("Элла")
+			, new Character("Юра")
+			, new Character("Яна")
 			];
 
 		this.ticket = 0;

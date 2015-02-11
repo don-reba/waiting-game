@@ -3,9 +3,13 @@
 
 class QueueView implements IQueueView, IClientView
 {
+	selectedReply : number = -1;
+
 	// IQueueView implementation
 
 	GoToApartment = new Signal();
+	PersonClicked = new Signal();
+	ReplyClicked  = new Signal();
 	Shown         = new Signal();
 
 	ClearCurrentTicket() : void
@@ -18,9 +22,42 @@ class QueueView implements IQueueView, IClientView
 		$("#clientArea #player").text("");
 	}
 
+	GetSelectedReply() : number
+	{
+		return this.selectedReply;
+	}
+
 	SetCurrentTicket(ticket : string) : void
 	{
 		$("#clientArea #current").text("текущий номер: " + ticket);
+	}
+
+	SetDialog(dialog : IDialog) : void
+	{
+		var div = $("#clientArea #dialog");
+		div.empty();
+
+		if (!dialog)
+			return;
+
+		var mainText = $("<p>");
+		mainText.text(dialog.text);
+		div.append(mainText);
+
+		var ol = $("<ol>");
+		for (var i = 0; i != dialog.replies.length; ++i)
+		{
+			var OnClick = function(e)
+			{
+				this.selectedReply = e.data;
+				this.ReplyClicked.Call();
+			}
+			var li = $("<li>");
+			li.text(dialog.replies[i].text);
+			li.click(i, OnClick.bind(this));
+			ol.append(li);
+		}
+		div.append(ol);
 	}
 
 	SetPlayerTicket(ticket : string) : void
@@ -35,9 +72,10 @@ class QueueView implements IQueueView, IClientView
 
 		for (var i = 0; i != names.length; ++i)
 		{
-			var btn = $("<button>");
-			btn.text(names[i]);
-			people.append(btn);
+			var button = $("<button>");
+			button.text(names[i]);
+			button.click(() => { this.PersonClicked.Call(); });
+			people.append(button);
 		}
 	}
 
@@ -69,6 +107,7 @@ class QueueView implements IQueueView, IClientView
 		e.append($("<p id='player' />"));
 		e.append($("<p id='current' />"));
 		e.append($("<div id='people' />"));
+		e.append($("<div id='dialog' />"));
 
 		this.Shown.Call();
 	}
