@@ -20,16 +20,8 @@ class StoreView implements IStoreView, IClientView
 
 	Show(e : JQuery) : void
 	{
-		var header = $("<div>");
-		e.append(header);
+		e.append("<table id='store'><tr><td id='store-header'><button id='goApartment'>вернуться домой</button></td></tr><tr><td id='store-view'>Что вы здесь делаете? Кризис на дворе!</td></tr></table>");
 
-		var button = $("<button id='goApartment' type='button' />");
-		button.text("вернуться домой");
-		button.click(() => { this.GoToApartment.Call(); });
-		header.append(button);
-
-		var text = $("<p>");
-		text.text("Что вы здесь делаете? Кризис на дворе!");
-		e.append(text);
+		$("#store #goApartment").click(() => { this.GoToApartment.Call(); });
 	}
 }

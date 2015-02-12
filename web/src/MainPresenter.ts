@@ -9,7 +9,6 @@ class MainPresenter
 		)
 	{
 		mainModel.MoneyChanged.Add(this.OnMoneyChanged.bind(this));
-		mainModel.ResetActivated.Add(this.OnResetActivated.bind(this));
 		mainModel.ViewChanged.Add(this.OnViewChanged.bind(this));
 
 		mainView.ResetRequested.Add(this.OnResetRequested.bind(this));
@@ -23,11 +22,6 @@ class MainPresenter
 	private OnMoneyChanged() : void
 	{
 		this.mainView.SetMoney(this.mainModel.GetMoney());
-	}
-
-	private OnResetActivated() : void
-	{
-		//this.mainView.Reset();
 	}
 
 	private OnResetRequested() : void

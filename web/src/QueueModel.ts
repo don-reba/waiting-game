@@ -104,7 +104,7 @@ class QueueModel implements IQueueModel
 			, new Character("Света")
 			, new Character("Тамара")
 			, new Character("Усач")
-			, new Character("Фёдр")
+			, new Character("Фёдор")
 			, new Character("Хосе")
 			, new Character("Цезарь")
 			, new Character("Чарли")
@@ -193,7 +193,7 @@ class QueueModel implements IQueueModel
 
 	private OnKnock() : void
 	{
-		if (this.queue.length < this.maxLength && Math.random() < 0.25)
+		if (this.queue.length < this.maxLength && Math.random() < 0.3)
 		{
 			this.AddStockPosition();
 			this.PeopleChanged.Call();

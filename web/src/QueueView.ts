@@ -15,12 +15,12 @@ class QueueView implements IQueueView, IClientView
 
 	ClearCurrentTicket() : void
 	{
-		$("#clientArea #current").text("");
+		$("#queue #current").text("");
 	}
 
 	ClearPlayerTicket() : void
 	{
-		$("#clientArea #player").text("");
+		$("#queue #player").text("");
 	}
 
 	GetSelectedReply() : number
@@ -30,12 +30,12 @@ class QueueView implements IQueueView, IClientView
 
 	SetCurrentTicket(ticket : string) : void
 	{
-		$("#clientArea #current").text("текущий номер: " + ticket);
+		$("#queue #current").text("текущий номер: " + ticket);
 	}
 
 	SetDialog(dialog : IDialog) : void
 	{
-		var div = $("#clientArea #dialog");
+		var div = $("#queue #dialog");
 		div.empty();
 
 		if (!dialog)
@@ -61,12 +61,12 @@ class QueueView implements IQueueView, IClientView
 
 	SetPlayerTicket(ticket : string) : void
 	{
-		$("#clientArea #player").text("ваш номер: " + ticket);
+		$("#queue #player").text("ваш номер: " + ticket);
 	}
 
 	SetPeopleNames(names : string[]) : void
 	{
-		var people = $("#clientArea #people");
+		var people = $("#queue #people");
 		people.empty();
 
 		for (var i = 0; i != names.length; ++i)
@@ -96,22 +96,9 @@ class QueueView implements IQueueView, IClientView
 
 	Show(e : JQuery) : void
 	{
-		var header = $("<div>");
-		e.append(header);
+		e.append("<table id='queue'><tr><td><button id='goApartment'>вернуться домой</button></td></tr><tr><td id='player' /></tr><tr><td id='current' /></tr><tr><td id='people' /></tr><tr><td id='body'><div id='dialog'</td></tr></table>");
 
-		var button = $("<button id='goApartment' type='button' />");
-		button.text("вернуться домой");
-		button.click(() => { this.GoToApartment.Call(); });
-		header.append(button);
-
-		var text = $("<p>");
-		text.text("Привет, очередь!");
-		e.append(text);
-
-		e.append($("<p id='player' />"));
-		e.append($("<p id='current' />"));
-		e.append($("<div id='people' />"));
-		e.append($("<div id='dialog' />"));
+		$("#goApartment").click(() => { this.GoToApartment.Call(); });
 
 		this.Shown.Call();
 	}

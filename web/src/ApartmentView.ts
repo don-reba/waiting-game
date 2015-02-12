@@ -21,21 +21,10 @@ class ApartmentView implements IApartmentView, IClientView
 
 	Show(e : JQuery) : void
 	{
-		var header = $("<div>");
-		e.append(header);
+		e.append("<table id='apartment'><tr><td id='apartment-header'><button id='goQueue'>в очередь</button><button id='goStore'>в магазин</button></td></tr><tr><td id='apartment-view'>Вы у себя дома…</td></tr></table>");
 
-		var button = $("<button id='goQueue' type='button' />");
-		button.text("в очередь");
-		button.click(() => { this.GoToQueue.Call(); });
-		header.append(button);
+		$("#goQueue").click(() => { this.GoToQueue.Call(); });
 
-		var button = $("<button id='goStore' type='button' />");
-		button.text("в магазин");
-		button.click(() => { this.GoToStore.Call(); });
-		header.append(button);
-
-		var text = $("<p>");
-		text.text("Вы у себя дома.");
-		e.append(text);
+		$("#goStore").click(() => { this.GoToStore.Call(); });
 	}
 }

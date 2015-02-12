@@ -6,17 +6,8 @@ class MainView implements IMainView
 
 	constructor(private clientViews : IClientView[])
 	{
-		var game = $("#game");
-		game.empty();
-
-		game.append("<div id='money' />");
-
-		var button = $("<button id='reset' type='button' />");
-		button.text("начать заново");
+		var button = $("#reset-game");
 		button.click(() => { this.ResetRequested.Call(); });
-		game.append(button);
-
-		game.append("<div id='clientArea' />");
 	}
 
 	// IMainView implementation
@@ -36,12 +27,17 @@ class MainView implements IMainView
 
 		if (this.activeView)
 			this.activeView.Hide();
-		newActiveView.Show($("#game #clientArea").empty());
+
+		var loc = $("#location");
+		loc.empty();
+		loc.removeClass();
+		newActiveView.Show(loc);
+
 		this.activeView = newActiveView;
 	}
 
 	SetMoney(money : number) : void
 	{
-		$("#game > #money").text(Math.floor(money) + " ₽");
+		$("#money-total").text(Math.floor(money) + " ₽");
 	}
 }
