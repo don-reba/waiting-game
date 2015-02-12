@@ -8,18 +8,15 @@ class DialogManager
 
 	GetDialog(dialogID : number) : IDialog
 	{
-		if (dialogID === -1)
-			return null;
-		return this.dialogs[dialogID];
+		if (dialogID >= 0)
+			return this.dialogs[dialogID];
+		return null;
 	}
 
-	GetRefDialog(dialogID : number, option : number) : IDialog
+	GetRefDialogID(dialogID : number, option : number) : number
 	{
-		if (dialogID === -1 || option === -1)
-			return null;
-		var refID = this.dialogs[dialogID].replies[option].ref;
-		if (refID === -1)
-			return null;
-		return this.dialogs[refID];
+		if (dialogID >= 0 && option >= 0)
+			return this.dialogs[dialogID].replies[option].ref;
+		return null;
 	}
 }

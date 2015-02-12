@@ -20,10 +20,12 @@ class QueuePosition
 class QueueModelState
 {
 	constructor
-		( public queue  : QueuePosition[]
-		, public stock  : Character[]
-		, public player : QueuePosition
-		, public ticket : number
+		( public queue    : QueuePosition[]
+		, public stock    : Character[]
+		, public player   : QueuePosition
+		, public ticket   : number
+		, public dialogID : number
+		, public speaker  : string
 		)
 	{
 	}
@@ -31,10 +33,12 @@ class QueueModelState
 
 class QueueModel implements IQueueModel
 {
-	private queue  : QueuePosition[];
-	private stock  : Character[];
-	private player : QueuePosition;
-	private ticket : number;
+	private queue    : QueuePosition[];
+	private stock    : Character[];
+	private player   : QueuePosition;
+	private ticket   : number;
+	private dialogID : number;
+	private speaker  : string;
 
 	constructor
 		( private timer     : Timer
@@ -48,14 +52,20 @@ class QueueModel implements IQueueModel
 
 	// IQueueModel implementation
 
-	PlayerTicketChanged  = new Signal();
 	CurrentTicketChanged = new Signal();
+	DialogChanged        = new Signal();
 	PeopleChanged        = new Signal();
+	PlayerTicketChanged  = new Signal();
 
 	EnterQueue() : void
 	{
 		if (this.queue.every((p) => { return p.character != null; }))
 			this.AddPlayerPosition();
+	}
+
+	GetDialogID() : number
+	{
+		return this.dialogID;
 	}
 
 	GetPlayerTicket() : string
@@ -80,6 +90,11 @@ class QueueModel implements IQueueModel
 		return this.queue
 			.filter((p) => { return p.character != null; })
 			.map((p) => { return p.character.name; });
+	}
+
+	GetSpeaker() : string
+	{
+		return this.speaker;
 	}
 
 	Reset() : void
@@ -120,18 +135,29 @@ class QueueModel implements IQueueModel
 		for (var i = 0; i != this.maxLength; ++i)
 			this.AddStockPosition();
 	}
+
+	SetDialog(speaker : string, dialogID : number) : void
+	{
+		this.speaker  = speaker;
+		this.dialogID = dialogID;
+		this.DialogChanged.Call();
+	}
+
 	// IPersistent implementation
 
 	FromPersistentString(str : string) : void
 	{
 		var state = <QueueModelState>JSON.parse(str);
-		this.queue  = state.queue;
-		this.stock  = state.stock;
-		this.player = state.player;
-		this.ticket = state.ticket;
+		this.queue    = state.queue;
+		this.stock    = state.stock;
+		this.player   = state.player;
+		this.ticket   = state.ticket;
+		this.dialogID = state.dialogID;
+		this.speaker  = state.speaker;
 		this.PlayerTicketChanged.Call();
 		this.CurrentTicketChanged.Call();
 		this.PeopleChanged.Call();
+		this.DialogChanged.Call();
 	}
 
 	ToPersistentString() : string
@@ -141,6 +167,8 @@ class QueueModel implements IQueueModel
 			, this.stock
 			, this.player
 			, this.ticket
+			, this.dialogID
+			, this.speaker
 			);
 		return JSON.stringify(state);
 	}

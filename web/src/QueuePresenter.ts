@@ -12,9 +12,10 @@ class QueuePresenter
 		, private dialogManager : DialogManager
 		)
 	{
-		queueModel.PlayerTicketChanged.Add(this.OnPlayerTicketChanged.bind(this));
 		queueModel.CurrentTicketChanged.Add(this.OnCurrentTicketChanged.bind(this));
+		queueModel.DialogChanged.Add(this.OnDialogChanged.bind(this));
 		queueModel.PeopleChanged.Add(this.OnPeopleChanged.bind(this));
+		queueModel.PlayerTicketChanged.Add(this.OnPlayerTicketChanged.bind(this));
 
 		queueView.GoToApartment.Add(this.OnGoToApartment.bind(this));
 		queueView.PersonClicked.Add(this.OnPersonClicked.bind(this));
@@ -33,6 +34,11 @@ class QueuePresenter
 			this.queueView.SetCurrentTicket(ticket);
 	}
 
+	private OnDialogChanged() : void
+	{
+		this.queueView.SetDialog(this.queueModel.GetSpeaker(), this.dialogManager.GetDialog(this.queueModel.GetDialogID()));
+	}
+
 	private OnGoToApartment() : void
 	{
 		this.mainModel.SetView(ClientViewType.Apartment);
@@ -41,6 +47,11 @@ class QueuePresenter
 	private OnPeopleChanged() : void
 	{
 		this.queueView.SetPeopleNames(this.queueModel.GetPeopleNames());
+	}
+
+	private OnPersonClicked() : void
+	{
+		this.queueModel.SetDialog(this.queueView.GetSpeaker(), 0);
 	}
 
 	private OnPlayerTicketChanged() : void
@@ -59,19 +70,14 @@ class QueuePresenter
 		this.queueView.SetPlayerTicket(this.queueModel.GetPlayerTicket());
 		this.queueView.SetCurrentTicket(this.queueModel.GetCurrentTicket());
 		this.queueView.SetPeopleNames(this.queueModel.GetPeopleNames());
-		this.queueView.SetDialog(null);
-	}
-
-	private OnPersonClicked() : void
-	{
-		this.queueView.SetDialog(this.dialogManager.GetDialog(0));
+		this.queueView.SetDialog(this.queueModel.GetSpeaker(), this.dialogManager.GetDialog(this.queueModel.GetDialogID()));
 	}
 
 	private OnReplyClicked() : void
 	{
-		var reply  = this.queueView.GetSelectedReply();
-		var dialog = this.dialogManager.GetRefDialog(0, reply);
-		this.queueView.SetDialog(dialog);
+		var reply    = this.queueView.GetSelectedReply();
+		var dialogID = this.dialogManager.GetRefDialogID(this.queueModel.GetDialogID(), reply);
+		this.queueModel.SetDialog(this.queueView.GetSpeaker(), dialogID);
 	}
 
 	private OnResetActivated() : void

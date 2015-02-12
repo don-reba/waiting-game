@@ -11,9 +11,11 @@ interface IQueueView
 
 	GetSelectedReply() : number;
 
+	GetSpeaker() : string;
+
 	SetCurrentTicket(ticket : string) : void;
 
-	SetDialog(dialog : IDialog) : void;
+	SetDialog(speaker : string, dialog : IDialog) : void;
 
 	SetPlayerTicket(ticket : string) : void;
 

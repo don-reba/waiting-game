@@ -28,12 +28,17 @@ class QueueView implements IQueueView, IClientView
 		return this.selectedReply;
 	}
 
+	GetSpeaker() : string
+	{
+		return this.selectedPerson;
+	}
+
 	SetCurrentTicket(ticket : string) : void
 	{
 		$("#queue #current").text("текущий номер: " + ticket);
 	}
 
-	SetDialog(dialog : IDialog) : void
+	SetDialog(speaker : string, dialog : IDialog) : void
 	{
 		var div = $("#queue #dialog");
 		div.empty();
@@ -41,7 +46,7 @@ class QueueView implements IQueueView, IClientView
 		if (!dialog)
 			return;
 
-		div.append($("<p><strong>" + this.selectedPerson + "</strong>: " + dialog.text + "</p>"));
+		div.append($("<p><strong>" + speaker + "</strong>: " + dialog.text + "</p>"));
 
 		var ol = $("<ol>");
 		for (var i = 0; i != dialog.replies.length; ++i)

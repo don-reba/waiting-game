@@ -1,16 +1,23 @@
 interface IQueueModel
 {
-	PlayerTicketChanged  : Signal;
 	CurrentTicketChanged : Signal;
+	DialogChanged        : Signal;
 	PeopleChanged        : Signal;
+	PlayerTicketChanged  : Signal;
 
 	EnterQueue() : void;
 
-	GetPlayerTicket() : string;
-
 	GetCurrentTicket() : string;
+
+	GetDialogID() : number;
+
+	GetPlayerTicket() : string;
 
 	GetPeopleNames() : string[];
 
+	GetSpeaker() : string;
+
 	Reset() : void;
+
+	SetDialog(speaker : string, dialogID : number) : void;
 }
