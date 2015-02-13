@@ -4,8 +4,9 @@
 	>
 
 	<ItemGroup>
-		<WebSrc Include="web\src\*.ts"    />
-		<WebSrc Include="web\dts\*.d.ts"    />
+		<WebSrc Include="web\src\*.ts"   />
+		<WebSrc Include="web\lib\*.ts"   />
+		<WebSrc Include="web\dts\*.d.ts" />
 		<WebOut Include="web\js\game.js" />
 	</ItemGroup>
 
