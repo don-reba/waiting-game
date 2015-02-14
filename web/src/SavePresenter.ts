@@ -9,16 +9,23 @@ class SavePresenter
 		)
 	{
 		this.saveView.Clear.Add(this.OnClear.bind(this));
-		this.saveView.Update.Add(this.OnUpdate.bind(this));
-	}
-
-	private OnUpdate()
-	{
-		this.saveView.SetSaveData(this.saveModel.GetSaveData());
+		this.saveView.Load.Add(this.OnLoad.bind(this));
+		this.saveView.Save.Add(this.OnSave.bind(this));
 	}
 
 	private OnClear()
 	{
 		this.saveModel.ClearSaveData();
+		this.saveView.SetSaveData(this.saveModel.GetSaveData());
+	}
+
+	private OnLoad()
+	{
+		this.saveView.SetSaveData(this.saveModel.GetSaveData());
+	}
+
+	private OnSave()
+	{
+		this.saveModel.SetSaveData(this.saveView.GetSaveData());
 	}
 }

@@ -11,6 +11,6 @@ get '/' do
   send_file File.join(settings.public_dir, 'index.html')
 end
 
-get '/dev/' do
+get '/dev' do
   send_file File.join(settings.public_dir, 'index-dev.html')
 end

@@ -670,6 +670,10 @@ var SaveModel = (function () {
         }
         return data;
     };
+    SaveModel.prototype.SetSaveData = function (data) {
+        for (var i = 0; i != data.length; ++i)
+            localStorage[data[i][0]] = data[i][1];
+    };
     return SaveModel;
 })();
 /// <reference path="ISaveModel.ts" />
@@ -679,13 +683,18 @@ var SavePresenter = (function () {
         this.saveModel = saveModel;
         this.saveView = saveView;
         this.saveView.Clear.Add(this.OnClear.bind(this));
-        this.saveView.Update.Add(this.OnUpdate.bind(this));
+        this.saveView.Load.Add(this.OnLoad.bind(this));
+        this.saveView.Save.Add(this.OnSave.bind(this));
     }
-    SavePresenter.prototype.OnUpdate = function () {
-        this.saveView.SetSaveData(this.saveModel.GetSaveData());
-    };
     SavePresenter.prototype.OnClear = function () {
         this.saveModel.ClearSaveData();
+        this.saveView.SetSaveData(this.saveModel.GetSaveData());
+    };
+    SavePresenter.prototype.OnLoad = function () {
+        this.saveView.SetSaveData(this.saveModel.GetSaveData());
+    };
+    SavePresenter.prototype.OnSave = function () {
+        this.saveModel.SetSaveData(this.saveView.GetSaveData());
     };
     return SavePresenter;
 })();
@@ -696,21 +705,35 @@ var SaveView = (function () {
         var _this = this;
         // ISaveView implementation
         this.Clear = new Signal();
-        this.Update = new Signal();
+        this.Load = new Signal();
+        this.Save = new Signal();
         $("#save-clear").click(function () {
             _this.Clear.Call();
         });
-        $("#save-update").click(function () {
-            _this.Update.Call();
+        $("#save-load").click(function () {
+            _this.Load.Call();
+        });
+        $("#save-save").click(function () {
+            _this.Save.Call();
         });
     }
+    SaveView.prototype.GetSaveData = function () {
+        var data = [];
+        var rows = $("#dev-contents tr");
+        for (var i = 0; i != rows.length; ++i) {
+            var key = $(rows[i]).find("td.key").text();
+            var value = $(rows[i]).find("td.value").text();
+            data.push([key, value]);
+        }
+        return data;
+    };
     SaveView.prototype.SetSaveData = function (data) {
         var rows = [];
         for (var i = 0; i != data.length; ++i) {
             var item = data[i];
             var key = item[0];
             var value = CompactJson.Stringify(JSON.parse(item[1]));
-            rows.push("<tr><td class='key'>" + key + "</td><td class='value'>" + value + "</td></tr>");
+            rows.push("<tr><td class='key'>" + key + "</td><td class='value' contenteditable>" + value + "</td></tr>");
         }
         $("#dev-contents").html("<table>" + rows.join("") + "</table>");
     };

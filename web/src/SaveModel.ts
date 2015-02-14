@@ -20,4 +20,10 @@ class SaveModel implements ISaveModel
 		}
 		return data;
 	}
+
+	SetSaveData(data : [string, string][]) : void
+	{
+		for (var i = 0; i != data.length; ++i)
+			localStorage[data[i][0]] = data[i][1];
+	}
 }
