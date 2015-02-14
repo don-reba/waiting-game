@@ -16,7 +16,6 @@ class QueuePosition
 class QueueModelState
 {
 	queue    : QueuePosition[];
-	stock    : Character[];
 	player   : QueuePosition;
 	ticket   : number;
 	dialogID : number;
@@ -39,6 +38,37 @@ class QueueModel implements IQueueModel
 	{
 		timer.AddEvent(this.OnAdvance.bind(this), 20);
 		timer.AddEvent(this.OnKnock.bind(this),   19);
+
+		this.stock =
+			[ { name : "Аня"      }
+			, { name : "Борис"    }
+			, { name : "Вера"     }
+			, { name : "Григорий" }
+			, { name : "Даша"     }
+			, { name : "Елена"    }
+			, { name : "Жора"     }
+			, { name : "Зоя"      }
+			, { name : "Инна"     }
+			, { name : "Костик"   }
+			, { name : "Лёша"     }
+			, { name : "Маша"     }
+			, { name : "Настя"    }
+			, { name : "Оля"      }
+			, { name : "Пётр"     }
+			, { name : "Родриг"   }
+			, { name : "Света"    }
+			, { name : "Тамара"   }
+			, { name : "Усач"     }
+			, { name : "Фёдор"    }
+			, { name : "Хосе"     }
+			, { name : "Цезарь"   }
+			, { name : "Чарли"    }
+			, { name : "Шарик"    }
+			, { name : "Элла"     }
+			, { name : "Юра"      }
+			, { name : "Яна"      }
+			];
+
 		this.Reset();
 	}
 
@@ -91,36 +121,6 @@ class QueueModel implements IQueueModel
 
 	Reset() : void
 	{
-		this.stock =
-			[ { name : "Аня"      }
-			, { name : "Борис"    }
-			, { name : "Вера"     }
-			, { name : "Григорий" }
-			, { name : "Даша"     }
-			, { name : "Елена"    }
-			, { name : "Жора"     }
-			, { name : "Зоя"      }
-			, { name : "Инна"     }
-			, { name : "Костик"   }
-			, { name : "Лёша"     }
-			, { name : "Маша"     }
-			, { name : "Настя"    }
-			, { name : "Оля"      }
-			, { name : "Пётр"     }
-			, { name : "Родриг"   }
-			, { name : "Света"    }
-			, { name : "Тамара"   }
-			, { name : "Усач"     }
-			, { name : "Фёдор"    }
-			, { name : "Хосе"     }
-			, { name : "Цезарь"   }
-			, { name : "Чарли"    }
-			, { name : "Шарик"    }
-			, { name : "Элла"     }
-			, { name : "Юра"      }
-			, { name : "Яна"      }
-			];
-
 		this.ticket = 0;
 
 		this.queue = [];
@@ -141,7 +141,6 @@ class QueueModel implements IQueueModel
 	{
 		var state = <QueueModelState>JSON.parse(str);
 		this.queue    = state.queue;
-		this.stock    = state.stock;
 		this.player   = state.player;
 		this.ticket   = state.ticket;
 		this.dialogID = state.dialogID;
@@ -156,7 +155,6 @@ class QueueModel implements IQueueModel
 	{
 		var state : QueueModelState =
 			{ queue    : this.queue
-			, stock    : this.stock
 			, player   : this.player
 			, ticket   : this.ticket
 			, dialogID : this.dialogID
@@ -169,7 +167,12 @@ class QueueModel implements IQueueModel
 
 	private AddStockPosition() : void
 	{
-		var i         = Math.floor(Math.random() * this.stock.length);
+		var i;
+		do
+		{
+			i = Math.floor(Math.random() * this.stock.length);
+		} while (this.InQueue(this.stock[i]));
+
 		var remaining = Math.floor(2 + Math.random() * 8);
 		var ticket    = String(this.ticket++);
 		var p         =
@@ -193,6 +196,11 @@ class QueueModel implements IQueueModel
 			};
 
 		this.queue.push(p);
+	}
+
+	private InQueue(c : Character) : boolean
+	{
+		return this.queue.some((p) => { return p.character && p.character.name === c.name; });
 	}
 
 	private OnAdvance() : void
