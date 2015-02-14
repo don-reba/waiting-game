@@ -1,6 +1,6 @@
 interface IQueueView
 {
-	GoToApartment : Signal;
+	GoToHome : Signal;
 	PersonClicked : Signal;
 	ReplyClicked  : Signal;
 	Shown         : Signal;

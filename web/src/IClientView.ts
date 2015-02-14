@@ -2,7 +2,7 @@
 
 enum ClientViewType
 {
-	Apartment, Queue, Store
+	Home, Queue, Store
 }
 
 interface IClientView

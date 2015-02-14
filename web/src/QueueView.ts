@@ -8,7 +8,7 @@ class QueueView implements IQueueView, IClientView
 
 	// IQueueView implementation
 
-	GoToApartment = new Signal();
+	GoToHome = new Signal();
 	PersonClicked = new Signal();
 	ReplyClicked  = new Signal();
 	Shown         = new Signal();
@@ -101,9 +101,9 @@ class QueueView implements IQueueView, IClientView
 
 	Show(e : JQuery) : void
 	{
-		e.append("<table id='queue'><tr><td><button id='goApartment'>вернуться домой</button></td></tr><tr><td id='player' /></tr><tr><td id='current' /></tr><tr><td id='people' /></tr><tr><td id='body'><div id='dialog' /></td></tr></table>");
+		e.append("<table id='queue'><tr><td><button id='goHome'>вернуться домой</button></td></tr><tr><td id='player' /></tr><tr><td id='current' /></tr><tr><td id='people' /></tr><tr><td id='body'><div id='dialog' /></td></tr></table>");
 
-		$("#goApartment").click(() => { this.GoToApartment.Call(); });
+		$("#goHome").click(() => { this.GoToHome.Call(); });
 
 		this.Shown.Call();
 	}

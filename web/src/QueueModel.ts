@@ -3,32 +3,24 @@
 
 class Character
 {
-	constructor(public name : string) { }
+	public name : string;
 }
 
 class QueuePosition
 {
-	constructor
-		( public character : Character
-		, public remaining : number
-		, public ticket    : string
-		)
-	{
-	}
+	character : Character;
+	remaining : number;
+	ticket    : string;
 }
 
 class QueueModelState
 {
-	constructor
-		( public queue    : QueuePosition[]
-		, public stock    : Character[]
-		, public player   : QueuePosition
-		, public ticket   : number
-		, public dialogID : number
-		, public speaker  : string
-		)
-	{
-	}
+	queue    : QueuePosition[];
+	stock    : Character[];
+	player   : QueuePosition;
+	ticket   : number;
+	dialogID : number;
+	speaker  : string;
 }
 
 class QueueModel implements IQueueModel
@@ -100,33 +92,33 @@ class QueueModel implements IQueueModel
 	Reset() : void
 	{
 		this.stock =
-			[ new Character("Аня")
-			, new Character("Борис")
-			, new Character("Вера")
-			, new Character("Григорий")
-			, new Character("Даша")
-			, new Character("Елена")
-			, new Character("Жора")
-			, new Character("Зоя")
-			, new Character("Инна")
-			, new Character("Костик")
-			, new Character("Лёша")
-			, new Character("Маша")
-			, new Character("Настя")
-			, new Character("Оля")
-			, new Character("Пётр")
-			, new Character("Родриг")
-			, new Character("Света")
-			, new Character("Тамара")
-			, new Character("Усач")
-			, new Character("Фёдор")
-			, new Character("Хосе")
-			, new Character("Цезарь")
-			, new Character("Чарли")
-			, new Character("Шарик")
-			, new Character("Элла")
-			, new Character("Юра")
-			, new Character("Яна")
+			[ { name : "Аня"      }
+			, { name : "Борис"    }
+			, { name : "Вера"     }
+			, { name : "Григорий" }
+			, { name : "Даша"     }
+			, { name : "Елена"    }
+			, { name : "Жора"     }
+			, { name : "Зоя"      }
+			, { name : "Инна"     }
+			, { name : "Костик"   }
+			, { name : "Лёша"     }
+			, { name : "Маша"     }
+			, { name : "Настя"    }
+			, { name : "Оля"      }
+			, { name : "Пётр"     }
+			, { name : "Родриг"   }
+			, { name : "Света"    }
+			, { name : "Тамара"   }
+			, { name : "Усач"     }
+			, { name : "Фёдор"    }
+			, { name : "Хосе"     }
+			, { name : "Цезарь"   }
+			, { name : "Чарли"    }
+			, { name : "Шарик"    }
+			, { name : "Элла"     }
+			, { name : "Юра"      }
+			, { name : "Яна"      }
 			];
 
 		this.ticket = 0;
@@ -162,14 +154,14 @@ class QueueModel implements IQueueModel
 
 	ToPersistentString() : string
 	{
-		var state = new QueueModelState
-			( this.queue
-			, this.stock
-			, this.player
-			, this.ticket
-			, this.dialogID
-			, this.speaker
-			);
+		var state : QueueModelState =
+			{ queue    : this.queue
+			, stock    : this.stock
+			, player   : this.player
+			, ticket   : this.ticket
+			, dialogID : this.dialogID
+			, speaker  : this.speaker
+			};
 		return JSON.stringify(state);
 	}
 
@@ -177,10 +169,14 @@ class QueueModel implements IQueueModel
 
 	private AddStockPosition() : void
 	{
-		var i      = Math.floor(Math.random() * this.stock.length);
-		var delay  = Math.floor(2 + Math.random() * 8);
-		var ticket = String(this.ticket++);
-		var p      = new QueuePosition(this.stock[i], delay, ticket);
+		var i         = Math.floor(Math.random() * this.stock.length);
+		var remaining = Math.floor(2 + Math.random() * 8);
+		var ticket    = String(this.ticket++);
+		var p         =
+			{ character : this.stock[i]
+			, remaining : remaining
+			, ticket    : ticket
+			};
 
 		this.stock.splice(i, 1);
 		this.queue.push(p);
@@ -188,9 +184,13 @@ class QueueModel implements IQueueModel
 
 	private AddPlayerPosition() : void
 	{
-		var delay  = Math.floor(2 + Math.random() * 8);
-		var ticket = String(this.ticket++);
-		var p      = new QueuePosition(null, delay, ticket);
+		var remaining = Math.floor(2 + Math.random() * 8);
+		var ticket    = String(this.ticket++);
+		var p         =
+			{ character : null
+			, remaining : remaining
+			, ticket    : ticket
+			};
 
 		this.queue.push(p);
 	}

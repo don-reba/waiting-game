@@ -10,11 +10,11 @@ class StorePresenter
 		, private storeView  : IStoreView
 		)
 	{
-		storeView.GoToApartment.Add(this.OnGoToApartment.bind(this));
+		storeView.GoToHome.Add(this.OnGoToHome.bind(this));
 	}
 
-	private OnGoToApartment() : void
+	private OnGoToHome() : void
 	{
-		this.mainModel.SetView(ClientViewType.Apartment);
+		this.mainModel.SetView(ClientViewType.Home);
 	}
 }

@@ -43,7 +43,7 @@ class MainModel implements IMainModel, IPersistent
 	Reset() : void
 	{
 		this.money = 0;
-		this.view  = ClientViewType.Apartment;
+		this.view  = ClientViewType.Home;
 		this.ResetActivated.Call();
 		this.MoneyChanged.Call();
 		this.ViewChanged.Call();

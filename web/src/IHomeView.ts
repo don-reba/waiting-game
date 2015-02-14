@@ -1,4 +1,4 @@
-interface IApartmentView
+interface IHomeView
 {
 	GoToQueue : Signal;
 	GoToStore : Signal;
