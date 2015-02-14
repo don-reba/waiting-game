@@ -70,6 +70,78 @@ var ApartmentView = (function () {
     };
     return ApartmentView;
 })();
+// Copyright 2014 Simon Lydell
+// X11 (“MIT”) Licensed. (See LICENSE.)
+var CompactJson;
+(function (CompactJson) {
+    function Stringify(obj, options) {
+        if (options === void 0) { options = { indent: "  ", maxLength: 80 }; }
+        var indent = options.indent;
+        var maxLength = options.maxLength;
+        return (function _stringify(obj, currentIndent, reserved) {
+            if (obj && typeof obj.toJSON === "function") {
+                obj = obj.toJSON();
+            }
+            var string = JSON.stringify(obj);
+            if (string === undefined) {
+                return string;
+            }
+            var length = maxLength - currentIndent.length - reserved;
+            if (string.length <= length) {
+                var prettified = prettify(string);
+                if (prettified.length <= length) {
+                    return prettified;
+                }
+            }
+            if (typeof obj === "object" && obj !== null) {
+                var nextIndent = currentIndent + indent;
+                var items = [];
+                var delimiters;
+                var comma = function (array, index) {
+                    return (index === array.length - 1 ? 0 : 1);
+                };
+                if (Array.isArray(obj)) {
+                    for (var index = 0; index < obj.length; index++) {
+                        items.push(_stringify(obj[index], nextIndent, comma(obj, index)) || "null");
+                    }
+                    delimiters = "[]";
+                }
+                else {
+                    Object.keys(obj).forEach(function (key, index, array) {
+                        var keyPart = JSON.stringify(key) + ": ";
+                        var value = _stringify(obj[key], nextIndent, keyPart.length + comma(array, index));
+                        if (value !== undefined) {
+                            items.push(keyPart + value);
+                        }
+                    });
+                    delimiters = "{}";
+                }
+                if (items.length > 0) {
+                    return [
+                        delimiters[0],
+                        indent + items.join(",\n" + nextIndent),
+                        delimiters[1]
+                    ].join("\n" + currentIndent);
+                }
+            }
+            return string;
+        }(obj, "", 0));
+    }
+    CompactJson.Stringify = Stringify;
+    // Note: This regex matches even invalid JSON strings, but since we’re
+    // working on the output of `JSON.stringify` we know that only valid strings
+    // are present (unless the user supplied a weird `options.indent` but in
+    // that case we don’t care since the output would be invalid anyway).
+    var stringOrChar = /("(?:[^"]|\\.)*")|[:,]/g;
+    function prettify(string) {
+        return string.replace(stringOrChar, function (match, string) {
+            if (string) {
+                return match;
+            }
+            return match + " ";
+        });
+    }
+})(CompactJson || (CompactJson = {}));
 var Reply = (function () {
     function Reply() {
     }
@@ -93,6 +165,7 @@ var DialogManager = (function () {
     return DialogManager;
 })();
 /// <reference path="IClientView.ts" />
+/// <reference path="Signal.ts" />
 /// <reference path="IMainModel.ts"  />
 /// <reference path="IPersistent.ts" />
 var MainModelState = (function () {
@@ -206,10 +279,60 @@ var MainView = (function () {
     };
     return MainView;
 })();
+/// <reference path="IPersistent.ts" />
+var TimerState = (function () {
+    function TimerState(ticks) {
+        this.ticks = ticks;
+    }
+    return TimerState;
+})();
+var TimerEvent = (function () {
+    function TimerEvent(handler, delay) {
+        this.handler = handler;
+        this.delay = delay;
+    }
+    return TimerEvent;
+})();
+var Timer = (function () {
+    function Timer() {
+        this.events = [];
+        // if we started at 0, all the events would go off at start
+        this.ticks = 1;
+    }
+    // public interface
+    Timer.prototype.Start = function (tickMilliseconds) {
+        setInterval(this.OnTick.bind(this), tickMilliseconds);
+    };
+    Timer.prototype.AddEvent = function (e, delay) {
+        this.events.push(new TimerEvent(e, delay));
+    };
+    // IPersistent implementation
+    Timer.prototype.FromPersistentString = function (str) {
+        var state = JSON.parse(str);
+        this.ticks = state.ticks;
+    };
+    Timer.prototype.ToPersistentString = function () {
+        return JSON.stringify(new TimerState(this.ticks));
+    };
+    // private implementation
+    Timer.prototype.OnTick = function () {
+        for (var i = 0; i != this.events.length; ++i) {
+            var e = this.events[i];
+            if (this.ticks % e.delay == 0)
+                e.handler();
+        }
+        ++this.ticks;
+    };
+    return Timer;
+})();
+/// <reference path="IPersistent.ts" />
+/// <reference path="Signal.ts"      />
+/// <reference path="Timer.ts"       />
 var PersistentState = (function () {
-    function PersistentState(items) {
+    function PersistentState(items, timer) {
         this.items = items;
         this.version = "1";
+        timer.AddEvent(this.Save.bind(this), 50);
     }
     // get the state string from each item and store it in local storage
     PersistentState.prototype.Save = function () {
@@ -522,13 +645,76 @@ var QueueView = (function () {
     };
     QueueView.prototype.Show = function (e) {
         var _this = this;
-        e.append("<table id='queue'><tr><td><button id='goApartment'>вернуться домой</button></td></tr><tr><td id='player' /></tr><tr><td id='current' /></tr><tr><td id='people' /></tr><tr><td id='body'><div id='dialog'</td></tr></table>");
+        e.append("<table id='queue'><tr><td><button id='goApartment'>вернуться домой</button></td></tr><tr><td id='player' /></tr><tr><td id='current' /></tr><tr><td id='people' /></tr><tr><td id='body'><div id='dialog' /></td></tr></table>");
         $("#goApartment").click(function () {
             _this.GoToApartment.Call();
         });
         this.Shown.Call();
     };
     return QueueView;
+})();
+/// <reference path="ISaveModel.ts" />
+var SaveModel = (function () {
+    function SaveModel() {
+    }
+    // ISaveModel implementation
+    SaveModel.prototype.ClearSaveData = function () {
+        localStorage.clear();
+    };
+    SaveModel.prototype.GetSaveData = function () {
+        var data = [];
+        for (var i = 0; i != localStorage.length; ++i) {
+            var key = localStorage.key(i);
+            var val = localStorage[key];
+            data.push([key, val]);
+        }
+        return data;
+    };
+    return SaveModel;
+})();
+/// <reference path="ISaveModel.ts" />
+/// <reference path="ISaveView.ts"  />
+var SavePresenter = (function () {
+    function SavePresenter(saveModel, saveView) {
+        this.saveModel = saveModel;
+        this.saveView = saveView;
+        this.saveView.Clear.Add(this.OnClear.bind(this));
+        this.saveView.Update.Add(this.OnUpdate.bind(this));
+    }
+    SavePresenter.prototype.OnUpdate = function () {
+        this.saveView.SetSaveData(this.saveModel.GetSaveData());
+    };
+    SavePresenter.prototype.OnClear = function () {
+        this.saveModel.ClearSaveData();
+    };
+    return SavePresenter;
+})();
+/// <reference path="CompactJson.ts" />
+/// <reference path="ISaveView.ts"   />
+var SaveView = (function () {
+    function SaveView() {
+        var _this = this;
+        // ISaveView implementation
+        this.Clear = new Signal();
+        this.Update = new Signal();
+        $("#save-clear").click(function () {
+            _this.Clear.Call();
+        });
+        $("#save-update").click(function () {
+            _this.Update.Call();
+        });
+    }
+    SaveView.prototype.SetSaveData = function (data) {
+        var rows = [];
+        for (var i = 0; i != data.length; ++i) {
+            var item = data[i];
+            var key = item[0];
+            var value = CompactJson.Stringify(JSON.parse(item[1]));
+            rows.push("<tr><td class='key'>" + key + "</td><td class='value'>" + value + "</td></tr>");
+        }
+        $("#dev-contents").html("<table>" + rows.join("") + "</table>");
+    };
+    return SaveView;
 })();
 /// <reference path="IStoreModel.ts" />
 var StoreModel = (function () {
@@ -573,52 +759,6 @@ var StoreView = (function () {
     };
     return StoreView;
 })();
-/// <reference path="IPersistent.ts" />
-var TimerState = (function () {
-    function TimerState(ticks) {
-        this.ticks = ticks;
-    }
-    return TimerState;
-})();
-var TimerEvent = (function () {
-    function TimerEvent(handler, delay) {
-        this.handler = handler;
-        this.delay = delay;
-    }
-    return TimerEvent;
-})();
-var Timer = (function () {
-    function Timer() {
-        this.events = [];
-        // if we started at 0, all the events would go off at start
-        this.ticks = 1;
-    }
-    // public interface
-    Timer.prototype.Start = function (tickMilliseconds) {
-        setInterval(this.OnTick.bind(this), tickMilliseconds);
-    };
-    Timer.prototype.AddEvent = function (e, delay) {
-        this.events.push(new TimerEvent(e, delay));
-    };
-    // IPersistent implementation
-    Timer.prototype.FromPersistentString = function (str) {
-        var state = JSON.parse(str);
-        this.ticks = state.ticks;
-    };
-    Timer.prototype.ToPersistentString = function () {
-        return JSON.stringify(new TimerState(this.ticks));
-    };
-    // private implementation
-    Timer.prototype.OnTick = function () {
-        for (var i = 0; i != this.events.length; ++i) {
-            var e = this.events[i];
-            if (this.ticks % e.delay == 0)
-                e.handler();
-        }
-        ++this.ticks;
-    };
-    return Timer;
-})();
 /// <reference path="ApartmentModel.ts"     />
 /// <reference path="ApartmentPresenter.ts" />
 /// <reference path="ApartmentView.ts"      />
@@ -630,6 +770,9 @@ var Timer = (function () {
 /// <reference path="QueueModel.ts"         />
 /// <reference path="QueuePresenter.ts"     />
 /// <reference path="QueueView.ts"          />
+/// <reference path="SaveModel.ts"         />
+/// <reference path="SavePresenter.ts"     />
+/// <reference path="SaveView.ts"          />
 /// <reference path="StoreModel.ts"         />
 /// <reference path="StorePresenter.ts"     />
 /// <reference path="StoreView.ts"          />
@@ -640,18 +783,20 @@ function Main(dialogs) {
     var apartmentModel = new ApartmentModel();
     var mainModel = new MainModel(timer);
     var queueModel = new QueueModel(timer, 8);
+    var saveModel = new SaveModel();
     var storeModel = new StoreModel();
     var apartmentView = new ApartmentView();
     var queueView = new QueueView();
+    var saveView = new SaveView();
     var storeView = new StoreView();
     var mainView = new MainView([apartmentView, queueView, storeView]);
     var apartmentPresenter = new ApartmentPresenter(apartmentModel, mainModel, apartmentView);
     var mainPresenter = new MainPresenter(mainModel, mainView);
     var queuePresenter = new QueuePresenter(mainModel, queueModel, queueView, dialogManager);
+    var savePrsenter = new SavePresenter(saveModel, saveView);
     var storePresenter = new StorePresenter(mainModel, storeModel, storeView);
     var persistentItems = [["main", mainModel], ["queue", queueModel], ["timer", timer]];
-    var persistentState = new PersistentState(persistentItems);
-    timer.AddEvent(persistentState.Save.bind(persistentState), 20);
+    var persistentState = new PersistentState(persistentItems, timer);
     mainPresenter.Start();
     timer.Start(100);
     persistentState.Load();

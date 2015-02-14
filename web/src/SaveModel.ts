@@ -1,0 +1,23 @@
+/// <reference path="ISaveModel.ts" />
+
+class SaveModel implements ISaveModel
+{
+	// ISaveModel implementation
+
+	ClearSaveData()
+	{
+		localStorage.clear();
+	}
+
+	GetSaveData() : [string, string][]
+	{
+		var data : [string, string][] = [];
+		for (var i = 0; i != localStorage.length; ++i)
+		{
+			var key = localStorage.key(i);
+			var val = localStorage[key];
+			data.push([key, val]);
+		}
+		return data;
+	}
+}

@@ -1,8 +1,15 @@
+/// <reference path="IPersistent.ts" />
+/// <reference path="Signal.ts"      />
+/// <reference path="Timer.ts"       />
+
 class PersistentState
 {
 	private version = "1";
 
-	constructor(private items : [string, IPersistent][]) { }
+	constructor(private items : [string, IPersistent][], timer : Timer)
+	{
+		timer.AddEvent(this.Save.bind(this), 50);
+	}
 
 	// get the state string from each item and store it in local storage
 	Save() : void

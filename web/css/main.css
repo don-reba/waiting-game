@@ -1,18 +1,28 @@
+html {
+	height : 100%;
+}
 body {
 	background-color : #FAFAFA;
-	font-family : Neucha;
-	font-size   : 100%;
-	text-align  : center;
+	font-family      : Neucha;
+	font-size        : 100%;
+	text-align       : center;
+	height           : 100%;
 }
-body > h1 {
-	font-size : 3em;
-	padding   : 0 0 0.5em 0;
+h1#title {
+	font-size      : 3em;
+	padding-bottom : 0.5em;
 }
 button {
 	cursor      : pointer;
 	font-family : Neucha;
 	white-space : nowrap;
 	padding     : 0.3em;
+}
+#main-table {
+	border-collapse : separate;
+	border-spacing  : 1em;
+	width           : 100%;
+	vertical-align  : top;
 }
 #game {
 	background-color : #F0F0F0;
@@ -46,13 +56,35 @@ button {
 	background-color : #E0E0E0;
 }
 
+/* save view */
+
+#dev {
+	background-color : #F0F0F0;
+	box-shadow       : 0 0 4px #808080;
+
+	max-height       : 40em;
+	width            : 100%;
+}
+#dev-contents {
+	text-align : left;
+}
+#dev-contents table {
+	border-collapse : separate;
+	border-spacing  : 0.5em;
+}
+#dev-contents td.key {
+	font-weight : bold;
+}
+#dev-contents td.value {
+	white-space : pre;
+}
+
 /* apartment */
 
 #apartment {
 	border-collapse : separate;
 	border-spacing  : 0.5em;
 
-	width           : 100%;
 	height          : 100%;
 }
 #apartment-view {

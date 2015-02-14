@@ -9,6 +9,9 @@
 /// <reference path="QueueModel.ts"         />
 /// <reference path="QueuePresenter.ts"     />
 /// <reference path="QueueView.ts"          />
+/// <reference path="SaveModel.ts"         />
+/// <reference path="SavePresenter.ts"     />
+/// <reference path="SaveView.ts"          />
 /// <reference path="StoreModel.ts"         />
 /// <reference path="StorePresenter.ts"     />
 /// <reference path="StoreView.ts"          />
@@ -23,10 +26,12 @@ function Main(dialogs : IDialog[])
 	var apartmentModel = new ApartmentModel();
 	var mainModel      = new MainModel(timer);
 	var queueModel     = new QueueModel(timer, 8);
+	var saveModel      = new SaveModel();
 	var storeModel     = new StoreModel();
 
 	var apartmentView = new ApartmentView();
 	var queueView     = new QueueView();
+	var saveView      = new SaveView();
 	var storeView     = new StoreView();
 
 	var mainView = new MainView([ apartmentView, queueView, storeView ]);
@@ -34,6 +39,7 @@ function Main(dialogs : IDialog[])
 	var apartmentPresenter = new ApartmentPresenter(apartmentModel, mainModel, apartmentView);
 	var mainPresenter      = new MainPresenter(mainModel, mainView);
 	var queuePresenter     = new QueuePresenter(mainModel, queueModel, queueView, dialogManager);
+	var savePrsenter       = new SavePresenter(saveModel, saveView);
 	var storePresenter     = new StorePresenter(mainModel, storeModel, storeView);
 
 	var persistentItems = <[string, IPersistent][]>
@@ -41,8 +47,7 @@ function Main(dialogs : IDialog[])
 		, [ "queue", queueModel ]
 		, [ "timer", timer      ]
 		];
-	var persistentState = new PersistentState(persistentItems);
-	timer.AddEvent(persistentState.Save.bind(persistentState), 20);
+	var persistentState = new PersistentState(persistentItems, timer);
 
 	mainPresenter.Start();
 	timer.Start(100);
