@@ -3,24 +3,19 @@
 
 class MainModelState
 {
-	constructor
-		( public money : number
-		, public view  : ClientViewType
-		)
-	{
-	}
+	money : number;
+	view  : ClientViewType;
 }
 
 class MainModel implements IMainModel, IPersistent
 {
-	private money : number;
 	private view  : ClientViewType;
 
 	constructor
-		( private timer : Timer
+		( private player : Player
 		)
 	{
-		timer.AddEvent(this.OnPay.bind(this), 20);
+		player.MoneyChanged.Add(this.OnMoneyChanged.bind(this));
 		this.Reset();
 	}
 
@@ -37,12 +32,11 @@ class MainModel implements IMainModel, IPersistent
 
 	GetMoney() : number
 	{
-		return this.money;
+		return this.player.money;
 	}
 
 	Reset() : void
 	{
-		this.money = 0;
 		this.view  = ClientViewType.Home;
 		this.ResetActivated.Call();
 		this.MoneyChanged.Call();
@@ -60,26 +54,17 @@ class MainModel implements IMainModel, IPersistent
 	FromPersistentString(str : string) : void
 	{
 		var state = <MainModelState>JSON.parse(str);
-		this.money = state.money;
 		this.view  = state.view;
 		this.ViewChanged.Call();
-		this.MoneyChanged.Call();
 	}
 
 	ToPersistentString() : string
 	{
-		var state = new MainModelState
-			( this.money
-			, this.view
-			);
-		return JSON.stringify(state);
+		return JSON.stringify({ view : this.view });
 	}
 
-	// private implementation
-
-	private OnPay() : void
+	private OnMoneyChanged() : void
 	{
-		++this.money;
 		this.MoneyChanged.Call();
 	}
 }

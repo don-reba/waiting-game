@@ -1,21 +1,22 @@
-/// <reference path="HomeModel.ts"     />
-/// <reference path="HomePresenter.ts" />
-/// <reference path="HomeView.ts"      />
-/// <reference path="DialogManager.ts"      />
-/// <reference path="MainModel.ts"          />
-/// <reference path="MainPresenter.ts"      />
-/// <reference path="MainView.ts"           />
-/// <reference path="PersistentState.ts"    />
-/// <reference path="QueueModel.ts"         />
-/// <reference path="QueuePresenter.ts"     />
-/// <reference path="QueueView.ts"          />
-/// <reference path="SaveModel.ts"         />
-/// <reference path="SavePresenter.ts"     />
-/// <reference path="SaveView.ts"          />
-/// <reference path="StoreModel.ts"         />
-/// <reference path="StorePresenter.ts"     />
-/// <reference path="StoreView.ts"          />
-/// <reference path="Timer.ts"              />
+/// <reference path="HomeModel.ts"       />
+/// <reference path="HomePresenter.ts"   />
+/// <reference path="HomeView.ts"        />
+/// <reference path="DialogManager.ts"   />
+/// <reference path="MainModel.ts"       />
+/// <reference path="MainPresenter.ts"   />
+/// <reference path="MainView.ts"        />
+/// <reference path="PersistentState.ts" />
+/// <reference path="Player.ts"          />
+/// <reference path="QueueModel.ts"      />
+/// <reference path="QueuePresenter.ts"  />
+/// <reference path="QueueView.ts"       />
+/// <reference path="SaveModel.ts"       />
+/// <reference path="SavePresenter.ts"   />
+/// <reference path="SaveView.ts"        />
+/// <reference path="StoreModel.ts"      />
+/// <reference path="StorePresenter.ts"  />
+/// <reference path="StoreView.ts"       />
+/// <reference path="Timer.ts"           />
 
 function Main(dialogs : IDialog[])
 {
@@ -23,8 +24,10 @@ function Main(dialogs : IDialog[])
 
 	var timer = new Timer();
 
+	var player = new Player(timer);
+
 	var homeModel  = new HomeModel();
-	var mainModel  = new MainModel(timer);
+	var mainModel  = new MainModel(player);
 	var queueModel = new QueueModel(timer, 8);
 	var saveModel  = new SaveModel();
 	var storeModel = new StoreModel();
@@ -43,9 +46,10 @@ function Main(dialogs : IDialog[])
 	var storePresenter = new StorePresenter(mainModel, storeModel, storeView);
 
 	var persistentItems = <[string, IPersistent][]>
-		[ [ "main",  mainModel  ]
-		, [ "queue", queueModel ]
-		, [ "timer", timer      ]
+		[ [ "main",   mainModel  ]
+		, [ "queue",  queueModel ]
+		, [ "player", player     ]
+		, [ "timer",  timer      ]
 		];
 	var persistentState = new PersistentState(persistentItems, timer);
 
