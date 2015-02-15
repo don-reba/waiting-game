@@ -12,11 +12,9 @@ class MainPresenter
 		mainModel.ViewChanged.Add(this.OnViewChanged.bind(this));
 
 		mainView.ResetRequested.Add(this.OnResetRequested.bind(this));
-	}
 
-	Start() : void
-	{
-		this.mainModel.Reset();
+		this.mainView.SetMoney(this.mainModel.GetMoney());
+		this.mainView.SetClientView(this.mainModel.GetView());
 	}
 
 	private OnMoneyChanged() : void

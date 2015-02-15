@@ -17,7 +17,5 @@ interface IQueueModel
 
 	GetSpeaker() : string;
 
-	Reset() : void;
-
 	SetDialog(speaker : string, dialogID : number) : void;
 }

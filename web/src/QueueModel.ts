@@ -69,7 +69,11 @@ class QueueModel implements IQueueModel
 			, { name : "Яна"      }
 			];
 
-		this.Reset();
+		this.ticket = 0;
+
+		this.queue = [];
+		for (var i = 0; i != this.maxLength; ++i)
+			this.AddStockPosition();
 	}
 
 	// IQueueModel implementation
@@ -117,15 +121,6 @@ class QueueModel implements IQueueModel
 	GetSpeaker() : string
 	{
 		return this.speaker;
-	}
-
-	Reset() : void
-	{
-		this.ticket = 0;
-
-		this.queue = [];
-		for (var i = 0; i != this.maxLength; ++i)
-			this.AddStockPosition();
 	}
 
 	SetDialog(speaker : string, dialogID : number) : void

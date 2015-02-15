@@ -21,8 +21,6 @@ class QueuePresenter
 		queueView.PersonClicked.Add(this.OnPersonClicked.bind(this));
 		queueView.ReplyClicked.Add(this.OnReplyClicked.bind(this));
 		queueView.Shown.Add(this.OnQueueShown.bind(this));
-
-		mainModel.ResetActivated.Add(this.OnResetActivated.bind(this));
 	}
 
 	private OnCurrentTicketChanged() : void
@@ -78,10 +76,5 @@ class QueuePresenter
 		var reply    = this.queueView.GetSelectedReply();
 		var dialogID = this.dialogManager.GetRefDialogID(this.queueModel.GetDialogID(), reply);
 		this.queueModel.SetDialog(this.queueView.GetSpeaker(), dialogID);
-	}
-
-	private OnResetActivated() : void
-	{
-		this.queueModel.Reset();
 	}
 }

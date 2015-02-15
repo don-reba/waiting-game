@@ -3,27 +3,24 @@
 
 class MainModelState
 {
-	money : number;
-	view  : ClientViewType;
+	view : ClientViewType;
 }
 
 class MainModel implements IMainModel, IPersistent
 {
-	private view  : ClientViewType;
+	private view = ClientViewType.Home;
 
 	constructor
 		( private player : Player
 		)
 	{
 		player.MoneyChanged.Add(this.OnMoneyChanged.bind(this));
-		this.Reset();
 	}
 
 	// IMainModel implementation
 
-	MoneyChanged   = new Signal();
-	ResetActivated = new Signal();
-	ViewChanged    = new Signal();
+	MoneyChanged = new Signal();
+	ViewChanged  = new Signal();
 
 	GetView() : ClientViewType
 	{
@@ -37,10 +34,8 @@ class MainModel implements IMainModel, IPersistent
 
 	Reset() : void
 	{
-		this.view  = ClientViewType.Home;
-		this.ResetActivated.Call();
-		this.MoneyChanged.Call();
-		this.ViewChanged.Call();
+		localStorage.clear();
+		location.reload();
 	}
 
 	SetView(view : ClientViewType) : void
@@ -54,7 +49,7 @@ class MainModel implements IMainModel, IPersistent
 	FromPersistentString(str : string) : void
 	{
 		var state = <MainModelState>JSON.parse(str);
-		this.view  = state.view;
+		this.view = state.view;
 		this.ViewChanged.Call();
 	}
 

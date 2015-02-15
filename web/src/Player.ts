@@ -15,21 +15,13 @@ class Player implements IPersistent
 	MoneyChanged     = new Signal();
 	RateChanged      = new Signal();
 
-	moustache : Moustache;
-	money     : number;
-	rate      : number;
+	moustache = Moustache.None;
+	money     = 0;
+	rate      = 1;
 
 	constructor(timer : Timer)
 	{
 		timer.AddEvent(this.OnPay.bind(this), 20);
-		this.Reset();
-	}
-
-	Reset() : void
-	{
-		this.moustache = Moustache.None;
-		this.money     = 0;
-		this.rate      = 1;
 	}
 
 	// IPersistent implementation

@@ -2,9 +2,8 @@
 
 interface IMainModel
 {
-	MoneyChanged   : Signal;
-	ResetActivated : Signal;
-	ViewChanged    : Signal;
+	MoneyChanged : Signal;
+	ViewChanged  : Signal;
 
 	GetView() : ClientViewType;
 

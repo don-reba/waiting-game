@@ -53,10 +53,9 @@ function Main(dialogs : IDialog[])
 		];
 	var persistentState = new PersistentState(persistentItems, timer);
 
-	mainPresenter.Start();
-	timer.Start(100);
-
 	persistentState.Load();
+
+	timer.Start(100);
 }
 
 $.getJSON("js/dialogs.json", function(dialogs : IDialog[], textStatus: string, jqXHR: JQueryXHR)
