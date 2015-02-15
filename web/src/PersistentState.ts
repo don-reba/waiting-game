@@ -8,7 +8,7 @@ class PersistentState
 
 	constructor(private items : [string, IPersistent][], timer : Timer)
 	{
-		timer.AddEvent(this.Save.bind(this), 50);
+		timer.AddEvent(this.Save.bind(this), 20);
 	}
 
 	// get the state string from each item and store it in local storage

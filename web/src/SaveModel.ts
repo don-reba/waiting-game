@@ -25,5 +25,6 @@ class SaveModel implements ISaveModel
 	{
 		for (var i = 0; i != data.length; ++i)
 			localStorage[data[i][0]] = data[i][1];
+		location.reload();
 	}
 }

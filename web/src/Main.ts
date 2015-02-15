@@ -55,6 +55,7 @@ function Main(dialogs : IDialog[])
 
 	persistentState.Load();
 
+	mainPresenter.LightsOn();
 	timer.Start(100);
 }
 

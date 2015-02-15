@@ -12,7 +12,10 @@ class MainPresenter
 		mainModel.ViewChanged.Add(this.OnViewChanged.bind(this));
 
 		mainView.ResetRequested.Add(this.OnResetRequested.bind(this));
+	}
 
+	LightsOn()
+	{
 		this.mainView.SetMoney(this.mainModel.GetMoney());
 		this.mainView.SetClientView(this.mainModel.GetView());
 	}
