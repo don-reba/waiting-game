@@ -1,3 +1,11 @@
+/* @font-face kit by Fonts2u (http://www.fonts2u.com) */
+@font-face {
+	font-family : "Mustache";
+	src         : url("../fonts/mustache.ttf");
+	font-weight : normal;
+	font-style  : normal;
+}
+
 html {
 	height : 100%;
 }
@@ -36,23 +44,25 @@ button {
 	height           : 30em;
 }
 #header-left {
-	width : 0%;
-}
-#header-center {
-	width : 100%;
+	text-align : left;
+	width      : 100%;
 }
 #header-right {
 	width : 0%;
 }
 #money-total {
-	text-align  : left;
+	display     : inline;
 	white-space : nowrap;
 }
 #moustache {
-	font-family : "Lucida Console", Monaco, monospace;
-	font-size   : 1.1em;
-	white-space : pre;
-}
+	display        : inline;
+	font-family    : Mustache;
+	font-size      : 1.5em;
+	overflow       : hidden;
+	padding-right  : 0.5em;
+	vertical-align : text-bottom;
+	white-space    : pre;
+	}
 #location {
 	background-color : #D0D0D0;
 	height           : 100%;

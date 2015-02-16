@@ -305,13 +305,13 @@ var MainView = (function () {
         var text = "";
         switch (moustache) {
             case 1 /* Pencil */:
-                text = "( ื-- ื)";
+                text = "u";
                 break;
             case 2 /* French */:
-                text = "( ื~~ ื)";
+                text = "r";
                 break;
             case 3 /* Handlebar */:
-                text = "( ื┏‸┓ ื)";
+                text = "a";
                 break;
         }
         $("#moustache").text(text);

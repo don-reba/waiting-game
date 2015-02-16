@@ -46,9 +46,9 @@ class MainView implements IMainView
 		var text = "";
 		switch (moustache)
 		{
-			case Moustache.Pencil:    text = "( ื-- ื)";  break;
-			case Moustache.French:    text = "( ื~~ ื)";  break;
-			case Moustache.Handlebar: text = "( ื┏‸┓ ื)"; break;
+			case Moustache.Pencil:    text = "u";  break;
+			case Moustache.French:    text = "r";  break;
+			case Moustache.Handlebar: text = "a"; break;
 		}
 		$("#moustache").text(text);
 	}
