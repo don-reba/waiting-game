@@ -8,5 +8,5 @@ interface IStoreView
 
 	GetSelectedItem() : Item;
 
-	SetItems(items : Item[]) : void;
+	SetItems(items : [Item, boolean][]) : void;
 }

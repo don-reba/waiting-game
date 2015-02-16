@@ -34,6 +34,7 @@ class StorePresenter
 
 	private OnShown()
 	{
+		this.storeModel.UpdateStock();
 		this.storeView.SetItems(this.storeModel.GetItems());
 	}
 }

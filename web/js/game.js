@@ -186,6 +186,7 @@ var Item;
     Item.GetInfo = GetInfo;
 })(Item || (Item = {}));
 /// <reference path="Item.ts" />
+/// <reference path="Item.ts" />
 /// <reference path="IMainModel.ts"  />
 /// <reference path="IPersistent.ts" />
 var MainModelState = (function () {
@@ -225,7 +226,6 @@ var MainModel = (function () {
     MainModel.prototype.FromPersistentString = function (str) {
         var state = JSON.parse(str);
         this.view = state.view;
-        this.ViewChanged.Call();
     };
     MainModel.prototype.ToPersistentString = function () {
         return JSON.stringify({ view: this.view });
@@ -544,10 +544,6 @@ var QueueModel = (function () {
         this.ticket = state.ticket;
         this.dialogID = state.dialogID;
         this.speaker = state.speaker;
-        this.PlayerTicketChanged.Call();
-        this.CurrentTicketChanged.Call();
-        this.PeopleChanged.Call();
-        this.DialogChanged.Call();
     };
     QueueModel.prototype.ToPersistentString = function () {
         var state = { queue: this.queue, player: this.player, ticket: this.ticket, dialogID: this.dialogID, speaker: this.speaker };
@@ -832,13 +828,20 @@ var SaveView = (function () {
 var StoreModel = (function () {
     function StoreModel(player) {
         this.player = player;
+        // IStoreModel implementation
         this.Purchased = new Signal();
+        player.MoneyChanged.Add(this.OnMoneyChanged.bind(this));
     }
     StoreModel.prototype.GetItems = function () {
+        var money = this.player.GetMoney();
         var items = [];
         var moustache = this.player.GetMoustache();
-        if (moustache < 1 /* Pencil */)
-            items.push(0 /* PencilMoustache */);
+        if (moustache < 1 /* Pencil */) {
+            var item = 0 /* PencilMoustache */;
+            var price = Item.GetInfo(item).price;
+            var enabled = price <= money;
+            items.push([item, enabled]);
+        }
         return items;
     };
     StoreModel.prototype.Purchase = function (item) {
@@ -850,11 +853,16 @@ var StoreModel = (function () {
         this.ApplyItem(item);
         this.Purchased.Call();
     };
+    StoreModel.prototype.UpdateStock = function () {
+    };
+    // private implementation
     StoreModel.prototype.ApplyItem = function (item) {
         switch (item) {
             case 0 /* PencilMoustache */:
                 this.player.SetMoustache(1 /* Pencil */);
         }
+    };
+    StoreModel.prototype.OnMoneyChanged = function () {
     };
     return StoreModel;
 })();
@@ -881,6 +889,7 @@ var StorePresenter = (function () {
         this.storeView.SetItems(this.storeModel.GetItems());
     };
     StorePresenter.prototype.OnShown = function () {
+        this.storeModel.UpdateStock();
         this.storeView.SetItems(this.storeModel.GetItems());
     };
     return StorePresenter;
@@ -920,9 +929,16 @@ var StoreView = (function () {
                 this.selectedItem = e.data;
                 this.ItemSelected.Call();
             };
-            var info = Item.GetInfo(items[i]);
+            var info = Item.GetInfo(items[i][0]);
+            var enabled = items[i][1];
             var button = $("<td>" + info.name + "<br/>" + info.description + "<br/>" + info.price + " ₽</td>");
-            button.click(items[i], OnClick.bind(this));
+            if (enabled) {
+                button.click(items[i][0], OnClick.bind(this));
+                button.addClass("enabled");
+            }
+            else {
+                button.addClass("disabled");
+            }
             buttons.push(button);
         }
         var row = $("<tr>");

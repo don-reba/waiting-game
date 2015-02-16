@@ -4,17 +4,32 @@
 
 class StoreModel implements IStoreModel
 {
+	private stock : Item;
+
+	constructor(private player : Player)
+	{
+		player.MoneyChanged.Add(this.OnMoneyChanged.bind(this));
+	}
+
+	// IStoreModel implementation
+
 	Purchased = new Signal();
 
-	constructor(private player : Player) { }
-
-	GetItems() : Item[]
+	GetItems() : [Item, boolean][]
 	{
+		var money = this.player.GetMoney();
+
 		var items = [];
 
 		var moustache = this.player.GetMoustache();
 		if (moustache < Moustache.Pencil)
-			items.push(Item.PencilMoustache);
+		{
+			var item    = Item.PencilMoustache;
+			var price   = Item.GetInfo(item).price;
+			var enabled = price <= money;
+
+			items.push([item, enabled]);
+		}
 
 		return items;
 	}
@@ -30,6 +45,12 @@ class StoreModel implements IStoreModel
 		this.Purchased.Call();
 	}
 
+	UpdateStock() : void
+	{
+	}
+
+	// private implementation
+
 	private ApplyItem(item : Item)
 	{
 		switch (item)
@@ -37,5 +58,9 @@ class StoreModel implements IStoreModel
 			case Item.PencilMoustache:
 				this.player.SetMoustache(Moustache.Pencil);
 		}
+	}
+
+	private OnMoneyChanged() : void
+	{
 	}
 }

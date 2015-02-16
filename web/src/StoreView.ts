@@ -40,7 +40,7 @@ class StoreView implements IStoreView, IClientView
 		this.Shown.Call();
 	}
 
-	SetItems(items : Item[]) : void
+	SetItems(items : [Item, boolean][]) : void
 	{
 		var buttons = [];
 		for (var i = 0; i != items.length; ++i)
@@ -50,9 +50,21 @@ class StoreView implements IStoreView, IClientView
 				this.selectedItem = e.data;
 				this.ItemSelected.Call();
 			}
-			var info = Item.GetInfo(items[i]);
+			var info    = Item.GetInfo(items[i][0]);
+			var enabled = items[i][1];
+
 			var button = $("<td>" + info.name + "<br/>" + info.description + "<br/>" +  info.price + " ₽</td>");
-			button.click(items[i], OnClick.bind(this));
+
+			if (enabled)
+			{
+				button.click(items[i][0], OnClick.bind(this));
+				button.addClass("enabled");
+			}
+			else
+			{
+				button.addClass("disabled");
+			}
+
 			buttons.push(button);
 		}
 

@@ -57,7 +57,6 @@ class MainModel implements IMainModel, IPersistent
 	{
 		var state = <MainModelState>JSON.parse(str);
 		this.view = state.view;
-		this.ViewChanged.Call();
 	}
 
 	ToPersistentString() : string

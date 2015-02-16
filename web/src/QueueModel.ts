@@ -140,10 +140,6 @@ class QueueModel implements IQueueModel
 		this.ticket   = state.ticket;
 		this.dialogID = state.dialogID;
 		this.speaker  = state.speaker;
-		this.PlayerTicketChanged.Call();
-		this.CurrentTicketChanged.Call();
-		this.PeopleChanged.Call();
-		this.DialogChanged.Call();
 	}
 
 	ToPersistentString() : string

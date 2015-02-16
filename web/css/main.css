@@ -167,6 +167,9 @@ button {
 	cursor  : pointer;
 	padding : 0.5em;
 }
-#store-items td:hover {
+#store-items td.disabled {
+	color : #606060;
+}
+#store-items td.enabled:hover {
 	background-color : #E0E0E0;
 }
