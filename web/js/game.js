@@ -1,75 +1,3 @@
-/// <reference path="IApartmentModel.ts" />
-var ApartmentModel = (function () {
-    function ApartmentModel() {
-    }
-    return ApartmentModel;
-})();
-var Signal = (function () {
-    function Signal() {
-        this.listeners = [];
-    }
-    Signal.prototype.Add = function (listener) {
-        this.listeners.push(listener);
-    };
-    Signal.prototype.Call = function () {
-        for (var i = 0, length = this.listeners.length; i != length; ++i)
-            this.listeners[i]();
-    };
-    return Signal;
-})();
-/// <reference path="Signal.ts" />
-/// <reference path="IApartmentModel.ts" />
-/// <reference path="IApartmentView.ts"  />
-/// <reference path="IMainModel.ts"      />
-var ApartmentPresenter = (function () {
-    function ApartmentPresenter(apartmentModel, mainModel, apartmentView) {
-        this.apartmentModel = apartmentModel;
-        this.mainModel = mainModel;
-        this.apartmentView = apartmentView;
-        apartmentView.GoToQueue.Add(this.OnGoToQueue.bind(this));
-        apartmentView.GoToStore.Add(this.OnGoToStore.bind(this));
-    }
-    ApartmentPresenter.prototype.OnGoToQueue = function () {
-        this.mainModel.SetView(1 /* Queue */);
-    };
-    ApartmentPresenter.prototype.OnGoToStore = function () {
-        this.mainModel.SetView(2 /* Store */);
-    };
-    return ApartmentPresenter;
-})();
-/// <reference path="../dts/jquery.d.ts" />
-var ClientViewType;
-(function (ClientViewType) {
-    ClientViewType[ClientViewType["Apartment"] = 0] = "Apartment";
-    ClientViewType[ClientViewType["Queue"] = 1] = "Queue";
-    ClientViewType[ClientViewType["Store"] = 2] = "Store";
-})(ClientViewType || (ClientViewType = {}));
-/// <reference path="IApartmentView.ts" />
-/// <reference path="IClientView.ts" />
-var ApartmentView = (function () {
-    function ApartmentView() {
-        // IApartmentView implementation
-        this.GoToQueue = new Signal();
-        this.GoToStore = new Signal();
-    }
-    // IClientView implementation
-    ApartmentView.prototype.GetType = function () {
-        return 0 /* Apartment */;
-    };
-    ApartmentView.prototype.Hide = function () {
-    };
-    ApartmentView.prototype.Show = function (e) {
-        var _this = this;
-        e.append("<table id='apartment'><tr><td id='apartment-header'><button id='goQueue'>в очередь</button><button id='goStore'>в магазин</button></td></tr><tr><td id='apartment-view'>Вы у себя дома…</td></tr></table>");
-        $("#goQueue").click(function () {
-            _this.GoToQueue.Call();
-        });
-        $("#goStore").click(function () {
-            _this.GoToStore.Call();
-        });
-    };
-    return ApartmentView;
-})();
 // Copyright 2014 Simon Lydell
 // X11 (“MIT”) Licensed. (See LICENSE.)
 var CompactJson;
@@ -164,39 +92,130 @@ var DialogManager = (function () {
     };
     return DialogManager;
 })();
+/// <reference path="IHomeModel.ts" />
+var HomeModel = (function () {
+    function HomeModel() {
+    }
+    return HomeModel;
+})();
+var Signal = (function () {
+    function Signal() {
+        this.listeners = [];
+    }
+    Signal.prototype.Add = function (listener) {
+        this.listeners.push(listener);
+    };
+    Signal.prototype.Call = function () {
+        for (var i = 0, length = this.listeners.length; i != length; ++i)
+            this.listeners[i]();
+    };
+    return Signal;
+})();
+/// <reference path="Signal.ts" />
+/// <reference path="IHomeModel.ts" />
+/// <reference path="IHomeView.ts"  />
+/// <reference path="IMainModel.ts"      />
+var HomePresenter = (function () {
+    function HomePresenter(homeModel, mainModel, homeView) {
+        this.homeModel = homeModel;
+        this.mainModel = mainModel;
+        this.homeView = homeView;
+        homeView.GoToQueue.Add(this.OnGoToQueue.bind(this));
+        homeView.GoToStore.Add(this.OnGoToStore.bind(this));
+    }
+    HomePresenter.prototype.OnGoToQueue = function () {
+        this.mainModel.SetView(1 /* Queue */);
+    };
+    HomePresenter.prototype.OnGoToStore = function () {
+        this.mainModel.SetView(2 /* Store */);
+    };
+    return HomePresenter;
+})();
+/// <reference path="../dts/jquery.d.ts" />
+var ClientViewType;
+(function (ClientViewType) {
+    ClientViewType[ClientViewType["Home"] = 0] = "Home";
+    ClientViewType[ClientViewType["Queue"] = 1] = "Queue";
+    ClientViewType[ClientViewType["Store"] = 2] = "Store";
+})(ClientViewType || (ClientViewType = {}));
+/// <reference path="IHomeView.ts" />
+/// <reference path="IClientView.ts" />
+var HomeView = (function () {
+    function HomeView() {
+        // IHomeView implementation
+        this.GoToQueue = new Signal();
+        this.GoToStore = new Signal();
+    }
+    // IClientView implementation
+    HomeView.prototype.GetType = function () {
+        return 0 /* Home */;
+    };
+    HomeView.prototype.Hide = function () {
+    };
+    HomeView.prototype.Show = function (e) {
+        var _this = this;
+        e.html("<table id='home'><tr><td id='home-header'><button id='goQueue'>в очередь</button><button id='goStore'>в магазин</button></td></tr><tr><td id='home-view'>Вы у себя дома…</td></tr></table>");
+        $("#goQueue").click(function () {
+            _this.GoToQueue.Call();
+        });
+        $("#goStore").click(function () {
+            _this.GoToStore.Call();
+        });
+    };
+    return HomeView;
+})();
 /// <reference path="IClientView.ts" />
 /// <reference path="Signal.ts" />
+var Item;
+(function (Item) {
+    Item[Item["PencilMoustache"] = 0] = "PencilMoustache";
+})(Item || (Item = {}));
+var ItemInfo = (function () {
+    function ItemInfo() {
+    }
+    return ItemInfo;
+})();
+var Item;
+(function (Item) {
+    var items = [
+        { name: "Усы «Карандаш»", description: "Мужественность со скидкой.", price: 1000 }
+    ];
+    function GetInfo(item) {
+        return items[item];
+    }
+    Item.GetInfo = GetInfo;
+})(Item || (Item = {}));
+/// <reference path="Item.ts" />
 /// <reference path="IMainModel.ts"  />
 /// <reference path="IPersistent.ts" />
 var MainModelState = (function () {
-    function MainModelState(money, view) {
-        this.money = money;
-        this.view = view;
+    function MainModelState() {
     }
     return MainModelState;
 })();
 var MainModel = (function () {
-    function MainModel(timer) {
-        this.timer = timer;
+    function MainModel(player) {
+        this.player = player;
+        this.view = 0 /* Home */;
         // IMainModel implementation
         this.MoneyChanged = new Signal();
-        this.ResetActivated = new Signal();
+        this.MoustacheChanged = new Signal();
         this.ViewChanged = new Signal();
-        timer.AddEvent(this.OnPay.bind(this), 20);
-        this.Reset();
+        player.MoneyChanged.Add(this.OnMoneyChanged.bind(this));
+        player.MoustacheChanged.Add(this.OnMoustacheChanged.bind(this));
     }
     MainModel.prototype.GetView = function () {
         return this.view;
     };
     MainModel.prototype.GetMoney = function () {
-        return this.money;
+        return this.player.GetMoney();
+    };
+    MainModel.prototype.GetMoustache = function () {
+        return this.player.GetMoustache();
     };
     MainModel.prototype.Reset = function () {
-        this.money = 0;
-        this.view = 0 /* Apartment */;
-        this.ResetActivated.Call();
-        this.MoneyChanged.Call();
-        this.ViewChanged.Call();
+        localStorage.clear();
+        location.reload();
     };
     MainModel.prototype.SetView = function (view) {
         this.view = view;
@@ -205,19 +224,18 @@ var MainModel = (function () {
     // IPersistent implementation
     MainModel.prototype.FromPersistentString = function (str) {
         var state = JSON.parse(str);
-        this.money = state.money;
         this.view = state.view;
         this.ViewChanged.Call();
-        this.MoneyChanged.Call();
     };
     MainModel.prototype.ToPersistentString = function () {
-        var state = new MainModelState(this.money, this.view);
-        return JSON.stringify(state);
+        return JSON.stringify({ view: this.view });
     };
     // private implementation
-    MainModel.prototype.OnPay = function () {
-        ++this.money;
+    MainModel.prototype.OnMoneyChanged = function () {
         this.MoneyChanged.Call();
+    };
+    MainModel.prototype.OnMoustacheChanged = function () {
+        this.MoustacheChanged.Call();
     };
     return MainModel;
 })();
@@ -228,14 +246,20 @@ var MainPresenter = (function () {
         this.mainModel = mainModel;
         this.mainView = mainView;
         mainModel.MoneyChanged.Add(this.OnMoneyChanged.bind(this));
+        mainModel.MoustacheChanged.Add(this.OnMoustacheChanged.bind(this));
         mainModel.ViewChanged.Add(this.OnViewChanged.bind(this));
         mainView.ResetRequested.Add(this.OnResetRequested.bind(this));
     }
-    MainPresenter.prototype.Start = function () {
-        this.mainModel.Reset();
+    MainPresenter.prototype.LightsCameraAction = function () {
+        this.mainView.SetMoney(this.mainModel.GetMoney());
+        this.mainView.SetMoustache(this.mainModel.GetMoustache());
+        this.mainView.SetClientView(this.mainModel.GetView());
     };
     MainPresenter.prototype.OnMoneyChanged = function () {
         this.mainView.SetMoney(this.mainModel.GetMoney());
+    };
+    MainPresenter.prototype.OnMoustacheChanged = function () {
+        this.mainView.SetMoustache(this.mainModel.GetMoustache());
     };
     MainPresenter.prototype.OnResetRequested = function () {
         this.mainModel.Reset();
@@ -276,6 +300,21 @@ var MainView = (function () {
     };
     MainView.prototype.SetMoney = function (money) {
         $("#money-total").text(Math.floor(money) + " ₽");
+    };
+    MainView.prototype.SetMoustache = function (moustache) {
+        var text = "";
+        switch (moustache) {
+            case 1 /* Pencil */:
+                text = "( ื-- ื)";
+                break;
+            case 2 /* French */:
+                text = "( ื~~ ื)";
+                break;
+            case 3 /* Handlebar */:
+                text = "( ื┏‸┓ ื)";
+                break;
+        }
+        $("#moustache").text(text);
     };
     return MainView;
 })();
@@ -331,8 +370,8 @@ var Timer = (function () {
 var PersistentState = (function () {
     function PersistentState(items, timer) {
         this.items = items;
-        this.version = "1";
-        timer.AddEvent(this.Save.bind(this), 50);
+        this.version = "3";
+        timer.AddEvent(this.Save.bind(this), 20);
     }
     // get the state string from each item and store it in local storage
     PersistentState.prototype.Save = function () {
@@ -370,30 +409,77 @@ var PersistentState = (function () {
     };
     return PersistentState;
 })();
+var Moustache;
+(function (Moustache) {
+    Moustache[Moustache["None"] = 0] = "None";
+    Moustache[Moustache["Pencil"] = 1] = "Pencil";
+    Moustache[Moustache["French"] = 2] = "French";
+    Moustache[Moustache["Handlebar"] = 3] = "Handlebar";
+})(Moustache || (Moustache = {}));
+/// <reference path="IPersistent.ts" />
+/// <reference path="Moustache.ts"   />
+/// <reference path="Signal.ts"      />
+var PlayerState = (function () {
+    function PlayerState() {
+    }
+    return PlayerState;
+})();
+var Player = (function () {
+    function Player(timer) {
+        this.moustache = 0 /* None */;
+        this.money = 0;
+        this.rate = 1;
+        this.MoustacheChanged = new Signal();
+        this.MoneyChanged = new Signal();
+        this.RateChanged = new Signal();
+        timer.AddEvent(this.OnPay.bind(this), 20);
+    }
+    Player.prototype.GetMoney = function () {
+        return this.money;
+    };
+    Player.prototype.GetMoustache = function () {
+        return this.moustache;
+    };
+    Player.prototype.SetMoney = function (money) {
+        this.money = money;
+        this.MoneyChanged.Call();
+    };
+    Player.prototype.SetMoustache = function (moustache) {
+        this.moustache = moustache;
+        this.MoustacheChanged.Call();
+    };
+    // IPersistent implementation
+    Player.prototype.FromPersistentString = function (str) {
+        var state = JSON.parse(str);
+        this.moustache = state.moustache;
+        this.money = state.money;
+        this.rate = state.rate;
+    };
+    Player.prototype.ToPersistentString = function () {
+        var state = { moustache: this.moustache, money: this.money, rate: this.rate };
+        return JSON.stringify(state);
+    };
+    // private implementation
+    Player.prototype.OnPay = function () {
+        this.money += this.rate;
+        this.MoneyChanged.Call();
+    };
+    return Player;
+})();
 /// <reference path="IQueueModel.ts" />
 /// <reference path="IPersistent.ts" />
 var Character = (function () {
-    function Character(name) {
-        this.name = name;
+    function Character() {
     }
     return Character;
 })();
 var QueuePosition = (function () {
-    function QueuePosition(character, remaining, ticket) {
-        this.character = character;
-        this.remaining = remaining;
-        this.ticket = ticket;
+    function QueuePosition() {
     }
     return QueuePosition;
 })();
 var QueueModelState = (function () {
-    function QueueModelState(queue, stock, player, ticket, dialogID, speaker) {
-        this.queue = queue;
-        this.stock = stock;
-        this.player = player;
-        this.ticket = ticket;
-        this.dialogID = dialogID;
-        this.speaker = speaker;
+    function QueueModelState() {
     }
     return QueueModelState;
 })();
@@ -408,7 +494,11 @@ var QueueModel = (function () {
         this.PlayerTicketChanged = new Signal();
         timer.AddEvent(this.OnAdvance.bind(this), 20);
         timer.AddEvent(this.OnKnock.bind(this), 19);
-        this.Reset();
+        this.stock = [{ name: "Аня" }, { name: "Борис" }, { name: "Вера" }, { name: "Григорий" }, { name: "Даша" }, { name: "Елена" }, { name: "Жора" }, { name: "Зоя" }, { name: "Инна" }, { name: "Костик" }, { name: "Лёша" }, { name: "Маша" }, { name: "Настя" }, { name: "Оля" }, { name: "Пётр" }, { name: "Родриг" }, { name: "Света" }, { name: "Тамара" }, { name: "Усач" }, { name: "Фёдор" }, { name: "Хосе" }, { name: "Цезарь" }, { name: "Чарли" }, { name: "Шарик" }, { name: "Элла" }, { name: "Юра" }, { name: "Яна" }];
+        this.ticket = 0;
+        this.queue = [];
+        for (var i = 0; i != this.maxLength; ++i)
+            this.AddStockPosition();
     }
     QueueModel.prototype.EnterQueue = function () {
         if (this.queue.every(function (p) {
@@ -441,13 +531,6 @@ var QueueModel = (function () {
     QueueModel.prototype.GetSpeaker = function () {
         return this.speaker;
     };
-    QueueModel.prototype.Reset = function () {
-        this.stock = [new Character("Аня"), new Character("Борис"), new Character("Вера"), new Character("Григорий"), new Character("Даша"), new Character("Елена"), new Character("Жора"), new Character("Зоя"), new Character("Инна"), new Character("Костик"), new Character("Лёша"), new Character("Маша"), new Character("Настя"), new Character("Оля"), new Character("Пётр"), new Character("Родриг"), new Character("Света"), new Character("Тамара"), new Character("Усач"), new Character("Фёдор"), new Character("Хосе"), new Character("Цезарь"), new Character("Чарли"), new Character("Шарик"), new Character("Элла"), new Character("Юра"), new Character("Яна")];
-        this.ticket = 0;
-        this.queue = [];
-        for (var i = 0; i != this.maxLength; ++i)
-            this.AddStockPosition();
-    };
     QueueModel.prototype.SetDialog = function (speaker, dialogID) {
         this.speaker = speaker;
         this.dialogID = dialogID;
@@ -457,7 +540,6 @@ var QueueModel = (function () {
     QueueModel.prototype.FromPersistentString = function (str) {
         var state = JSON.parse(str);
         this.queue = state.queue;
-        this.stock = state.stock;
         this.player = state.player;
         this.ticket = state.ticket;
         this.dialogID = state.dialogID;
@@ -468,23 +550,31 @@ var QueueModel = (function () {
         this.DialogChanged.Call();
     };
     QueueModel.prototype.ToPersistentString = function () {
-        var state = new QueueModelState(this.queue, this.stock, this.player, this.ticket, this.dialogID, this.speaker);
+        var state = { queue: this.queue, player: this.player, ticket: this.ticket, dialogID: this.dialogID, speaker: this.speaker };
         return JSON.stringify(state);
     };
     // private implementation
     QueueModel.prototype.AddStockPosition = function () {
-        var i = Math.floor(Math.random() * this.stock.length);
-        var delay = Math.floor(2 + Math.random() * 8);
+        var i;
+        do {
+            i = Math.floor(Math.random() * this.stock.length);
+        } while (this.InQueue(this.stock[i]));
+        var remaining = Math.floor(2 + Math.random() * 8);
         var ticket = String(this.ticket++);
-        var p = new QueuePosition(this.stock[i], delay, ticket);
+        var p = { character: this.stock[i], remaining: remaining, ticket: ticket };
         this.stock.splice(i, 1);
         this.queue.push(p);
     };
     QueueModel.prototype.AddPlayerPosition = function () {
-        var delay = Math.floor(2 + Math.random() * 8);
+        var remaining = Math.floor(2 + Math.random() * 8);
         var ticket = String(this.ticket++);
-        var p = new QueuePosition(null, delay, ticket);
+        var p = { character: null, remaining: remaining, ticket: ticket };
         this.queue.push(p);
+    };
+    QueueModel.prototype.InQueue = function (c) {
+        return this.queue.some(function (p) {
+            return p.character && p.character.name === c.name;
+        });
     };
     QueueModel.prototype.OnAdvance = function () {
         if (this.queue.length == 0)
@@ -525,11 +615,10 @@ var QueuePresenter = (function () {
         queueModel.DialogChanged.Add(this.OnDialogChanged.bind(this));
         queueModel.PeopleChanged.Add(this.OnPeopleChanged.bind(this));
         queueModel.PlayerTicketChanged.Add(this.OnPlayerTicketChanged.bind(this));
-        queueView.GoToApartment.Add(this.OnGoToApartment.bind(this));
+        queueView.GoToHome.Add(this.OnGoToHome.bind(this));
         queueView.PersonClicked.Add(this.OnPersonClicked.bind(this));
         queueView.ReplyClicked.Add(this.OnReplyClicked.bind(this));
         queueView.Shown.Add(this.OnQueueShown.bind(this));
-        mainModel.ResetActivated.Add(this.OnResetActivated.bind(this));
     }
     QueuePresenter.prototype.OnCurrentTicketChanged = function () {
         var ticket = this.queueModel.GetCurrentTicket();
@@ -541,8 +630,8 @@ var QueuePresenter = (function () {
     QueuePresenter.prototype.OnDialogChanged = function () {
         this.queueView.SetDialog(this.queueModel.GetSpeaker(), this.dialogManager.GetDialog(this.queueModel.GetDialogID()));
     };
-    QueuePresenter.prototype.OnGoToApartment = function () {
-        this.mainModel.SetView(0 /* Apartment */);
+    QueuePresenter.prototype.OnGoToHome = function () {
+        this.mainModel.SetView(0 /* Home */);
     };
     QueuePresenter.prototype.OnPeopleChanged = function () {
         this.queueView.SetPeopleNames(this.queueModel.GetPeopleNames());
@@ -569,9 +658,6 @@ var QueuePresenter = (function () {
         var dialogID = this.dialogManager.GetRefDialogID(this.queueModel.GetDialogID(), reply);
         this.queueModel.SetDialog(this.queueView.GetSpeaker(), dialogID);
     };
-    QueuePresenter.prototype.OnResetActivated = function () {
-        this.queueModel.Reset();
-    };
     return QueuePresenter;
 })();
 /// <reference path="IQueueView.ts" />
@@ -581,7 +667,7 @@ var QueueView = (function () {
         this.selectedPerson = null;
         this.selectedReply = -1;
         // IQueueView implementation
-        this.GoToApartment = new Signal();
+        this.GoToHome = new Signal();
         this.PersonClicked = new Signal();
         this.ReplyClicked = new Signal();
         this.Shown = new Signal();
@@ -645,9 +731,9 @@ var QueueView = (function () {
     };
     QueueView.prototype.Show = function (e) {
         var _this = this;
-        e.append("<table id='queue'><tr><td><button id='goApartment'>вернуться домой</button></td></tr><tr><td id='player' /></tr><tr><td id='current' /></tr><tr><td id='people' /></tr><tr><td id='body'><div id='dialog' /></td></tr></table>");
-        $("#goApartment").click(function () {
-            _this.GoToApartment.Call();
+        e.html("<table id='queue'><tr><td><button id='goHome'>вернуться домой</button></td></tr><tr><td id='player' /></tr><tr><td id='current' /></tr><tr><td id='people' /></tr><tr><td id='body'><div id='dialog' /></td></tr></table>");
+        $("#goHome").click(function () {
+            _this.GoToHome.Call();
         });
         this.Shown.Call();
     };
@@ -673,6 +759,7 @@ var SaveModel = (function () {
     SaveModel.prototype.SetSaveData = function (data) {
         for (var i = 0; i != data.length; ++i)
             localStorage[data[i][0]] = data[i][1];
+        location.reload();
     };
     return SaveModel;
 })();
@@ -740,9 +827,35 @@ var SaveView = (function () {
     return SaveView;
 })();
 /// <reference path="IStoreModel.ts" />
+/// <reference path="Moustache.ts"   />
+/// <reference path="Player.ts"      />
 var StoreModel = (function () {
-    function StoreModel() {
+    function StoreModel(player) {
+        this.player = player;
+        this.Purchased = new Signal();
     }
+    StoreModel.prototype.GetItems = function () {
+        var items = [];
+        var moustache = this.player.GetMoustache();
+        if (moustache < 1 /* Pencil */)
+            items.push(0 /* PencilMoustache */);
+        return items;
+    };
+    StoreModel.prototype.Purchase = function (item) {
+        var price = Item.GetInfo(item).price;
+        var money = this.player.GetMoney();
+        if (money < price)
+            return;
+        this.player.SetMoney(money - price);
+        this.ApplyItem(item);
+        this.Purchased.Call();
+    };
+    StoreModel.prototype.ApplyItem = function (item) {
+        switch (item) {
+            case 0 /* PencilMoustache */:
+                this.player.SetMoustache(1 /* Pencil */);
+        }
+    };
     return StoreModel;
 })();
 /// <reference path="IMainModel.ts"  />
@@ -753,10 +866,22 @@ var StorePresenter = (function () {
         this.mainModel = mainModel;
         this.storeModel = storeModel;
         this.storeView = storeView;
-        storeView.GoToApartment.Add(this.OnGoToApartment.bind(this));
+        storeModel.Purchased.Add(this.OnPurchased.bind(this));
+        storeView.GoToHome.Add(this.OnGoToHome.bind(this));
+        storeView.ItemSelected.Add(this.OnItemSelected.bind(this));
+        storeView.Shown.Add(this.OnShown.bind(this));
     }
-    StorePresenter.prototype.OnGoToApartment = function () {
-        this.mainModel.SetView(0 /* Apartment */);
+    StorePresenter.prototype.OnGoToHome = function () {
+        this.mainModel.SetView(0 /* Home */);
+    };
+    StorePresenter.prototype.OnItemSelected = function () {
+        this.storeModel.Purchase(this.storeView.GetSelectedItem());
+    };
+    StorePresenter.prototype.OnPurchased = function () {
+        this.storeView.SetItems(this.storeModel.GetItems());
+    };
+    StorePresenter.prototype.OnShown = function () {
+        this.storeView.SetItems(this.storeModel.GetItems());
     };
     return StorePresenter;
 })();
@@ -765,9 +890,14 @@ var StorePresenter = (function () {
 var StoreView = (function () {
     function StoreView() {
         // IStoreView implementation
-        this.GoToApartment = new Signal();
+        this.GoToHome = new Signal();
+        this.ItemSelected = new Signal();
+        this.Shown = new Signal();
     }
     // IClientView implementation
+    StoreView.prototype.GetSelectedItem = function () {
+        return this.selectedItem;
+    };
     StoreView.prototype.GetType = function () {
         return 2 /* Store */;
     };
@@ -775,54 +905,76 @@ var StoreView = (function () {
     };
     StoreView.prototype.Show = function (e) {
         var _this = this;
-        e.append("<table id='store'><tr><td id='store-header'><button id='goApartment'>вернуться домой</button></td></tr><tr><td id='store-view'>Что вы здесь делаете? Кризис на дворе!</td></tr></table>");
-        $("#store #goApartment").click(function () {
-            _this.GoToApartment.Call();
+        var header = "<tr><td id='store-header'><button id='goHome'>вернуться домой</button></td></tr>";
+        var body = "<tr><td id='store-body'><div><table id='store-items'></table></div></td></tr>";
+        e.html("<table id='store'>" + header + body + "</table>");
+        $("#store #goHome").click(function () {
+            _this.GoToHome.Call();
         });
+        this.Shown.Call();
+    };
+    StoreView.prototype.SetItems = function (items) {
+        var buttons = [];
+        for (var i = 0; i != items.length; ++i) {
+            var OnClick = function (e) {
+                this.selectedItem = e.data;
+                this.ItemSelected.Call();
+            };
+            var info = Item.GetInfo(items[i]);
+            var button = $("<td>" + info.name + "<br/>" + info.description + "<br/>" + info.price + " ₽</td>");
+            button.click(items[i], OnClick.bind(this));
+            buttons.push(button);
+        }
+        var row = $("<tr>");
+        for (var i = 0; i != buttons.length; ++i)
+            row.append(buttons[i]);
+        $("#store-items").empty().append(row);
     };
     return StoreView;
 })();
-/// <reference path="ApartmentModel.ts"     />
-/// <reference path="ApartmentPresenter.ts" />
-/// <reference path="ApartmentView.ts"      />
-/// <reference path="DialogManager.ts"      />
-/// <reference path="MainModel.ts"          />
-/// <reference path="MainPresenter.ts"      />
-/// <reference path="MainView.ts"           />
-/// <reference path="PersistentState.ts"    />
-/// <reference path="QueueModel.ts"         />
-/// <reference path="QueuePresenter.ts"     />
-/// <reference path="QueueView.ts"          />
-/// <reference path="SaveModel.ts"         />
-/// <reference path="SavePresenter.ts"     />
-/// <reference path="SaveView.ts"          />
-/// <reference path="StoreModel.ts"         />
-/// <reference path="StorePresenter.ts"     />
-/// <reference path="StoreView.ts"          />
-/// <reference path="Timer.ts"              />
+/// <reference path="HomeModel.ts"       />
+/// <reference path="HomePresenter.ts"   />
+/// <reference path="HomeView.ts"        />
+/// <reference path="DialogManager.ts"   />
+/// <reference path="MainModel.ts"       />
+/// <reference path="MainPresenter.ts"   />
+/// <reference path="MainView.ts"        />
+/// <reference path="PersistentState.ts" />
+/// <reference path="Player.ts"          />
+/// <reference path="QueueModel.ts"      />
+/// <reference path="QueuePresenter.ts"  />
+/// <reference path="QueueView.ts"       />
+/// <reference path="SaveModel.ts"       />
+/// <reference path="SavePresenter.ts"   />
+/// <reference path="SaveView.ts"        />
+/// <reference path="StoreModel.ts"      />
+/// <reference path="StorePresenter.ts"  />
+/// <reference path="StoreView.ts"       />
+/// <reference path="Timer.ts"           />
 function Main(dialogs) {
     var dialogManager = new DialogManager(dialogs);
     var timer = new Timer();
-    var apartmentModel = new ApartmentModel();
-    var mainModel = new MainModel(timer);
+    var player = new Player(timer);
+    var homeModel = new HomeModel();
+    var mainModel = new MainModel(player);
     var queueModel = new QueueModel(timer, 8);
     var saveModel = new SaveModel();
-    var storeModel = new StoreModel();
-    var apartmentView = new ApartmentView();
+    var storeModel = new StoreModel(player);
+    var homeView = new HomeView();
     var queueView = new QueueView();
     var saveView = new SaveView();
     var storeView = new StoreView();
-    var mainView = new MainView([apartmentView, queueView, storeView]);
-    var apartmentPresenter = new ApartmentPresenter(apartmentModel, mainModel, apartmentView);
+    var mainView = new MainView([homeView, queueView, storeView]);
+    var homePresenter = new HomePresenter(homeModel, mainModel, homeView);
     var mainPresenter = new MainPresenter(mainModel, mainView);
     var queuePresenter = new QueuePresenter(mainModel, queueModel, queueView, dialogManager);
     var savePrsenter = new SavePresenter(saveModel, saveView);
     var storePresenter = new StorePresenter(mainModel, storeModel, storeView);
-    var persistentItems = [["main", mainModel], ["queue", queueModel], ["timer", timer]];
+    var persistentItems = [["main", mainModel], ["queue", queueModel], ["player", player], ["timer", timer]];
     var persistentState = new PersistentState(persistentItems, timer);
-    mainPresenter.Start();
-    timer.Start(100);
     persistentState.Load();
+    mainPresenter.LightsCameraAction();
+    timer.Start(100);
 }
 $.getJSON("js/dialogs.json", function (dialogs, textStatus, jqXHR) {
     Main(dialogs);

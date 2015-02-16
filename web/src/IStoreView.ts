@@ -1,4 +1,12 @@
+/// <reference path="Item.ts" />
+
 interface IStoreView
 {
-	GoToHome : Signal;
+	GoToHome     : Signal;
+	ItemSelected : Signal;
+	Shown        : Signal;
+
+	GetSelectedItem() : Item;
+
+	SetItems(items : Item[]) : void;
 }

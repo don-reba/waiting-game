@@ -15,12 +15,14 @@ class MainModel implements IMainModel, IPersistent
 		)
 	{
 		player.MoneyChanged.Add(this.OnMoneyChanged.bind(this));
+		player.MoustacheChanged.Add(this.OnMoustacheChanged.bind(this));
 	}
 
 	// IMainModel implementation
 
-	MoneyChanged = new Signal();
-	ViewChanged  = new Signal();
+	MoneyChanged     = new Signal();
+	MoustacheChanged = new Signal();
+	ViewChanged      = new Signal();
 
 	GetView() : ClientViewType
 	{
@@ -29,7 +31,12 @@ class MainModel implements IMainModel, IPersistent
 
 	GetMoney() : number
 	{
-		return this.player.money;
+		return this.player.GetMoney();
+	}
+
+	GetMoustache() : Moustache
+	{
+		return this.player.GetMoustache();
 	}
 
 	Reset() : void
@@ -58,8 +65,15 @@ class MainModel implements IMainModel, IPersistent
 		return JSON.stringify({ view : this.view });
 	}
 
+	// private implementation
+
 	private OnMoneyChanged() : void
 	{
 		this.MoneyChanged.Call();
+	}
+
+	private OnMoustacheChanged() : void
+	{
+		this.MoustacheChanged.Call();
 	}
 }

@@ -30,7 +30,7 @@ function Main(dialogs : IDialog[])
 	var mainModel  = new MainModel(player);
 	var queueModel = new QueueModel(timer, 8);
 	var saveModel  = new SaveModel();
-	var storeModel = new StoreModel();
+	var storeModel = new StoreModel(player);
 
 	var homeView  = new HomeView();
 	var queueView = new QueueView();
@@ -55,7 +55,7 @@ function Main(dialogs : IDialog[])
 
 	persistentState.Load();
 
-	mainPresenter.LightsOn();
+	mainPresenter.LightsCameraAction();
 	timer.Start(100);
 }
 

@@ -11,17 +11,39 @@ class PlayerState
 
 class Player implements IPersistent
 {
+	private moustache = Moustache.None;
+	private money     = 0;
+	private rate      = 1;
+
 	MoustacheChanged = new Signal();
 	MoneyChanged     = new Signal();
 	RateChanged      = new Signal();
 
-	moustache = Moustache.None;
-	money     = 0;
-	rate      = 1;
-
 	constructor(timer : Timer)
 	{
 		timer.AddEvent(this.OnPay.bind(this), 20);
+	}
+
+	GetMoney() : number
+	{
+		return this.money;
+	}
+
+	GetMoustache() : Moustache
+	{
+		return this.moustache;
+	}
+
+	SetMoney(money : number)
+	{
+		this.money = money;
+		this.MoneyChanged.Call();
+	}
+
+	SetMoustache(moustache : Moustache)
+	{
+		this.moustache = moustache;
+		this.MoustacheChanged.Call();
 	}
 
 	// IPersistent implementation

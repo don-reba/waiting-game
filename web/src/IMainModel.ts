@@ -2,12 +2,15 @@
 
 interface IMainModel
 {
-	MoneyChanged : Signal;
-	ViewChanged  : Signal;
+	MoneyChanged     : Signal;
+	MoustacheChanged : Signal;
+	ViewChanged      : Signal;
 
 	GetView() : ClientViewType;
 
 	GetMoney() : number;
+
+	GetMoustache() : Moustache;
 
 	Reset() : void;
 

@@ -40,4 +40,16 @@ class MainView implements IMainView
 	{
 		$("#money-total").text(Math.floor(money) + " ₽");
 	}
+
+	SetMoustache(moustache : Moustache) : void
+	{
+		var text = "";
+		switch (moustache)
+		{
+			case Moustache.Pencil: text = "( ื-- ื)"; break;
+			case Moustache.French: text = "( ื~~ ื)"; break;
+			case Moustache.Handlebar: text = "( ื┏‸┓ ื)"; break;
+		}
+		$("#moustache").text(text);
+	}
 }

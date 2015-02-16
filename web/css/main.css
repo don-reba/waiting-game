@@ -36,13 +36,22 @@ button {
 	height           : 30em;
 }
 #header-left {
+	width : 0%;
+}
+#header-center {
 	width : 100%;
 }
 #header-right {
 	width : 0%;
 }
 #money-total {
-	text-align : left;
+	text-align  : left;
+	white-space : nowrap;
+}
+#moustache {
+	font-family : "Lucida Console", Monaco, monospace;
+	font-size   : 1.1em;
+	white-space : pre;
 }
 #location {
 	background-color : #D0D0D0;
@@ -87,16 +96,16 @@ button {
 	width            : 100%;
 }
 
-/* apartment */
+/* home */
 
-#apartment {
+#home {
 	border-collapse : separate;
 	border-spacing  : 0.5em;
 
 	width           : 100%;
 	height          : 100%;
 }
-#apartment-view {
+#home-view {
 	font-family    : "Courier New",monospace;
 	font-size      : 2em;
 	height         : 100%;
@@ -131,13 +140,33 @@ button {
 #store {
 	border-collapse : separate;
 	border-spacing  : 0.5em;
+	table-layout    : fixed;
 
 	width           : 100%;
 	height          : 100%;
 }
-#store-view {
-	font-family    : "Courier New",monospace;
-	font-size      : 2em;
-	height         : 100%;
-	vertical-align : middle;
+#store-body {
+	height : 100%;
+}
+#store-body > div {
+	position : relative;
+	height   : 100%;
+	overflow : auto;
+}
+#store-items {
+	position : absolute;
+	top      : 0;
+	right    : 0;
+	bottom   : 0;
+	left     : 0;
+
+	width    : 100%;
+}
+#store-items td {
+	border  : 1px solid black;
+	cursor  : pointer;
+	padding : 0.5em;
+}
+#store-items td:hover {
+	background-color : #E0E0E0;
 }

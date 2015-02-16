@@ -9,20 +9,27 @@ class MainPresenter
 		)
 	{
 		mainModel.MoneyChanged.Add(this.OnMoneyChanged.bind(this));
+		mainModel.MoustacheChanged.Add(this.OnMoustacheChanged.bind(this));
 		mainModel.ViewChanged.Add(this.OnViewChanged.bind(this));
 
 		mainView.ResetRequested.Add(this.OnResetRequested.bind(this));
 	}
 
-	LightsOn()
+	LightsCameraAction()
 	{
 		this.mainView.SetMoney(this.mainModel.GetMoney());
+		this.mainView.SetMoustache(this.mainModel.GetMoustache());
 		this.mainView.SetClientView(this.mainModel.GetView());
 	}
 
 	private OnMoneyChanged() : void
 	{
 		this.mainView.SetMoney(this.mainModel.GetMoney());
+	}
+
+	private OnMoustacheChanged() : void
+	{
+		this.mainView.SetMoustache(this.mainModel.GetMoustache());
 	}
 
 	private OnResetRequested() : void
