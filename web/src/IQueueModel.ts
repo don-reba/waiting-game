@@ -11,13 +11,13 @@ interface IQueueModel
 
 	EnterQueue() : void;
 
+	GetCharacters() : ICharacter[];
+
 	GetCurrentTicket() : string;
 
 	GetDialog() : IDialog;
 
 	GetPlayerTicket() : string;
-
-	GetPeopleNames() : string[];
 
 	GetSpeaker() : string;
 

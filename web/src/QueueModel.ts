@@ -5,9 +5,9 @@
 
 class QueuePosition
 {
-	character : ICharacter;
-	remaining : number;
-	ticket    : string;
+	characterID : string;
+	remaining   : number;
+	ticket      : string;
 }
 
 class QueueModelState
@@ -54,13 +54,20 @@ class QueueModel implements IQueueModel
 	AdvanceDialog(reply : number) : void
 	{
 		this.dialogID = this.dialogManager.GetRefDialogID(this.dialogID, reply);
+		if (this.dialogID == null)
+			this.speaker = null;
 		this.DialogChanged.Call();
 	}
 
 	EnterQueue() : void
 	{
-		if (this.queue.every((p) => { return p.character != null; }))
+		if (this.queue.every((p) => { return p.characterID != null; }))
 			this.AddPlayerPosition();
+	}
+
+	GetCharacters() : ICharacter[]
+	{
+		return this.queue.map((p) => { return this.characterManager.GetCharacter(p.characterID); });
 	}
 
 	GetDialog() : IDialog
@@ -72,7 +79,7 @@ class QueueModel implements IQueueModel
 	{
 		for (var i = 0; i != this.queue.length; ++i)
 		{
-			if (!this.queue[i].character)
+			if (!this.queue[i].characterID)
 				return this.queue[i].ticket;
 		}
 		return null;
@@ -83,13 +90,6 @@ class QueueModel implements IQueueModel
 		if (this.queue.length > 0)
 			return this.queue[0].ticket;
 		return null;
-	}
-
-	GetPeopleNames() : string[]
-	{
-		return this.queue
-			.filter((p) => { return p.character != null; })
-			.map((p) => { return p.character.name; });
 	}
 
 	GetSpeaker() : string
@@ -141,9 +141,9 @@ class QueueModel implements IQueueModel
 		var remaining = Math.floor(2 + Math.random() * 8);
 		var ticket    = String(this.ticket++);
 		var p         =
-			{ character : character
-			, remaining : remaining
-			, ticket    : ticket
+			{ characterID : character.id
+			, remaining   : remaining
+			, ticket      : ticket
 			};
 
 		this.queue.push(p);
@@ -154,9 +154,9 @@ class QueueModel implements IQueueModel
 		var remaining = Math.floor(2 + Math.random() * 8);
 		var ticket    = String(this.ticket++);
 		var p         =
-			{ character : null
-			, remaining : remaining
-			, ticket    : ticket
+			{ characterID : null
+			, remaining   : remaining
+			, ticket      : ticket
 			};
 
 		this.queue.push(p);
@@ -164,7 +164,7 @@ class QueueModel implements IQueueModel
 
 	private InQueue(c : ICharacter) : boolean
 	{
-		return this.queue.some((p) => { return p.character && p.character.id === c.id; });
+		return this.queue.some((p) => { return p.characterID && p.characterID === c.id; });
 	}
 
 	private OnAdvance() : void
@@ -178,7 +178,7 @@ class QueueModel implements IQueueModel
 		if (p.remaining <= 0)
 		{
 			this.queue.shift();
-			if (p.character)
+			if (p.characterID)
 				this.PeopleChanged.Call();
 			else
 				this.PlayerTicketChanged.Call();

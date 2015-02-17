@@ -12,6 +12,8 @@ class CharacterManager
 
 	GetCharacter(id : string) : ICharacter
 	{
+		if (!id)
+			return null;
 		return this.map[id];
 	}
 

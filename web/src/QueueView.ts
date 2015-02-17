@@ -3,8 +3,8 @@
 
 class QueueView implements IQueueView, IClientView
 {
-	selectedPerson : string = null;
-	selectedReply  : number = -1;
+	selectedCharacterID : string = null;
+	selectedReply       : number = -1;
 
 	// IQueueView implementation
 
@@ -28,9 +28,31 @@ class QueueView implements IQueueView, IClientView
 		return this.selectedReply;
 	}
 
-	GetSpeaker() : string
+	GetSpeakerID() : string
 	{
-		return this.selectedPerson;
+		return this.selectedCharacterID;
+	}
+
+	SetCharacters(characters : ICharacter[]) : void
+	{
+		var people = $("#queue #people");
+		people.empty();
+
+		for (var i = 0; i != characters.length; ++i)
+		{
+			var OnClick = function(e)
+			{
+				this.selectedCharacterID = e.data;
+				this.PersonClicked.Call();
+			}
+			var character = characters[i];
+			if (!character)
+				continue;
+			var button = $("<button>");
+			button.text(characters[i].name);
+			button.click(characters[i].id, OnClick.bind(this));
+			people.append(button);
+		}
 	}
 
 	SetCurrentTicket(ticket : string) : void
@@ -67,25 +89,6 @@ class QueueView implements IQueueView, IClientView
 	SetPlayerTicket(ticket : string) : void
 	{
 		$("#queue #player").text("ваш номер: " + ticket);
-	}
-
-	SetPeopleNames(names : string[]) : void
-	{
-		var people = $("#queue #people");
-		people.empty();
-
-		for (var i = 0; i != names.length; ++i)
-		{
-			var OnClick = function(e)
-			{
-				this.selectedPerson = e.data;
-				this.PersonClicked.Call();
-			}
-			var button = $("<button>");
-			button.text(names[i]);
-			button.click(names[i], OnClick.bind(this));
-			people.append(button);
-		}
 	}
 
 	// IClientView implementation

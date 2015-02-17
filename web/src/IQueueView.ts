@@ -11,13 +11,13 @@ interface IQueueView
 
 	GetSelectedReply() : number;
 
-	GetSpeaker() : string;
+	GetSpeakerID() : string;
+
+	SetCharacters(characters : ICharacter[]) : void;
 
 	SetCurrentTicket(ticket : string) : void;
 
 	SetDialog(speaker : string, dialog : IDialog) : void;
 
 	SetPlayerTicket(ticket : string) : void;
-
-	SetPeopleNames(n : string[]) : void;
 }

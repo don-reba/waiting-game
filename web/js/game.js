@@ -7,6 +7,8 @@ var CharacterManager = (function () {
             this.map[characters[i].id] = characters[i];
     }
     CharacterManager.prototype.GetCharacter = function (id) {
+        if (!id)
+            return null;
         return this.map[id];
     };
     CharacterManager.prototype.GetQueueGreetingDialogID = function (characterID) {
@@ -525,20 +527,28 @@ var QueueModel = (function () {
     }
     QueueModel.prototype.AdvanceDialog = function (reply) {
         this.dialogID = this.dialogManager.GetRefDialogID(this.dialogID, reply);
+        if (this.dialogID == null)
+            this.speaker = null;
         this.DialogChanged.Call();
     };
     QueueModel.prototype.EnterQueue = function () {
         if (this.queue.every(function (p) {
-            return p.character != null;
+            return p.characterID != null;
         }))
             this.AddPlayerPosition();
+    };
+    QueueModel.prototype.GetCharacters = function () {
+        var _this = this;
+        return this.queue.map(function (p) {
+            return _this.characterManager.GetCharacter(p.characterID);
+        });
     };
     QueueModel.prototype.GetDialog = function () {
         return this.dialogManager.GetDialog(this.dialogID);
     };
     QueueModel.prototype.GetPlayerTicket = function () {
         for (var i = 0; i != this.queue.length; ++i) {
-            if (!this.queue[i].character)
+            if (!this.queue[i].characterID)
                 return this.queue[i].ticket;
         }
         return null;
@@ -547,13 +557,6 @@ var QueueModel = (function () {
         if (this.queue.length > 0)
             return this.queue[0].ticket;
         return null;
-    };
-    QueueModel.prototype.GetPeopleNames = function () {
-        return this.queue.filter(function (p) {
-            return p.character != null;
-        }).map(function (p) {
-            return p.character.name;
-        });
     };
     QueueModel.prototype.GetSpeaker = function () {
         return this.speaker;
@@ -584,18 +587,18 @@ var QueueModel = (function () {
         } while (this.InQueue(character));
         var remaining = Math.floor(2 + Math.random() * 8);
         var ticket = String(this.ticket++);
-        var p = { character: character, remaining: remaining, ticket: ticket };
+        var p = { characterID: character.id, remaining: remaining, ticket: ticket };
         this.queue.push(p);
     };
     QueueModel.prototype.AddPlayerPosition = function () {
         var remaining = Math.floor(2 + Math.random() * 8);
         var ticket = String(this.ticket++);
-        var p = { character: null, remaining: remaining, ticket: ticket };
+        var p = { characterID: null, remaining: remaining, ticket: ticket };
         this.queue.push(p);
     };
     QueueModel.prototype.InQueue = function (c) {
         return this.queue.some(function (p) {
-            return p.character && p.character.id === c.id;
+            return p.characterID && p.characterID === c.id;
         });
     };
     QueueModel.prototype.OnAdvance = function () {
@@ -605,7 +608,7 @@ var QueueModel = (function () {
         --p.remaining;
         if (p.remaining <= 0) {
             this.queue.shift();
-            if (p.character)
+            if (p.characterID)
                 this.PeopleChanged.Call();
             else
                 this.PlayerTicketChanged.Call();
@@ -652,10 +655,10 @@ var QueuePresenter = (function () {
         this.mainModel.SetView(0 /* Home */);
     };
     QueuePresenter.prototype.OnPeopleChanged = function () {
-        this.queueView.SetPeopleNames(this.queueModel.GetPeopleNames());
+        this.queueView.SetCharacters(this.queueModel.GetCharacters());
     };
     QueuePresenter.prototype.OnPersonClicked = function () {
-        this.queueModel.StartDialog(this.queueView.GetSpeaker());
+        this.queueModel.StartDialog(this.queueView.GetSpeakerID());
     };
     QueuePresenter.prototype.OnPlayerTicketChanged = function () {
         var ticket = this.queueModel.GetPlayerTicket();
@@ -668,7 +671,7 @@ var QueuePresenter = (function () {
         this.queueModel.EnterQueue();
         this.queueView.SetPlayerTicket(this.queueModel.GetPlayerTicket());
         this.queueView.SetCurrentTicket(this.queueModel.GetCurrentTicket());
-        this.queueView.SetPeopleNames(this.queueModel.GetPeopleNames());
+        this.queueView.SetCharacters(this.queueModel.GetCharacters());
         this.queueView.SetDialog(this.queueModel.GetSpeaker(), this.queueModel.GetDialog());
     };
     QueuePresenter.prototype.OnReplyClicked = function () {
@@ -680,7 +683,7 @@ var QueuePresenter = (function () {
 /// <reference path="IClientView.ts" />
 var QueueView = (function () {
     function QueueView() {
-        this.selectedPerson = null;
+        this.selectedCharacterID = null;
         this.selectedReply = -1;
         // IQueueView implementation
         this.GoToHome = new Signal();
@@ -697,8 +700,25 @@ var QueueView = (function () {
     QueueView.prototype.GetSelectedReply = function () {
         return this.selectedReply;
     };
-    QueueView.prototype.GetSpeaker = function () {
-        return this.selectedPerson;
+    QueueView.prototype.GetSpeakerID = function () {
+        return this.selectedCharacterID;
+    };
+    QueueView.prototype.SetCharacters = function (characters) {
+        var people = $("#queue #people");
+        people.empty();
+        for (var i = 0; i != characters.length; ++i) {
+            var OnClick = function (e) {
+                this.selectedCharacterID = e.data;
+                this.PersonClicked.Call();
+            };
+            var character = characters[i];
+            if (!character)
+                continue;
+            var button = $("<button>");
+            button.text(characters[i].name);
+            button.click(characters[i].id, OnClick.bind(this));
+            people.append(button);
+        }
     };
     QueueView.prototype.SetCurrentTicket = function (ticket) {
         $("#queue #current").text("текущий номер: " + ticket);
@@ -724,20 +744,6 @@ var QueueView = (function () {
     };
     QueueView.prototype.SetPlayerTicket = function (ticket) {
         $("#queue #player").text("ваш номер: " + ticket);
-    };
-    QueueView.prototype.SetPeopleNames = function (names) {
-        var people = $("#queue #people");
-        people.empty();
-        for (var i = 0; i != names.length; ++i) {
-            var OnClick = function (e) {
-                this.selectedPerson = e.data;
-                this.PersonClicked.Call();
-            };
-            var button = $("<button>");
-            button.text(names[i]);
-            button.click(names[i], OnClick.bind(this));
-            people.append(button);
-        }
     };
     // IClientView implementation
     QueueView.prototype.GetType = function () {
@@ -968,25 +974,26 @@ var StoreView = (function () {
     };
     return StoreView;
 })();
-/// <reference path="HomeModel.ts"       />
-/// <reference path="HomePresenter.ts"   />
-/// <reference path="HomeView.ts"        />
-/// <reference path="DialogManager.ts"   />
-/// <reference path="MainModel.ts"       />
-/// <reference path="MainPresenter.ts"   />
-/// <reference path="MainView.ts"        />
-/// <reference path="PersistentState.ts" />
-/// <reference path="Player.ts"          />
-/// <reference path="QueueModel.ts"      />
-/// <reference path="QueuePresenter.ts"  />
-/// <reference path="QueueView.ts"       />
-/// <reference path="SaveModel.ts"       />
-/// <reference path="SavePresenter.ts"   />
-/// <reference path="SaveView.ts"        />
-/// <reference path="StoreModel.ts"      />
-/// <reference path="StorePresenter.ts"  />
-/// <reference path="StoreView.ts"       />
-/// <reference path="Timer.ts"           />
+/// <reference path="CharacterManager.ts" />
+/// <reference path="HomeModel.ts"        />
+/// <reference path="HomePresenter.ts"    />
+/// <reference path="HomeView.ts"         />
+/// <reference path="DialogManager.ts"    />
+/// <reference path="MainModel.ts"        />
+/// <reference path="MainPresenter.ts"    />
+/// <reference path="MainView.ts"         />
+/// <reference path="PersistentState.ts"  />
+/// <reference path="Player.ts"           />
+/// <reference path="QueueModel.ts"       />
+/// <reference path="QueuePresenter.ts"   />
+/// <reference path="QueueView.ts"        />
+/// <reference path="SaveModel.ts"        />
+/// <reference path="SavePresenter.ts"    />
+/// <reference path="SaveView.ts"         />
+/// <reference path="StoreModel.ts"       />
+/// <reference path="StorePresenter.ts"   />
+/// <reference path="StoreView.ts"        />
+/// <reference path="Timer.ts"            />
 function Main(dialogs, characters) {
     var dialogManager = new DialogManager(dialogs);
     var characterManager = new CharacterManager(characters);

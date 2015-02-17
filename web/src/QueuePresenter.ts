@@ -43,12 +43,12 @@ class QueuePresenter
 
 	private OnPeopleChanged() : void
 	{
-		this.queueView.SetPeopleNames(this.queueModel.GetPeopleNames());
+		this.queueView.SetCharacters(this.queueModel.GetCharacters());
 	}
 
 	private OnPersonClicked() : void
 	{
-		this.queueModel.StartDialog(this.queueView.GetSpeaker());
+		this.queueModel.StartDialog(this.queueView.GetSpeakerID());
 	}
 
 	private OnPlayerTicketChanged() : void
@@ -66,7 +66,7 @@ class QueuePresenter
 
 		this.queueView.SetPlayerTicket(this.queueModel.GetPlayerTicket());
 		this.queueView.SetCurrentTicket(this.queueModel.GetCurrentTicket());
-		this.queueView.SetPeopleNames(this.queueModel.GetPeopleNames());
+		this.queueView.SetCharacters(this.queueModel.GetCharacters());
 		this.queueView.SetDialog(this.queueModel.GetSpeaker(), this.queueModel.GetDialog());
 	}
 
