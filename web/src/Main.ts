@@ -1,3 +1,4 @@
+/// <reference path="CharacterManager.ts />
 /// <reference path="HomeModel.ts"       />
 /// <reference path="HomePresenter.ts"   />
 /// <reference path="HomeView.ts"        />
@@ -18,9 +19,10 @@
 /// <reference path="StoreView.ts"       />
 /// <reference path="Timer.ts"           />
 
-function Main(dialogs : IDialog[])
+function Main(dialogs : IDialog[], characters : ICharacter[])
 {
-	var dialogManager = new DialogManager(dialogs);
+	var dialogManager    = new DialogManager(dialogs);
+	var characterManager = new CharacterManager(characters);
 
 	var timer = new Timer();
 
@@ -28,7 +30,7 @@ function Main(dialogs : IDialog[])
 
 	var homeModel  = new HomeModel();
 	var mainModel  = new MainModel(player);
-	var queueModel = new QueueModel(timer, 8);
+	var queueModel = new QueueModel(timer, characterManager, dialogManager, 8);
 	var saveModel  = new SaveModel();
 	var storeModel = new StoreModel(player);
 
@@ -41,7 +43,7 @@ function Main(dialogs : IDialog[])
 
 	var homePresenter  = new HomePresenter(homeModel,  mainModel,  homeView);
 	var mainPresenter  = new MainPresenter(mainModel,  mainView);
-	var queuePresenter = new QueuePresenter(mainModel, queueModel, queueView,  dialogManager);
+	var queuePresenter = new QueuePresenter(mainModel, queueModel, queueView);
 	var savePrsenter   = new SavePresenter(saveModel,  saveView);
 	var storePresenter = new StorePresenter(mainModel, storeModel, storeView);
 
@@ -59,7 +61,10 @@ function Main(dialogs : IDialog[])
 	timer.Start(100);
 }
 
-$.getJSON("js/dialogs.json", function(dialogs : IDialog[], textStatus: string, jqXHR: JQueryXHR)
+$.getJSON("js/dialogs.json", function(dialogs : IDialog[])
 {
-	Main(dialogs);
+	$.getJSON("js/characters.json", function(characters : ICharacter[])
+	{
+		Main(dialogs, characters);
+	})
 })

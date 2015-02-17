@@ -1,3 +1,5 @@
+/// <reference path="IDialog.ts" />
+
 interface IQueueModel
 {
 	CurrentTicketChanged : Signal;
@@ -5,11 +7,13 @@ interface IQueueModel
 	PeopleChanged        : Signal;
 	PlayerTicketChanged  : Signal;
 
+	AdvanceDialog(reply : number) : void;
+
 	EnterQueue() : void;
 
 	GetCurrentTicket() : string;
 
-	GetDialogID() : number;
+	GetDialog() : IDialog;
 
 	GetPlayerTicket() : string;
 
@@ -17,5 +21,5 @@ interface IQueueModel
 
 	GetSpeaker() : string;
 
-	SetDialog(speaker : string, dialogID : number) : void;
+	StartDialog(speaker : string) : void;
 }

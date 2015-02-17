@@ -2,20 +2,24 @@
 
 class DialogManager
 {
-	constructor(public dialogs : IDialog[])
+	dialogs : { [id : string] : IDialog; } = {};
+
+	constructor(dialogs : IDialog[])
 	{
+		for (var i = 0; i != dialogs.length; ++i)
+			this.dialogs[dialogs[i].id] = dialogs[i];
 	}
 
-	GetDialog(dialogID : number) : IDialog
+	GetDialog(dialogID : string) : IDialog
 	{
-		if (dialogID >= 0)
+		if (dialogID)
 			return this.dialogs[dialogID];
 		return null;
 	}
 
-	GetRefDialogID(dialogID : number, option : number) : number
+	GetRefDialogID(dialogID : string, option : number) : string
 	{
-		if (dialogID >= 0 && option >= 0)
+		if (dialogID)
 			return this.dialogs[dialogID].replies[option].ref;
 		return null;
 	}

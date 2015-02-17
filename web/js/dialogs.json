@@ -1,12 +1,15 @@
-[ {
-	"text" : "Эй, как дела?",
-	"replies" :
-		[ { "text" : "Неплохо…", "ref" : null }
-		, { "text" : "Как вы смеете!", "ref" : 1 }
+[
+	{ "id"   : "StdQueueGreetingInit"
+	, "text" : "Эй, как дела?"
+	, "replies" :
+		[ { "text" : "Неплохо…",       "ref" : null }
+		, { "text" : "Как вы смеете!", "ref" : "StdQueueGreeting2" }
 		]
-},{
-	"text" : "Извините…",
-	"replies" :
+	},
+	{ "id"   : "StdQueueGreeting2"
+	, "text" : "Извините…"
+	, "replies" :
 		[ { "text" : "Прощайте!", "ref" : null }
-       		]
-} ]
+		]
+	}
+]

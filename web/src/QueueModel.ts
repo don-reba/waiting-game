@@ -1,14 +1,11 @@
-/// <reference path="IQueueModel.ts" />
-/// <reference path="IPersistent.ts" />
-
-class Character
-{
-	public name : string;
-}
+/// <reference path="CharacterManager.ts" />
+/// <reference path="DialogManager.ts"    />
+/// <reference path="IQueueModel.ts"      />
+/// <reference path="IPersistent.ts"      />
 
 class QueuePosition
 {
-	character : Character;
+	character : ICharacter;
 	remaining : number;
 	ticket    : string;
 }
@@ -18,56 +15,27 @@ class QueueModelState
 	queue    : QueuePosition[];
 	player   : QueuePosition;
 	ticket   : number;
-	dialogID : number;
+	dialogID : string;
 	speaker  : string;
 }
 
 class QueueModel implements IQueueModel
 {
 	private queue    : QueuePosition[];
-	private stock    : Character[];
 	private player   : QueuePosition;
 	private ticket   : number;
-	private dialogID : number;
+	private dialogID : string;
 	private speaker  : string;
 
 	constructor
-		( private timer     : Timer
-		, private maxLength : number
+		( private timer            : Timer
+		, private characterManager : CharacterManager
+		, private dialogManager    : DialogManager
+		, private maxLength        : number
 		)
 	{
 		timer.AddEvent(this.OnAdvance.bind(this), 20);
 		timer.AddEvent(this.OnKnock.bind(this),   19);
-
-		this.stock =
-			[ { name : "Аня"      }
-			, { name : "Борис"    }
-			, { name : "Вера"     }
-			, { name : "Григорий" }
-			, { name : "Даша"     }
-			, { name : "Елена"    }
-			, { name : "Жора"     }
-			, { name : "Зоя"      }
-			, { name : "Инна"     }
-			, { name : "Костик"   }
-			, { name : "Лёша"     }
-			, { name : "Маша"     }
-			, { name : "Настя"    }
-			, { name : "Оля"      }
-			, { name : "Пётр"     }
-			, { name : "Родриг"   }
-			, { name : "Света"    }
-			, { name : "Тамара"   }
-			, { name : "Усач"     }
-			, { name : "Фёдор"    }
-			, { name : "Хосе"     }
-			, { name : "Цезарь"   }
-			, { name : "Чарли"    }
-			, { name : "Шарик"    }
-			, { name : "Элла"     }
-			, { name : "Юра"      }
-			, { name : "Яна"      }
-			];
 
 		this.ticket = 0;
 
@@ -83,15 +51,21 @@ class QueueModel implements IQueueModel
 	PeopleChanged        = new Signal();
 	PlayerTicketChanged  = new Signal();
 
+	AdvanceDialog(reply : number) : void
+	{
+		this.dialogID = this.dialogManager.GetRefDialogID(this.dialogID, reply);
+		this.DialogChanged.Call();
+	}
+
 	EnterQueue() : void
 	{
 		if (this.queue.every((p) => { return p.character != null; }))
 			this.AddPlayerPosition();
 	}
 
-	GetDialogID() : number
+	GetDialog() : IDialog
 	{
-		return this.dialogID;
+		return this.dialogManager.GetDialog(this.dialogID);
 	}
 
 	GetPlayerTicket() : string
@@ -123,10 +97,10 @@ class QueueModel implements IQueueModel
 		return this.speaker;
 	}
 
-	SetDialog(speaker : string, dialogID : number) : void
+	StartDialog(speaker : string) : void
 	{
 		this.speaker  = speaker;
-		this.dialogID = dialogID;
+		this.dialogID = "StdQueueGreetingInit";
 		this.DialogChanged.Call();
 	}
 
@@ -158,21 +132,20 @@ class QueueModel implements IQueueModel
 
 	private AddStockPosition() : void
 	{
-		var i;
+		var character;
 		do
 		{
-			i = Math.floor(Math.random() * this.stock.length);
-		} while (this.InQueue(this.stock[i]));
+			character = this.characterManager.GetRandomCharacter();
+		} while (this.InQueue(character));
 
 		var remaining = Math.floor(2 + Math.random() * 8);
 		var ticket    = String(this.ticket++);
 		var p         =
-			{ character : this.stock[i]
+			{ character : character
 			, remaining : remaining
 			, ticket    : ticket
 			};
 
-		this.stock.splice(i, 1);
 		this.queue.push(p);
 	}
 
@@ -189,9 +162,9 @@ class QueueModel implements IQueueModel
 		this.queue.push(p);
 	}
 
-	private InQueue(c : Character) : boolean
+	private InQueue(c : ICharacter) : boolean
 	{
-		return this.queue.some((p) => { return p.character && p.character.name === c.name; });
+		return this.queue.some((p) => { return p.character && p.character.id === c.id; });
 	}
 
 	private OnAdvance() : void
@@ -206,14 +179,9 @@ class QueueModel implements IQueueModel
 		{
 			this.queue.shift();
 			if (p.character)
-			{
-				this.stock.push(p.character);
 				this.PeopleChanged.Call();
-			}
 			else
-			{
 				this.PlayerTicketChanged.Call();
-			}
 			this.CurrentTicketChanged.Call();
 		}
 	}

@@ -9,7 +9,6 @@ class QueuePresenter
 		( private mainModel     : IMainModel
 		, private queueModel    : IQueueModel
 		, private queueView     : IQueueView
-		, private dialogManager : DialogManager
 		)
 	{
 		queueModel.CurrentTicketChanged.Add(this.OnCurrentTicketChanged.bind(this));
@@ -34,7 +33,7 @@ class QueuePresenter
 
 	private OnDialogChanged() : void
 	{
-		this.queueView.SetDialog(this.queueModel.GetSpeaker(), this.dialogManager.GetDialog(this.queueModel.GetDialogID()));
+		this.queueView.SetDialog(this.queueModel.GetSpeaker(), this.queueModel.GetDialog());
 	}
 
 	private OnGoToHome() : void
@@ -49,7 +48,7 @@ class QueuePresenter
 
 	private OnPersonClicked() : void
 	{
-		this.queueModel.SetDialog(this.queueView.GetSpeaker(), 0);
+		this.queueModel.StartDialog(this.queueView.GetSpeaker());
 	}
 
 	private OnPlayerTicketChanged() : void
@@ -68,13 +67,11 @@ class QueuePresenter
 		this.queueView.SetPlayerTicket(this.queueModel.GetPlayerTicket());
 		this.queueView.SetCurrentTicket(this.queueModel.GetCurrentTicket());
 		this.queueView.SetPeopleNames(this.queueModel.GetPeopleNames());
-		this.queueView.SetDialog(this.queueModel.GetSpeaker(), this.dialogManager.GetDialog(this.queueModel.GetDialogID()));
+		this.queueView.SetDialog(this.queueModel.GetSpeaker(), this.queueModel.GetDialog());
 	}
 
 	private OnReplyClicked() : void
 	{
-		var reply    = this.queueView.GetSelectedReply();
-		var dialogID = this.dialogManager.GetRefDialogID(this.queueModel.GetDialogID(), reply);
-		this.queueModel.SetDialog(this.queueView.GetSpeaker(), dialogID);
+		this.queueModel.AdvanceDialog(this.queueView.GetSelectedReply());
 	}
 }

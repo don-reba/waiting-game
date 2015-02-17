@@ -1,0 +1,58 @@
+[
+	{ "id"    : "Queueologist"
+	, "name"  : "Учёный-очередолог"
+	, "color" : "black"
+	},
+	{ "id"    : "Hero"
+	, "name"  : "Герой"
+	, "color" : "black"
+	},
+	{ "id"    : "QuietFriend"
+	, "name"  : "Молчаливый друг"
+	, "color" : "black"
+	},
+	{ "id"    : "ShadyCharacter"
+	, "name"  : "Тёмная личность"
+	, "color" : "black"
+	},
+	{ "id"    : "Hat"
+	, "name"  : "Шляпа"
+	, "color" : "black"
+	},
+	{ "id"    : "Turtle"
+	, "name"  : "Черепашка"
+	, "color" : "black"
+	},
+	{ "id"    : "MoustachedMan"
+	, "name"  : "Усач"
+	, "color" : "black"
+	},
+	{ "id"    : "Encyclopedist"
+	, "name"  : "Энциклопедист"
+	, "color" : "black"
+	},
+	{ "id"    : "Hipster"
+	, "name"  : "Хипстер"
+	, "color" : "black"
+	},
+	{ "id"    : "Poet"
+	, "name"  : "Поэт"
+	, "color" : "black"
+	},
+	{ "id"    : "Anny"
+	, "name"  : "Настенька"
+	, "color" : "black"
+	},
+	{ "id"    : "Kostik"
+	, "name"  : "Костик"
+	, "color" : "black"
+	},
+	{ "id"    : "Cat"
+	, "name"  : "Кот"
+	, "color" : "black"
+	},
+	{ "id"    : "TerminallyIll"
+	, "name"  : "Тяжёлобольной"
+	, "color" : "black"
+	}
+]

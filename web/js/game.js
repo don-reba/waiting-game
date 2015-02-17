@@ -1,3 +1,25 @@
+/// <reference path="ICharacter.ts" />
+var CharacterManager = (function () {
+    function CharacterManager(characters) {
+        this.characters = characters;
+        this.map = {};
+        for (var i = 0; i != characters.length; ++i)
+            this.map[characters[i].id] = characters[i];
+    }
+    CharacterManager.prototype.GetCharacter = function (id) {
+        return this.map[id];
+    };
+    CharacterManager.prototype.GetQueueGreetingDialogID = function (characterID) {
+        var character = this.map[characterID];
+        if (character.queueGreetingDialogs)
+            return character.queueGreetingDialogs[0];
+        return "StdQueueGreetingInit";
+    };
+    CharacterManager.prototype.GetRandomCharacter = function () {
+        return this.characters[Math.floor(Math.random() * this.characters.length)];
+    };
+    return CharacterManager;
+})();
 // Copyright 2014 Simon Lydell
 // X11 (“MIT”) Licensed. (See LICENSE.)
 var CompactJson;
@@ -78,15 +100,17 @@ var Reply = (function () {
 /// <reference path="IDialog.ts" />
 var DialogManager = (function () {
     function DialogManager(dialogs) {
-        this.dialogs = dialogs;
+        this.dialogs = {};
+        for (var i = 0; i != dialogs.length; ++i)
+            this.dialogs[dialogs[i].id] = dialogs[i];
     }
     DialogManager.prototype.GetDialog = function (dialogID) {
-        if (dialogID >= 0)
+        if (dialogID)
             return this.dialogs[dialogID];
         return null;
     };
     DialogManager.prototype.GetRefDialogID = function (dialogID, option) {
-        if (dialogID >= 0 && option >= 0)
+        if (dialogID)
             return this.dialogs[dialogID].replies[option].ref;
         return null;
     };
@@ -165,6 +189,7 @@ var HomeView = (function () {
     return HomeView;
 })();
 /// <reference path="IClientView.ts" />
+/// <reference path="IDialog.ts" />
 /// <reference path="Signal.ts" />
 var Item;
 (function (Item) {
@@ -466,13 +491,10 @@ var Player = (function () {
     };
     return Player;
 })();
-/// <reference path="IQueueModel.ts" />
-/// <reference path="IPersistent.ts" />
-var Character = (function () {
-    function Character() {
-    }
-    return Character;
-})();
+/// <reference path="CharacterManager.ts" />
+/// <reference path="DialogManager.ts"    />
+/// <reference path="IQueueModel.ts"      />
+/// <reference path="IPersistent.ts"      />
 var QueuePosition = (function () {
     function QueuePosition() {
     }
@@ -484,8 +506,10 @@ var QueueModelState = (function () {
     return QueueModelState;
 })();
 var QueueModel = (function () {
-    function QueueModel(timer, maxLength) {
+    function QueueModel(timer, characterManager, dialogManager, maxLength) {
         this.timer = timer;
+        this.characterManager = characterManager;
+        this.dialogManager = dialogManager;
         this.maxLength = maxLength;
         // IQueueModel implementation
         this.CurrentTicketChanged = new Signal();
@@ -494,20 +518,23 @@ var QueueModel = (function () {
         this.PlayerTicketChanged = new Signal();
         timer.AddEvent(this.OnAdvance.bind(this), 20);
         timer.AddEvent(this.OnKnock.bind(this), 19);
-        this.stock = [{ name: "Аня" }, { name: "Борис" }, { name: "Вера" }, { name: "Григорий" }, { name: "Даша" }, { name: "Елена" }, { name: "Жора" }, { name: "Зоя" }, { name: "Инна" }, { name: "Костик" }, { name: "Лёша" }, { name: "Маша" }, { name: "Настя" }, { name: "Оля" }, { name: "Пётр" }, { name: "Родриг" }, { name: "Света" }, { name: "Тамара" }, { name: "Усач" }, { name: "Фёдор" }, { name: "Хосе" }, { name: "Цезарь" }, { name: "Чарли" }, { name: "Шарик" }, { name: "Элла" }, { name: "Юра" }, { name: "Яна" }];
         this.ticket = 0;
         this.queue = [];
         for (var i = 0; i != this.maxLength; ++i)
             this.AddStockPosition();
     }
+    QueueModel.prototype.AdvanceDialog = function (reply) {
+        this.dialogID = this.dialogManager.GetRefDialogID(this.dialogID, reply);
+        this.DialogChanged.Call();
+    };
     QueueModel.prototype.EnterQueue = function () {
         if (this.queue.every(function (p) {
             return p.character != null;
         }))
             this.AddPlayerPosition();
     };
-    QueueModel.prototype.GetDialogID = function () {
-        return this.dialogID;
+    QueueModel.prototype.GetDialog = function () {
+        return this.dialogManager.GetDialog(this.dialogID);
     };
     QueueModel.prototype.GetPlayerTicket = function () {
         for (var i = 0; i != this.queue.length; ++i) {
@@ -531,9 +558,9 @@ var QueueModel = (function () {
     QueueModel.prototype.GetSpeaker = function () {
         return this.speaker;
     };
-    QueueModel.prototype.SetDialog = function (speaker, dialogID) {
+    QueueModel.prototype.StartDialog = function (speaker) {
         this.speaker = speaker;
-        this.dialogID = dialogID;
+        this.dialogID = "StdQueueGreetingInit";
         this.DialogChanged.Call();
     };
     // IPersistent implementation
@@ -551,14 +578,13 @@ var QueueModel = (function () {
     };
     // private implementation
     QueueModel.prototype.AddStockPosition = function () {
-        var i;
+        var character;
         do {
-            i = Math.floor(Math.random() * this.stock.length);
-        } while (this.InQueue(this.stock[i]));
+            character = this.characterManager.GetRandomCharacter();
+        } while (this.InQueue(character));
         var remaining = Math.floor(2 + Math.random() * 8);
         var ticket = String(this.ticket++);
-        var p = { character: this.stock[i], remaining: remaining, ticket: ticket };
-        this.stock.splice(i, 1);
+        var p = { character: character, remaining: remaining, ticket: ticket };
         this.queue.push(p);
     };
     QueueModel.prototype.AddPlayerPosition = function () {
@@ -569,7 +595,7 @@ var QueueModel = (function () {
     };
     QueueModel.prototype.InQueue = function (c) {
         return this.queue.some(function (p) {
-            return p.character && p.character.name === c.name;
+            return p.character && p.character.id === c.id;
         });
     };
     QueueModel.prototype.OnAdvance = function () {
@@ -579,13 +605,10 @@ var QueueModel = (function () {
         --p.remaining;
         if (p.remaining <= 0) {
             this.queue.shift();
-            if (p.character) {
-                this.stock.push(p.character);
+            if (p.character)
                 this.PeopleChanged.Call();
-            }
-            else {
+            else
                 this.PlayerTicketChanged.Call();
-            }
             this.CurrentTicketChanged.Call();
         }
     };
@@ -602,11 +625,10 @@ var QueueModel = (function () {
 /// <reference path="IQueueModel.ts"   />
 /// <reference path="IQueueView.ts"    />
 var QueuePresenter = (function () {
-    function QueuePresenter(mainModel, queueModel, queueView, dialogManager) {
+    function QueuePresenter(mainModel, queueModel, queueView) {
         this.mainModel = mainModel;
         this.queueModel = queueModel;
         this.queueView = queueView;
-        this.dialogManager = dialogManager;
         queueModel.CurrentTicketChanged.Add(this.OnCurrentTicketChanged.bind(this));
         queueModel.DialogChanged.Add(this.OnDialogChanged.bind(this));
         queueModel.PeopleChanged.Add(this.OnPeopleChanged.bind(this));
@@ -624,7 +646,7 @@ var QueuePresenter = (function () {
             this.queueView.SetCurrentTicket(ticket);
     };
     QueuePresenter.prototype.OnDialogChanged = function () {
-        this.queueView.SetDialog(this.queueModel.GetSpeaker(), this.dialogManager.GetDialog(this.queueModel.GetDialogID()));
+        this.queueView.SetDialog(this.queueModel.GetSpeaker(), this.queueModel.GetDialog());
     };
     QueuePresenter.prototype.OnGoToHome = function () {
         this.mainModel.SetView(0 /* Home */);
@@ -633,7 +655,7 @@ var QueuePresenter = (function () {
         this.queueView.SetPeopleNames(this.queueModel.GetPeopleNames());
     };
     QueuePresenter.prototype.OnPersonClicked = function () {
-        this.queueModel.SetDialog(this.queueView.GetSpeaker(), 0);
+        this.queueModel.StartDialog(this.queueView.GetSpeaker());
     };
     QueuePresenter.prototype.OnPlayerTicketChanged = function () {
         var ticket = this.queueModel.GetPlayerTicket();
@@ -647,12 +669,10 @@ var QueuePresenter = (function () {
         this.queueView.SetPlayerTicket(this.queueModel.GetPlayerTicket());
         this.queueView.SetCurrentTicket(this.queueModel.GetCurrentTicket());
         this.queueView.SetPeopleNames(this.queueModel.GetPeopleNames());
-        this.queueView.SetDialog(this.queueModel.GetSpeaker(), this.dialogManager.GetDialog(this.queueModel.GetDialogID()));
+        this.queueView.SetDialog(this.queueModel.GetSpeaker(), this.queueModel.GetDialog());
     };
     QueuePresenter.prototype.OnReplyClicked = function () {
-        var reply = this.queueView.GetSelectedReply();
-        var dialogID = this.dialogManager.GetRefDialogID(this.queueModel.GetDialogID(), reply);
-        this.queueModel.SetDialog(this.queueView.GetSpeaker(), dialogID);
+        this.queueModel.AdvanceDialog(this.queueView.GetSelectedReply());
     };
     return QueuePresenter;
 })();
@@ -967,13 +987,14 @@ var StoreView = (function () {
 /// <reference path="StorePresenter.ts"  />
 /// <reference path="StoreView.ts"       />
 /// <reference path="Timer.ts"           />
-function Main(dialogs) {
+function Main(dialogs, characters) {
     var dialogManager = new DialogManager(dialogs);
+    var characterManager = new CharacterManager(characters);
     var timer = new Timer();
     var player = new Player(timer);
     var homeModel = new HomeModel();
     var mainModel = new MainModel(player);
-    var queueModel = new QueueModel(timer, 8);
+    var queueModel = new QueueModel(timer, characterManager, dialogManager, 8);
     var saveModel = new SaveModel();
     var storeModel = new StoreModel(player);
     var homeView = new HomeView();
@@ -983,7 +1004,7 @@ function Main(dialogs) {
     var mainView = new MainView([homeView, queueView, storeView]);
     var homePresenter = new HomePresenter(homeModel, mainModel, homeView);
     var mainPresenter = new MainPresenter(mainModel, mainView);
-    var queuePresenter = new QueuePresenter(mainModel, queueModel, queueView, dialogManager);
+    var queuePresenter = new QueuePresenter(mainModel, queueModel, queueView);
     var savePrsenter = new SavePresenter(saveModel, saveView);
     var storePresenter = new StorePresenter(mainModel, storeModel, storeView);
     var persistentItems = [["main", mainModel], ["queue", queueModel], ["player", player], ["timer", timer]];
@@ -992,6 +1013,8 @@ function Main(dialogs) {
     mainPresenter.LightsCameraAction();
     timer.Start(100);
 }
-$.getJSON("js/dialogs.json", function (dialogs, textStatus, jqXHR) {
-    Main(dialogs);
+$.getJSON("js/dialogs.json", function (dialogs) {
+    $.getJSON("js/characters.json", function (characters) {
+        Main(dialogs, characters);
+    });
 });
