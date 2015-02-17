@@ -1,58 +1,62 @@
 [
 	{ "id"    : "Queueologist"
 	, "name"  : "Учёный-очередолог"
-	, "color" : "black"
+	, "color" : "#1693A5"
 	},
 	{ "id"    : "Hero"
 	, "name"  : "Герой"
-	, "color" : "black"
+	, "color" : "#ADD8C7"
 	},
 	{ "id"    : "QuietFriend"
 	, "name"  : "Молчаливый друг"
-	, "color" : "black"
+	, "color" : "#FF0066"
 	},
 	{ "id"    : "ShadyCharacter"
 	, "name"  : "Тёмная личность"
-	, "color" : "black"
+	, "color" : "#FBB829"
 	},
 	{ "id"    : "Hat"
 	, "name"  : "Шляпа"
-	, "color" : "black"
+	, "color" : "#800F25"
 	},
 	{ "id"    : "Turtle"
 	, "name"  : "Черепашка"
-	, "color" : "black"
+	, "color" : "#CDD7B6"
 	},
 	{ "id"    : "MoustachedMan"
 	, "name"  : "Усач"
-	, "color" : "black"
+	, "color" : "#C3FF68"
 	},
 	{ "id"    : "Encyclopedist"
 	, "name"  : "Энциклопедист"
-	, "color" : "black"
+	, "color" : "#FCFBE3"
 	},
 	{ "id"    : "Hipster"
 	, "name"  : "Хипстер"
-	, "color" : "black"
+	, "color" : "#FF0000"
 	},
 	{ "id"    : "Poet"
 	, "name"  : "Поэт"
-	, "color" : "black"
+	, "color" : "#D31996"
 	},
 	{ "id"    : "Anny"
 	, "name"  : "Настенька"
-	, "color" : "black"
+	, "color" : "#FF9900"
 	},
 	{ "id"    : "Kostik"
 	, "name"  : "Костик"
-	, "color" : "black"
+	, "color" : "#F02311"
 	},
 	{ "id"    : "Cat"
 	, "name"  : "Кот"
-	, "color" : "black"
+	, "color" : "#FE4365"
 	},
 	{ "id"    : "TerminallyIll"
 	, "name"  : "Тяжёлобольной"
-	, "color" : "black"
+	, "color" : "#F0F0D8"
+	},
+	{ "id"    : "Villain"
+	, "name"  : "Злодей"
+	, "color" : "#77CCA4"
 	}
 ]

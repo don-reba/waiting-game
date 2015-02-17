@@ -1,5 +1,5 @@
 [
-	{ "id"   : "StdQueueGreetingInit"
+	{ "id"   : "StdQueueGreeting"
 	, "text" : "Эй, как дела?"
 	, "replies" :
 		[ { "text" : "Неплохо…",       "ref" : null }
@@ -10,6 +10,12 @@
 	, "text" : "Извините…"
 	, "replies" :
 		[ { "text" : "Прощайте!", "ref" : null }
+		]
+	},
+	{ "id"   : "StdQueueEscape"
+	, "text" : "Извините, моя очередь."
+	, "replies" :
+		[ { "text" : "До свидания", "ref" : null }
 		]
 	}
 ]

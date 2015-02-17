@@ -16,16 +16,16 @@ class QueueModelState
 	player   : QueuePosition;
 	ticket   : number;
 	dialogID : string;
-	speaker  : string;
+	speakerID : string;
 }
 
 class QueueModel implements IQueueModel
 {
-	private queue    : QueuePosition[];
-	private player   : QueuePosition;
-	private ticket   : number;
-	private dialogID : string;
-	private speaker  : string;
+	private queue     : QueuePosition[];
+	private player    : QueuePosition;
+	private ticket    : number;
+	private dialogID  : string;
+	private speakerID : string;
 
 	constructor
 		( private timer            : Timer
@@ -55,7 +55,7 @@ class QueueModel implements IQueueModel
 	{
 		this.dialogID = this.dialogManager.GetRefDialogID(this.dialogID, reply);
 		if (this.dialogID == null)
-			this.speaker = null;
+			this.speakerID = null;
 		this.DialogChanged.Call();
 	}
 
@@ -92,15 +92,15 @@ class QueueModel implements IQueueModel
 		return null;
 	}
 
-	GetSpeaker() : string
+	GetSpeaker() : ICharacter
 	{
-		return this.speaker;
+		return this.characterManager.GetCharacter(this.speakerID);
 	}
 
-	StartDialog(speaker : string) : void
+	StartDialog(speaker : ICharacter) : void
 	{
-		this.speaker  = speaker;
-		this.dialogID = "StdQueueGreetingInit";
+		this.speakerID = speaker.id;
+		this.dialogID  = this.characterManager.GetDialogID(speaker.id, DialogType.Greeting);
 		this.DialogChanged.Call();
 	}
 
@@ -109,21 +109,21 @@ class QueueModel implements IQueueModel
 	FromPersistentString(str : string) : void
 	{
 		var state = <QueueModelState>JSON.parse(str);
-		this.queue    = state.queue;
-		this.player   = state.player;
-		this.ticket   = state.ticket;
-		this.dialogID = state.dialogID;
-		this.speaker  = state.speaker;
+		this.queue      = state.queue;
+		this.player     = state.player;
+		this.ticket     = state.ticket;
+		this.dialogID   = state.dialogID;
+		this.speakerID  = state.speakerID;
 	}
 
 	ToPersistentString() : string
 	{
 		var state : QueueModelState =
-			{ queue    : this.queue
-			, player   : this.player
-			, ticket   : this.ticket
-			, dialogID : this.dialogID
-			, speaker  : this.speaker
+			{ queue     : this.queue
+			, player    : this.player
+			, ticket    : this.ticket
+			, dialogID  : this.dialogID
+			, speakerID : this.speakerID
 			};
 		return JSON.stringify(state);
 	}
@@ -167,6 +167,19 @@ class QueueModel implements IQueueModel
 		return this.queue.some((p) => { return p.characterID && p.characterID === c.id; });
 	}
 
+	private ProcessNextCharacter() : void
+	{
+		if (this.queue.length == 0)
+			return;
+		if (this.queue[0].characterID == this.speakerID)
+		{
+			this.dialogID = this.characterManager.GetDialogID(this.speakerID, DialogType.Escape);
+			this.DialogChanged.Call();
+		}
+	}
+
+	// event handlers
+
 	private OnAdvance() : void
 	{
 		if (this.queue.length == 0)
@@ -179,9 +192,14 @@ class QueueModel implements IQueueModel
 		{
 			this.queue.shift();
 			if (p.characterID)
+			{
+				this.ProcessNextCharacter();
 				this.PeopleChanged.Call();
+			}
 			else
+			{
 				this.PlayerTicketChanged.Call();
+			}
 			this.CurrentTicketChanged.Call();
 		}
 	}

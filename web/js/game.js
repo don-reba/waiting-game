@@ -1,4 +1,9 @@
 /// <reference path="ICharacter.ts" />
+var DialogType;
+(function (DialogType) {
+    DialogType[DialogType["Escape"] = 0] = "Escape";
+    DialogType[DialogType["Greeting"] = 1] = "Greeting";
+})(DialogType || (DialogType = {}));
 var CharacterManager = (function () {
     function CharacterManager(characters) {
         this.characters = characters;
@@ -7,15 +12,21 @@ var CharacterManager = (function () {
             this.map[characters[i].id] = characters[i];
     }
     CharacterManager.prototype.GetCharacter = function (id) {
-        if (!id)
-            return null;
-        return this.map[id];
+        if (id)
+            return this.map[id];
     };
-    CharacterManager.prototype.GetQueueGreetingDialogID = function (characterID) {
+    CharacterManager.prototype.GetDialogID = function (characterID, dialogType) {
         var character = this.map[characterID];
-        if (character.queueGreetingDialogs)
-            return character.queueGreetingDialogs[0];
-        return "StdQueueGreetingInit";
+        switch (dialogType) {
+            case 0 /* Escape */:
+                if (character.queueEscapeDialogs)
+                    return character.queueGreetingDialogs[0];
+                return "StdQueueEscape";
+            case 1 /* Greeting */:
+                if (character.queueGreetingDialogs)
+                    return character.queueGreetingDialogs[0];
+                return "StdQueueGreeting";
+        }
     };
     CharacterManager.prototype.GetRandomCharacter = function () {
         return this.characters[Math.floor(Math.random() * this.characters.length)];
@@ -191,7 +202,10 @@ var HomeView = (function () {
     return HomeView;
 })();
 /// <reference path="IClientView.ts" />
-/// <reference path="IDialog.ts" />
+/// <reference path="ICharacter.ts" />
+/// <reference path="IDialog.ts"    />
+/// <reference path="ICharacter.ts" />
+/// <reference path="IDialog.ts"    />
 /// <reference path="Signal.ts" />
 var Item;
 (function (Item) {
@@ -528,7 +542,7 @@ var QueueModel = (function () {
     QueueModel.prototype.AdvanceDialog = function (reply) {
         this.dialogID = this.dialogManager.GetRefDialogID(this.dialogID, reply);
         if (this.dialogID == null)
-            this.speaker = null;
+            this.speakerID = null;
         this.DialogChanged.Call();
     };
     QueueModel.prototype.EnterQueue = function () {
@@ -559,11 +573,11 @@ var QueueModel = (function () {
         return null;
     };
     QueueModel.prototype.GetSpeaker = function () {
-        return this.speaker;
+        return this.characterManager.GetCharacter(this.speakerID);
     };
     QueueModel.prototype.StartDialog = function (speaker) {
-        this.speaker = speaker;
-        this.dialogID = "StdQueueGreetingInit";
+        this.speakerID = speaker.id;
+        this.dialogID = this.characterManager.GetDialogID(speaker.id, 1 /* Greeting */);
         this.DialogChanged.Call();
     };
     // IPersistent implementation
@@ -573,10 +587,10 @@ var QueueModel = (function () {
         this.player = state.player;
         this.ticket = state.ticket;
         this.dialogID = state.dialogID;
-        this.speaker = state.speaker;
+        this.speakerID = state.speakerID;
     };
     QueueModel.prototype.ToPersistentString = function () {
-        var state = { queue: this.queue, player: this.player, ticket: this.ticket, dialogID: this.dialogID, speaker: this.speaker };
+        var state = { queue: this.queue, player: this.player, ticket: this.ticket, dialogID: this.dialogID, speakerID: this.speakerID };
         return JSON.stringify(state);
     };
     // private implementation
@@ -601,6 +615,15 @@ var QueueModel = (function () {
             return p.characterID && p.characterID === c.id;
         });
     };
+    QueueModel.prototype.ProcessNextCharacter = function () {
+        if (this.queue.length == 0)
+            return;
+        if (this.queue[0].characterID == this.speakerID) {
+            this.dialogID = this.characterManager.GetDialogID(this.speakerID, 0 /* Escape */);
+            this.DialogChanged.Call();
+        }
+    };
+    // event handlers
     QueueModel.prototype.OnAdvance = function () {
         if (this.queue.length == 0)
             return;
@@ -608,10 +631,13 @@ var QueueModel = (function () {
         --p.remaining;
         if (p.remaining <= 0) {
             this.queue.shift();
-            if (p.characterID)
+            if (p.characterID) {
+                this.ProcessNextCharacter();
                 this.PeopleChanged.Call();
-            else
+            }
+            else {
                 this.PlayerTicketChanged.Call();
+            }
             this.CurrentTicketChanged.Call();
         }
     };
@@ -658,7 +684,7 @@ var QueuePresenter = (function () {
         this.queueView.SetCharacters(this.queueModel.GetCharacters());
     };
     QueuePresenter.prototype.OnPersonClicked = function () {
-        this.queueModel.StartDialog(this.queueView.GetSpeakerID());
+        this.queueModel.StartDialog(this.queueView.GetSpeaker());
     };
     QueuePresenter.prototype.OnPlayerTicketChanged = function () {
         var ticket = this.queueModel.GetPlayerTicket();
@@ -683,7 +709,7 @@ var QueuePresenter = (function () {
 /// <reference path="IClientView.ts" />
 var QueueView = (function () {
     function QueueView() {
-        this.selectedCharacterID = null;
+        this.selectedCharacter = null;
         this.selectedReply = -1;
         // IQueueView implementation
         this.GoToHome = new Signal();
@@ -700,23 +726,26 @@ var QueueView = (function () {
     QueueView.prototype.GetSelectedReply = function () {
         return this.selectedReply;
     };
-    QueueView.prototype.GetSpeakerID = function () {
-        return this.selectedCharacterID;
+    QueueView.prototype.GetSpeaker = function () {
+        return this.selectedCharacter;
     };
     QueueView.prototype.SetCharacters = function (characters) {
         var people = $("#queue #people");
         people.empty();
         for (var i = 0; i != characters.length; ++i) {
             var OnClick = function (e) {
-                this.selectedCharacterID = e.data;
+                this.selectedCharacter = e.data;
                 this.PersonClicked.Call();
             };
             var character = characters[i];
             if (!character)
                 continue;
             var button = $("<button>");
+            button.css("background-color", character.color);
             button.text(characters[i].name);
-            button.click(characters[i].id, OnClick.bind(this));
+            button.click(characters[i], OnClick.bind(this));
+            if (i == 0)
+                button.prop("disabled", true);
             people.append(button);
         }
     };
@@ -728,7 +757,7 @@ var QueueView = (function () {
         div.empty();
         if (!dialog)
             return;
-        div.append($("<p><strong>" + speaker + "</strong>: " + dialog.text + "</p>"));
+        div.append($("<p><strong>" + speaker.name + "</strong>: " + dialog.text + "</p>"));
         var ol = $("<ol>");
         for (var i = 0; i != dialog.replies.length; ++i) {
             var OnClick = function (e) {

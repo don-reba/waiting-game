@@ -1,6 +1,9 @@
+/// <reference path="ICharacter.ts" />
+/// <reference path="IDialog.ts"    />
+
 interface IQueueView
 {
-	GoToHome : Signal;
+	GoToHome      : Signal;
 	PersonClicked : Signal;
 	ReplyClicked  : Signal;
 	Shown         : Signal;
@@ -11,13 +14,13 @@ interface IQueueView
 
 	GetSelectedReply() : number;
 
-	GetSpeakerID() : string;
+	GetSpeaker() : ICharacter;
 
 	SetCharacters(characters : ICharacter[]) : void;
 
 	SetCurrentTicket(ticket : string) : void;
 
-	SetDialog(speaker : string, dialog : IDialog) : void;
+	SetDialog(speaker : ICharacter, dialog : IDialog) : void;
 
 	SetPlayerTicket(ticket : string) : void;
 }

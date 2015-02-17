@@ -1,4 +1,5 @@
-/// <reference path="IDialog.ts" />
+/// <reference path="ICharacter.ts" />
+/// <reference path="IDialog.ts"    />
 
 interface IQueueModel
 {
@@ -19,7 +20,7 @@ interface IQueueModel
 
 	GetPlayerTicket() : string;
 
-	GetSpeaker() : string;
+	GetSpeaker() : ICharacter;
 
-	StartDialog(speaker : string) : void;
+	StartDialog(speaker : ICharacter) : void;
 }

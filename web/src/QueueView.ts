@@ -3,8 +3,8 @@
 
 class QueueView implements IQueueView, IClientView
 {
-	selectedCharacterID : string = null;
-	selectedReply       : number = -1;
+	selectedCharacter : ICharacter = null;
+	selectedReply     : number     = -1;
 
 	// IQueueView implementation
 
@@ -28,9 +28,9 @@ class QueueView implements IQueueView, IClientView
 		return this.selectedReply;
 	}
 
-	GetSpeakerID() : string
+	GetSpeaker() : ICharacter
 	{
-		return this.selectedCharacterID;
+		return this.selectedCharacter;
 	}
 
 	SetCharacters(characters : ICharacter[]) : void
@@ -42,15 +42,18 @@ class QueueView implements IQueueView, IClientView
 		{
 			var OnClick = function(e)
 			{
-				this.selectedCharacterID = e.data;
+				this.selectedCharacter = e.data;
 				this.PersonClicked.Call();
 			}
 			var character = characters[i];
 			if (!character)
 				continue;
 			var button = $("<button>");
+			button.css("background-color", character.color);
 			button.text(characters[i].name);
-			button.click(characters[i].id, OnClick.bind(this));
+			button.click(characters[i], OnClick.bind(this));
+			if (i == 0)
+				button.prop("disabled", true);
 			people.append(button);
 		}
 	}
@@ -60,7 +63,7 @@ class QueueView implements IQueueView, IClientView
 		$("#queue #current").text("текущий номер: " + ticket);
 	}
 
-	SetDialog(speaker : string, dialog : IDialog) : void
+	SetDialog(speaker : ICharacter, dialog : IDialog) : void
 	{
 		var div = $("#queue #dialog");
 		div.empty();
@@ -68,7 +71,7 @@ class QueueView implements IQueueView, IClientView
 		if (!dialog)
 			return;
 
-		div.append($("<p><strong>" + speaker + "</strong>: " + dialog.text + "</p>"));
+		div.append($("<p><strong>" + speaker.name + "</strong>: " + dialog.text + "</p>"));
 
 		var ol = $("<ol>");
 		for (var i = 0; i != dialog.replies.length; ++i)

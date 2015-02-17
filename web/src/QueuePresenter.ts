@@ -48,7 +48,7 @@ class QueuePresenter
 
 	private OnPersonClicked() : void
 	{
-		this.queueModel.StartDialog(this.queueView.GetSpeakerID());
+		this.queueModel.StartDialog(this.queueView.GetSpeaker());
 	}
 
 	private OnPlayerTicketChanged() : void

@@ -1,5 +1,11 @@
 /// <reference path="ICharacter.ts" />
 
+enum DialogType
+{
+	Escape,
+	Greeting
+}
+
 class CharacterManager
 {
 	map : { [ id : string ] : ICharacter; } = {}
@@ -12,17 +18,23 @@ class CharacterManager
 
 	GetCharacter(id : string) : ICharacter
 	{
-		if (!id)
-			return null;
-		return this.map[id];
+		if (id) return this.map[id];
 	}
 
-	GetQueueGreetingDialogID(characterID : string) : string
+	GetDialogID(characterID : string, dialogType : DialogType) : string
 	{
 		var character = this.map[characterID];
-		if (character.queueGreetingDialogs)
-			return character.queueGreetingDialogs[0];
-		return "StdQueueGreetingInit";
+		switch (dialogType)
+		{
+			case DialogType.Escape:
+				if (character.queueEscapeDialogs)
+					return character.queueGreetingDialogs[0];
+				return "StdQueueEscape";
+			case DialogType.Greeting:
+				if (character.queueGreetingDialogs)
+					return character.queueGreetingDialogs[0];
+				return "StdQueueGreeting";
+		}
 	}
 
 	GetRandomCharacter() : ICharacter
