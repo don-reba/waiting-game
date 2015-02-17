@@ -17,6 +17,7 @@ class QueuePresenter
 		queueModel.PlayerTicketChanged.Add(this.OnPlayerTicketChanged.bind(this));
 
 		queueView.GoToHome.Add(this.OnGoToHome.bind(this));
+		queueView.Hidden.Add(this.OnHidden.bind(this));
 		queueView.PersonClicked.Add(this.OnPersonClicked.bind(this));
 		queueView.ReplyClicked.Add(this.OnReplyClicked.bind(this));
 		queueView.Shown.Add(this.OnQueueShown.bind(this));
@@ -39,6 +40,11 @@ class QueuePresenter
 	private OnGoToHome() : void
 	{
 		this.mainModel.SetView(ClientViewType.Home);
+	}
+
+	private OnHidden() : void
+	{
+		this.queueModel.EndDialog();
 	}
 
 	private OnPeopleChanged() : void

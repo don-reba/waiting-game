@@ -8,9 +8,10 @@ class QueueView implements IQueueView, IClientView
 
 	// IQueueView implementation
 
-	GoToHome = new Signal();
+	GoToHome      = new Signal();
 	PersonClicked = new Signal();
 	ReplyClicked  = new Signal();
+	Hidden        = new Signal();
 	Shown         = new Signal();
 
 	ClearCurrentTicket() : void
@@ -103,6 +104,7 @@ class QueueView implements IQueueView, IClientView
 
 	Hide() : void
 	{
+		this.Hidden.Call();
 	}
 
 	Show(e : JQuery) : void

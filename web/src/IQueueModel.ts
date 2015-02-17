@@ -10,6 +10,8 @@ interface IQueueModel
 
 	AdvanceDialog(reply : number) : void;
 
+	EndDialog() : void;
+
 	EnterQueue() : void;
 
 	GetCharacters() : ICharacter[];

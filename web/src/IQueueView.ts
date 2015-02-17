@@ -4,6 +4,7 @@
 interface IQueueView
 {
 	GoToHome      : Signal;
+	Hidden        : Signal;
 	PersonClicked : Signal;
 	ReplyClicked  : Signal;
 	Shown         : Signal;

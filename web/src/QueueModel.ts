@@ -59,6 +59,13 @@ class QueueModel implements IQueueModel
 		this.DialogChanged.Call();
 	}
 
+	EndDialog() : void
+	{
+		this.dialogID  = null;
+		this.speakerID = null;
+		this.DialogChanged.Call();
+	}
+
 	EnterQueue() : void
 	{
 		if (this.queue.every((p) => { return p.characterID != null; }))

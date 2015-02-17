@@ -545,6 +545,11 @@ var QueueModel = (function () {
             this.speakerID = null;
         this.DialogChanged.Call();
     };
+    QueueModel.prototype.EndDialog = function () {
+        this.dialogID = null;
+        this.speakerID = null;
+        this.DialogChanged.Call();
+    };
     QueueModel.prototype.EnterQueue = function () {
         if (this.queue.every(function (p) {
             return p.characterID != null;
@@ -663,6 +668,7 @@ var QueuePresenter = (function () {
         queueModel.PeopleChanged.Add(this.OnPeopleChanged.bind(this));
         queueModel.PlayerTicketChanged.Add(this.OnPlayerTicketChanged.bind(this));
         queueView.GoToHome.Add(this.OnGoToHome.bind(this));
+        queueView.Hidden.Add(this.OnHidden.bind(this));
         queueView.PersonClicked.Add(this.OnPersonClicked.bind(this));
         queueView.ReplyClicked.Add(this.OnReplyClicked.bind(this));
         queueView.Shown.Add(this.OnQueueShown.bind(this));
@@ -679,6 +685,9 @@ var QueuePresenter = (function () {
     };
     QueuePresenter.prototype.OnGoToHome = function () {
         this.mainModel.SetView(0 /* Home */);
+    };
+    QueuePresenter.prototype.OnHidden = function () {
+        this.queueModel.EndDialog();
     };
     QueuePresenter.prototype.OnPeopleChanged = function () {
         this.queueView.SetCharacters(this.queueModel.GetCharacters());
@@ -715,6 +724,7 @@ var QueueView = (function () {
         this.GoToHome = new Signal();
         this.PersonClicked = new Signal();
         this.ReplyClicked = new Signal();
+        this.Hidden = new Signal();
         this.Shown = new Signal();
     }
     QueueView.prototype.ClearCurrentTicket = function () {
@@ -779,6 +789,7 @@ var QueueView = (function () {
         return 1 /* Queue */;
     };
     QueueView.prototype.Hide = function () {
+        this.Hidden.Call();
     };
     QueueView.prototype.Show = function (e) {
         var _this = this;
