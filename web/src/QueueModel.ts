@@ -171,7 +171,7 @@ class QueueModel implements IQueueModel
 	{
 		if (this.queue.length == 0)
 			return;
-		if (this.queue[0].characterID == this.speakerID)
+		if (this.speakerID && this.queue[0].characterID == this.speakerID)
 		{
 			this.dialogID = this.characterManager.GetDialogID(this.speakerID, DialogType.Escape);
 			this.DialogChanged.Call();

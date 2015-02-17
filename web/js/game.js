@@ -411,7 +411,7 @@ var Timer = (function () {
 var PersistentState = (function () {
     function PersistentState(items, timer) {
         this.items = items;
-        this.version = "3";
+        this.version = "4";
         timer.AddEvent(this.Save.bind(this), 20);
     }
     // get the state string from each item and store it in local storage
@@ -618,7 +618,7 @@ var QueueModel = (function () {
     QueueModel.prototype.ProcessNextCharacter = function () {
         if (this.queue.length == 0)
             return;
-        if (this.queue[0].characterID == this.speakerID) {
+        if (this.speakerID && this.queue[0].characterID == this.speakerID) {
             this.dialogID = this.characterManager.GetDialogID(this.speakerID, 0 /* Escape */);
             this.DialogChanged.Call();
         }
