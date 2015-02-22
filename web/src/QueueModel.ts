@@ -27,11 +27,12 @@ class QueueModel implements IQueueModel
 	private dialogID  : string;
 	private speakerID : string;
 
+	private maxLength = 8;
+
 	constructor
 		( private timer            : Timer
 		, private characterManager : CharacterManager
 		, private dialogManager    : DialogManager
-		, private maxLength        : number
 		)
 	{
 		timer.AddEvent(this.OnAdvance.bind(this), 20);
@@ -68,13 +69,13 @@ class QueueModel implements IQueueModel
 
 	EnterQueue() : void
 	{
-		if (this.queue.every((p) => { return p.characterID != null; }))
+		if (this.queue.every(p => { return p.characterID != null; }))
 			this.AddPlayerPosition();
 	}
 
 	GetCharacters() : ICharacter[]
 	{
-		return this.queue.map((p) => { return this.characterManager.GetCharacter(p.characterID); });
+		return this.queue.map(p => { return this.characterManager.GetCharacter(p.characterID); });
 	}
 
 	GetDialog() : IDialog
@@ -171,7 +172,7 @@ class QueueModel implements IQueueModel
 
 	private InQueue(c : ICharacter) : boolean
 	{
-		return this.queue.some((p) => { return p.characterID && p.characterID === c.id; });
+		return this.queue.some(p => { return p.characterID && p.characterID === c.id; });
 	}
 
 	private ProcessNextCharacter() : void

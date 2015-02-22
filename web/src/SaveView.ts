@@ -11,9 +11,9 @@ class SaveView implements ISaveView
 
 	constructor()
 	{
-		$("#save-clear").click(() => { this.Clear.Call(); });
-		$("#save-load").click(() => { this.Load.Call(); });
-		$("#save-save").click(() => { this.Save.Call(); });
+		$("#save-clear").click(() => { this.Clear.Call() });
+		$("#save-load").click(() => { this.Load.Call() });
+		$("#save-save").click(() => { this.Save.Call() });
 	}
 
 	GetSaveData() : [string, string][]

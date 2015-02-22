@@ -1,4 +1,5 @@
 /// <reference path="ICharacter.ts" />
+/// <reference path="Util.ts"       />
 
 enum DialogType
 {
@@ -16,6 +17,11 @@ class CharacterManager
 			this.map[characters[i].id] = characters[i];
 	}
 
+	GetAllCharacters() : ICharacter[]
+	{
+		return this.characters;
+	}
+
 	GetCharacter(id : string) : ICharacter
 	{
 		if (id) return this.map[id];
@@ -28,7 +34,7 @@ class CharacterManager
 		{
 			case DialogType.Escape:
 				if (character.queueEscapeDialogs)
-					return character.queueGreetingDialogs[0];
+					return character.queueEscapeDialogs[0];
 				return "StdQueueEscape";
 			case DialogType.Greeting:
 				if (character.queueGreetingDialogs)
@@ -39,6 +45,6 @@ class CharacterManager
 
 	GetRandomCharacter() : ICharacter
 	{
-		return this.characters[Math.floor(Math.random() * this.characters.length)];
+		return Util.Sample(this.characters);
 	}
 }

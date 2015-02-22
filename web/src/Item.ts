@@ -1,13 +1,13 @@
-enum Item
-{
-	PencilMoustache
-}
-
 class ItemInfo
 {
 	name        : string;
 	description : string;
 	price       : number;
+}
+
+enum Item
+{
+	PencilMoustache = 0
 }
 
 module Item

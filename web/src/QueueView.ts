@@ -47,15 +47,20 @@ class QueueView implements IQueueView, IClientView
 				this.PersonClicked.Call();
 			}
 			var character = characters[i];
-			if (!character)
-				continue;
-			var button = $("<button>");
-			button.css("background-color", character.color);
-			button.text(characters[i].name);
-			button.click(characters[i], OnClick.bind(this));
-			if (i == 0)
-				button.prop("disabled", true);
-			people.append(button);
+			if (character)
+			{
+				var button = $("<button>");
+				button.css("background-color", character.color);
+				button.text(characters[i].name);
+				button.click(characters[i], OnClick.bind(this));
+				if (i == 0)
+					button.prop("disabled", true);
+				people.append(button);
+			}
+			else
+			{
+				people.append("&nbsp;\\o/&nbsp;");
+			}
 		}
 	}
 
@@ -111,7 +116,7 @@ class QueueView implements IQueueView, IClientView
 	{
 		e.html("<table id='queue'><tr><td><button id='goHome'>вернуться домой</button></td></tr><tr><td id='player' /></tr><tr><td id='current' /></tr><tr><td id='people' /></tr><tr><td id='body'><div id='dialog' /></td></tr></table>");
 
-		$("#goHome").click(() => { this.GoToHome.Call(); });
+		$("#goHome").click(() => { this.GoToHome.Call() });
 
 		this.Shown.Call();
 	}

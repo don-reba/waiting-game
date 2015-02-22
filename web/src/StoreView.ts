@@ -11,33 +11,9 @@ class StoreView implements IStoreView, IClientView
 	ItemSelected = new Signal();
 	Shown        = new Signal();
 
-	// IClientView implementation
-
 	GetSelectedItem() : Item
 	{
 		return this.selectedItem;
-	}
-
-	GetType() : ClientViewType
-	{
-		return ClientViewType.Store;
-	}
-
-	Hide() : void
-	{
-	}
-
-	Show(e : JQuery) : void
-	{
-		var header = "<tr><td id='store-header'><button id='goHome'>вернуться домой</button></td></tr>";
-
-		var body = "<tr><td id='store-body'><div><table id='store-items'></table></div></td></tr>";
-
-		e.html("<table id='store'>" + header + body + "</table>");
-
-		$("#store #goHome").click(() => { this.GoToHome.Call(); });
-
-		this.Shown.Call();
 	}
 
 	SetItems(items : [Item, boolean][]) : void
@@ -73,5 +49,29 @@ class StoreView implements IStoreView, IClientView
 			row.append(buttons[i]);
 
 		$("#store-items").empty().append(row);
+	}
+
+	// IClientView implementation
+
+	GetType() : ClientViewType
+	{
+		return ClientViewType.Store;
+	}
+
+	Hide() : void
+	{
+	}
+
+	Show(e : JQuery) : void
+	{
+		var header = "<tr><td id='store-header'><button id='goHome'>вернуться домой</button></td></tr>";
+
+		var body = "<tr><td id='store-body'><div><table id='store-items'></table></div></td></tr>";
+
+		e.html("<table id='store'>" + header + body + "</table>");
+
+		$("#store #goHome").click(() => { this.GoToHome.Call(); });
+
+		this.Shown.Call();
 	}
 }
