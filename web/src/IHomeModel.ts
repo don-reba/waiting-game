@@ -7,6 +7,8 @@ interface IHomeModel
 	FriendsArriving : Signal;
 	GuestsChanged   : Signal;
 
+	AreGuestsIn() : boolean;
+
 	ClearFriendSelection() : void;
 
 	GetCanvas() : HomeCanvas;

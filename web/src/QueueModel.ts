@@ -12,14 +12,14 @@ class QueuePosition
 
 class QueueModelState
 {
-	queue    : QueuePosition[];
-	player   : QueuePosition;
-	ticket   : number;
-	dialogID : string;
+	queue     : QueuePosition[];
+	player    : QueuePosition;
+	ticket    : number;
+	dialogID  : string;
 	speakerID : string;
 }
 
-class QueueModel implements IQueueModel
+class QueueModel implements IQueueModel, IPersistent
 {
 	private queue     : QueuePosition[];
 	private player    : QueuePosition;

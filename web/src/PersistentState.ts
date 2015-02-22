@@ -4,7 +4,7 @@
 
 class PersistentState
 {
-	private version = "4";
+	private version = "5";
 
 	constructor(private items : [string, IPersistent][], timer : Timer)
 	{

@@ -184,8 +184,14 @@ var Signal = (function () {
 /// <reference path="HomeCanvas.ts" />
 /// <reference path="ICharacter.ts" />
 /// <reference path="Signal.ts" />
-/// <reference path="HomeItem.ts"   />
-/// <reference path="IHomeModel.ts" />
+/// <reference path="HomeItem.ts"    />
+/// <reference path="IHomeModel.ts"  />
+/// <reference path="IPersistent.ts" />
+var HomeModelState = (function () {
+    function HomeModelState() {
+    }
+    return HomeModelState;
+})();
 var HomeModel = (function () {
     function HomeModel(characterManager, timer) {
         this.characterManager = characterManager;
@@ -204,6 +210,9 @@ var HomeModel = (function () {
         this.guests = [];
         this.items = [1 /* TV */];
     }
+    HomeModel.prototype.AreGuestsIn = function () {
+        return this.waitingGuests.length + this.guests.length > 0;
+    };
     HomeModel.prototype.ClearFriendSelection = function () {
         this.selectedFriends = [];
     };
@@ -270,6 +279,18 @@ var HomeModel = (function () {
         waiting.splice(i, 1);
         this.atEntrance = true;
         this.GuestsChanged.Call();
+    };
+    // IPersistent implementation
+    HomeModel.prototype.FromPersistentString = function (str) {
+        var state = JSON.parse(str);
+        this.waitingGuests = state.waitingGuests;
+        this.guests = state.guests;
+        this.atEntrance = state.atEntrance;
+        this.activity = state.activity;
+    };
+    HomeModel.prototype.ToPersistentString = function () {
+        var state = { waitingGuests: this.waitingGuests, guests: this.guests, atEntrance: this.atEntrance, activity: this.activity };
+        return JSON.stringify(state);
     };
     // private implementation
     HomeModel.prototype.Clear = function () {
@@ -355,7 +376,7 @@ var HomePresenter = (function () {
     };
     HomePresenter.prototype.OnFriendsArriving = function () {
         this.homeView.HideFriendsButton();
-        this.homeView.HideTravelButtons();
+        //this.homeView.HideTravelButtons();
         this.homeView.SetCanvas(this.homeModel.GetCanvas());
     };
     HomePresenter.prototype.OnGoToQueue = function () {
@@ -379,6 +400,9 @@ var HomePresenter = (function () {
     HomePresenter.prototype.OnShown = function () {
         this.homeModel.ClearFriendSelection();
         this.homeView.SetCanvas(this.homeModel.GetCanvas());
+        if (this.homeModel.AreGuestsIn()) {
+            this.homeView.HideFriendsButton();
+        }
     };
     return HomePresenter;
 })();
@@ -719,7 +743,7 @@ var Timer = (function () {
 var PersistentState = (function () {
     function PersistentState(items, timer) {
         this.items = items;
-        this.version = "4";
+        this.version = "5";
         timer.AddEvent(this.Save.bind(this), 20);
     }
     // get the state string from each item and store it in local storage
@@ -1365,7 +1389,7 @@ function Main(dialogs, characters) {
     var queuePresenter = new QueuePresenter(mainModel, queueModel, queueView);
     var savePrsenter = new SavePresenter(saveModel, saveView);
     var storePresenter = new StorePresenter(mainModel, storeModel, storeView);
-    var persistentItems = [["main", mainModel], ["queue", queueModel], ["player", player], ["timer", timer]];
+    var persistentItems = [["main", mainModel], ["home", homeModel], ["queue", queueModel], ["player", player], ["timer", timer]];
     var persistentState = new PersistentState(persistentItems, timer);
     persistentState.Load();
     mainPresenter.LightsCameraAction();

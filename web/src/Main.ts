@@ -49,6 +49,7 @@ function Main(dialogs : IDialog[], characters : ICharacter[])
 
 	var persistentItems = <[string, IPersistent][]>
 		[ [ "main",   mainModel  ]
+		, [ "home",   homeModel  ]
 		, [ "queue",  queueModel ]
 		, [ "player", player     ]
 		, [ "timer",  timer      ]

@@ -42,7 +42,7 @@ class HomePresenter
 	private OnFriendsArriving() : void
 	{
 		this.homeView.HideFriendsButton();
-		this.homeView.HideTravelButtons();
+		//this.homeView.HideTravelButtons();
 		this.homeView.SetCanvas(this.homeModel.GetCanvas());
 	}
 
@@ -78,5 +78,10 @@ class HomePresenter
 	{
 		this.homeModel.ClearFriendSelection();
 		this.homeView.SetCanvas(this.homeModel.GetCanvas());
+		if (this.homeModel.AreGuestsIn())
+		{
+			this.homeView.HideFriendsButton();
+			//this.homeView.HideTravelButtons();
+		}
 	}
 }

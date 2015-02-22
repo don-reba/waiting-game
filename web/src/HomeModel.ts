@@ -1,7 +1,16 @@
-/// <reference path="HomeItem.ts"   />
-/// <reference path="IHomeModel.ts" />
+/// <reference path="HomeItem.ts"    />
+/// <reference path="IHomeModel.ts"  />
+/// <reference path="IPersistent.ts" />
 
-class HomeModel implements IHomeModel
+class HomeModelState
+{
+	waitingGuests : string[];
+	guests        : string[];
+	atEntrance    : boolean;
+	activity      : HomeItem;
+}
+
+class HomeModel implements IHomeModel, IPersistent
 {
 	private canvas          : string[][];
 	private selectedFriends : string[];
@@ -35,6 +44,11 @@ class HomeModel implements IHomeModel
 		this.guests        = [];
 
 		this.items = [ HomeItem.TV ];
+	}
+
+	AreGuestsIn() : boolean
+	{
+		return this.waitingGuests.length + this.guests.length > 0;
 	}
 
 	ClearFriendSelection() : void
@@ -134,6 +148,28 @@ class HomeModel implements IHomeModel
 		this.atEntrance = true;
 
 		this.GuestsChanged.Call();
+	}
+
+	// IPersistent implementation
+
+	FromPersistentString(str : string) : void
+	{
+		var state = <HomeModelState>JSON.parse(str);
+		this.waitingGuests = state.waitingGuests;
+		this.guests        = state.guests;
+		this.atEntrance    = state.atEntrance;
+		this.activity      = state.activity;
+	}
+
+	ToPersistentString() : string
+	{
+		var state : HomeModelState =
+			{ waitingGuests : this.waitingGuests
+			, guests        : this.guests
+			, atEntrance    : this.atEntrance
+			, activity      : this.activity
+			};
+		return JSON.stringify(state);
 	}
 
 	// private implementation
