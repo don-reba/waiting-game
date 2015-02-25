@@ -325,9 +325,11 @@ var HomeModel = (function () {
         this.guests = state.guests;
         this.atEntrance = state.atEntrance;
         this.activity = state.activity;
+        this.dialogID = state.dialogID;
+        this.speakerID = state.speakerID;
     };
     HomeModel.prototype.ToPersistentString = function () {
-        var state = { waitingGuests: this.waitingGuests, guests: this.guests, atEntrance: this.atEntrance, activity: this.activity };
+        var state = { waitingGuests: this.waitingGuests, guests: this.guests, atEntrance: this.atEntrance, activity: this.activity, dialogID: this.dialogID, speakerID: this.speakerID };
         return JSON.stringify(state);
     };
     // private implementation
@@ -457,6 +459,7 @@ var HomePresenter = (function () {
         if (this.homeModel.AreGuestsIn()) {
             this.homeView.HideFriendsButton();
         }
+        this.homeView.SetDialog(this.homeModel.GetSpeaker(), this.homeModel.GetDialog());
     };
     return HomePresenter;
 })();

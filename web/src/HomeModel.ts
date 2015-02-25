@@ -8,6 +8,8 @@ class HomeModelState
 	guests        : string[];
 	atEntrance    : boolean;
 	activity      : HomeItem;
+	dialogID      : string;
+	speakerID     : string;
 }
 
 class HomeModel implements IHomeModel, IPersistent
@@ -203,6 +205,8 @@ class HomeModel implements IHomeModel, IPersistent
 		this.guests        = state.guests;
 		this.atEntrance    = state.atEntrance;
 		this.activity      = state.activity;
+		this.dialogID      = state.dialogID;
+		this.speakerID     = state.speakerID;
 	}
 
 	ToPersistentString() : string
@@ -212,6 +216,8 @@ class HomeModel implements IHomeModel, IPersistent
 			, guests        : this.guests
 			, atEntrance    : this.atEntrance
 			, activity      : this.activity
+			, dialogID      : this.dialogID
+			, speakerID     : this.speakerID
 			};
 		return JSON.stringify(state);
 	}

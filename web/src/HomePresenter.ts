@@ -33,7 +33,7 @@ class HomePresenter
 	private OnDialogChanged() : void
 	{
 		var speaker = this.homeModel.GetSpeaker();
-		var dialog  = this.homeModel.GetDialog()
+		var dialog  = this.homeModel.GetDialog();
 		this.homeView.SetDialog(speaker, dialog);
 		if (!dialog && this.homeModel.IsGuestAtTheDoor())
 			this.homeModel.LetTheGuestIn();
@@ -105,5 +105,6 @@ class HomePresenter
 			this.homeView.HideFriendsButton();
 			//this.homeView.HideTravelButtons();
 		}
+		this.homeView.SetDialog(this.homeModel.GetSpeaker(), this.homeModel.GetDialog());
 	}
 }
