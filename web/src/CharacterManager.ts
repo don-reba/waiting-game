@@ -3,8 +3,10 @@
 
 enum DialogType
 {
-	Escape,
-	Greeting
+	QueueEscape,
+	QueueConversation,
+	HomeArrival,
+	HomeConversation
 }
 
 class CharacterManager
@@ -32,14 +34,22 @@ class CharacterManager
 		var character = this.map[characterID];
 		switch (dialogType)
 		{
-			case DialogType.Escape:
+			case DialogType.QueueEscape:
 				if (character.queueEscapeDialogs)
 					return character.queueEscapeDialogs[0];
 				return "StdQueueEscape";
-			case DialogType.Greeting:
-				if (character.queueGreetingDialogs)
-					return character.queueGreetingDialogs[0];
-				return "StdQueueGreeting";
+			case DialogType.QueueConversation:
+				if (character.queueConversationDialogs)
+					return character.queueConversationDialogs[0];
+				return "StdQueueConversation";
+			case DialogType.HomeArrival:
+				if (character.homeArrivalDialogs)
+					return character.homeArrivalDialogs[0];
+				return "StdHomeArrival";
+			case DialogType.QueueConversation:
+				if (character.homeConversationDialogs)
+					return character.homeConversationDialogs[0];
+				return "StdHomeConversation";
 		}
 	}
 

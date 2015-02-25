@@ -20,21 +20,26 @@ class HomeModel implements IHomeModel, IPersistent
 	private items           : HomeItem[];
 	private activity        : HomeItem;
 
+	private dialogID  : string;
+	private speakerID : string;
+
 	private maxFriends = 3;  // has to be single-digit
 	private nx         = 78;
 	private ny         = 23;
 
 	// IHomeModel implementation
 
+	DialogChanged   = new Signal();
 	FriendsArriving = new Signal();
 	GuestsChanged   = new Signal();
 
 	constructor
-		( private characterManager : CharacterManager
-		, private timer            : Timer
+		( private timer            : Timer
+		, private characterManager : CharacterManager
+		, private dialogManager    : DialogManager
 		)
 	{
-		timer.AddEvent(this.OnAdvance.bind(this), 20);
+		timer.AddEvent(this.OnAdvance.bind(this), 25);
 
 		this.canvas = [];
 		for (var y = 0; y != this.ny; ++y)
@@ -44,6 +49,14 @@ class HomeModel implements IHomeModel, IPersistent
 		this.guests        = [];
 
 		this.items = [ HomeItem.TV ];
+	}
+
+	AdvanceDialog(reply : number) : void
+	{
+		this.dialogID = this.dialogManager.GetRefDialogID(this.dialogID, reply);
+		if (this.dialogID == null)
+			this.speakerID = null;
+		this.DialogChanged.Call();
 	}
 
 	AreGuestsIn() : boolean
@@ -83,9 +96,19 @@ class HomeModel implements IHomeModel, IPersistent
 			};
 	}
 
+	GetDialog() : IDialog
+	{
+		return this.dialogManager.GetDialog(this.dialogID);
+	}
+
 	GetFriends() : ICharacter[]
 	{
 		return this.characterManager.GetAllCharacters();
+	}
+
+	GetSpeaker() : ICharacter
+	{
+		return this.characterManager.GetCharacter(this.speakerID);
 	}
 
 	InviteFriends() : void
@@ -106,9 +129,20 @@ class HomeModel implements IHomeModel, IPersistent
 		return this.selectedFriends.length >= this.maxFriends;
 	}
 
+	IsGuestAtTheDoor() : boolean
+	{
+		return this.atEntrance;
+	}
+
 	IsInviteEnabled() : boolean
 	{
 		return this.selectedFriends.length > 0;
+	}
+
+	LetTheGuestIn() : void
+	{
+		this.atEntrance = false;
+		this.GuestsChanged.Call();
 	}
 
 	SetFriendStatus(character : ICharacter, enabled : boolean) : void
@@ -132,22 +166,25 @@ class HomeModel implements IHomeModel, IPersistent
 	private OnAdvance() : void
 	{
 		if (this.atEntrance)
-		{
-			this.atEntrance = false;
-			this.GuestsChanged.Call();
-		}
-
-		var waiting = this.waitingGuests;
-		if (waiting.length == 0)
 			return;
 
-		var i = Math.floor(Math.random() * waiting.length);
-		this.guests.push(waiting[i]);
-		waiting.splice(i, 1);
+		if (this.waitingGuests.length == 0)
+			return;
+
+		var i = Math.floor(Math.random() * this.waitingGuests.length);
+		var waiting = this.waitingGuests[i];
+		this.waitingGuests.splice(i, 1);
+		this.guests.push(waiting);
 
 		this.atEntrance = true;
 
 		this.GuestsChanged.Call();
+
+		var speaker = this.characterManager.GetCharacter(waiting);
+
+		this.speakerID = speaker.id;
+		this.dialogID  = this.characterManager.GetDialogID(speaker.id, DialogType.HomeArrival);
+		this.DialogChanged.Call();
 	}
 
 	// IPersistent implementation

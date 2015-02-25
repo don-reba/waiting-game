@@ -10,6 +10,7 @@ class HomePresenter
 		, private homeView  : IHomeView
 		)
 	{
+		homeModel.DialogChanged.Add(this.OnDialogChanged.bind(this));
 		homeModel.FriendsArriving.Add(this.OnFriendsArriving.bind(this));
 		homeModel.GuestsChanged.Add(this.OnGuestsChanged.bind(this));
 
@@ -19,12 +20,22 @@ class HomePresenter
 		homeView.GoToStore.Add(this.OnGoToStore.bind(this));
 		homeView.InviteFriends.Add(this.OnInviteFriends.bind(this));
 		homeView.OpenInvites.Add(this.OnOpenInvites.bind(this));
+		homeView.ReplyClicked.Add(this.OnReplyClicked.bind(this));
 		homeView.Shown.Add(this.OnShown.bind(this));
 	}
 
 	private OnCloseInvites() : void
 	{
 		this.homeView.HideFriends();
+	}
+
+	private OnDialogChanged() : void
+	{
+		var speaker = this.homeModel.GetSpeaker();
+		var dialog  = this.homeModel.GetDialog()
+		this.homeView.SetDialog(speaker, dialog);
+		if (!dialog && this.homeModel.IsGuestAtTheDoor())
+			this.homeModel.LetTheGuestIn();
 	}
 
 	private OnFriendSelected() : void
@@ -72,6 +83,11 @@ class HomePresenter
 		this.homeModel.ClearFriendSelection();
 		this.homeView.ShowFriends(this.homeModel.GetFriends());
 		this.homeView.SetInviteStatus(this.homeModel.IsInviteEnabled());
+	}
+
+	private OnReplyClicked() : void
+	{
+		this.homeModel.AdvanceDialog(this.homeView.GetSelectedReply());
 	}
 
 	private OnShown() : void

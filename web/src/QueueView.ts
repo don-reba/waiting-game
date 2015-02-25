@@ -3,8 +3,8 @@
 
 class QueueView implements IQueueView, IClientView
 {
-	selectedCharacter : ICharacter = null;
-	selectedReply     : number     = -1;
+	private selectedCharacter : ICharacter;
+	private selectedReply     : number;
 
 	// IQueueView implementation
 
@@ -71,7 +71,7 @@ class QueueView implements IQueueView, IClientView
 
 	SetDialog(speaker : ICharacter, dialog : IDialog) : void
 	{
-		var div = $("#queue #dialog");
+		var div = $("#queue-dialog");
 		div.empty();
 
 		if (!dialog)
@@ -114,7 +114,7 @@ class QueueView implements IQueueView, IClientView
 
 	Show(e : JQuery) : void
 	{
-		e.html("<table id='queue'><tr><td><button id='goHome'>вернуться домой</button></td></tr><tr><td id='player' /></tr><tr><td id='current' /></tr><tr><td id='people' /></tr><tr><td id='body'><div id='dialog' /></td></tr></table>");
+		e.html("<table id='queue'><tr><td><button id='goHome'>вернуться домой</button></td></tr><tr><td id='player' /></tr><tr><td id='current' /></tr><tr><td id='people' /></tr><tr><td id='body'><div id='queue-dialog' /></td></tr></table>");
 
 		$("#goHome").click(() => { this.GoToHome.Call() });
 

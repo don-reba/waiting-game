@@ -10,6 +10,7 @@ interface IHomeView
 	GoToStore      : Signal;
 	InviteFriends  : Signal;
 	OpenInvites    : Signal;
+	ReplyClicked   : Signal;
 	Shown          : Signal;
 
 	DisableUnselectedFriends() : void;
@@ -20,6 +21,8 @@ interface IHomeView
 
 	GetSelectedFriendStatus() : boolean;
 
+	GetSelectedReply() : number;
+
 	HideFriends() : void;
 
 	HideFriendsButton() : void;
@@ -27,6 +30,8 @@ interface IHomeView
 	HideTravelButtons() : void;
 
 	SetCanvas(canvas : HomeCanvas) : void;
+
+	SetDialog(speaker : ICharacter, dialog : IDialog) : void;
 
 	SetInviteStatus(status : boolean) : void;
 

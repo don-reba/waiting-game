@@ -1,12 +1,12 @@
 [
-	{ "id"   : "StdQueueGreeting"
+	{ "id"   : "StdQueueConversation"
 	, "text" : "Эй, как дела?"
 	, "replies" :
 		[ { "text" : "Неплохо…",       "ref" : null }
 		, { "text" : "Как вы смеете!", "ref" : "StdQueueGreeting2" }
 		]
 	},
-	{ "id"   : "StdQueueGreeting2"
+	{ "id"   : "StdQueueConversation2"
 	, "text" : "Извините…"
 	, "replies" :
 		[ { "text" : "Прощайте!", "ref" : null }
@@ -16,6 +16,18 @@
 	, "text" : "Извините, моя очередь."
 	, "replies" :
 		[ { "text" : "До свидания", "ref" : null }
+		]
+	},
+	{ "id"   : "StdHomeArrival"
+	, "text" : "А вот и я!"
+	, "replies" :
+		[ { "text" : "Привет!", "ref" : null }
+		]
+	},
+	{ "id"   : "StdHomeConversation"
+	, "text" : "…"
+	, "replies" :
+		[ { "text" : "…", "ref" : null }
 		]
 	}
 ]

@@ -10,8 +10,10 @@ var Util;
 /// <reference path="Util.ts"       />
 var DialogType;
 (function (DialogType) {
-    DialogType[DialogType["Escape"] = 0] = "Escape";
-    DialogType[DialogType["Greeting"] = 1] = "Greeting";
+    DialogType[DialogType["QueueEscape"] = 0] = "QueueEscape";
+    DialogType[DialogType["QueueConversation"] = 1] = "QueueConversation";
+    DialogType[DialogType["HomeArrival"] = 2] = "HomeArrival";
+    DialogType[DialogType["HomeConversation"] = 3] = "HomeConversation";
 })(DialogType || (DialogType = {}));
 var CharacterManager = (function () {
     function CharacterManager(characters) {
@@ -30,14 +32,22 @@ var CharacterManager = (function () {
     CharacterManager.prototype.GetDialogID = function (characterID, dialogType) {
         var character = this.map[characterID];
         switch (dialogType) {
-            case 0 /* Escape */:
+            case 0 /* QueueEscape */:
                 if (character.queueEscapeDialogs)
                     return character.queueEscapeDialogs[0];
                 return "StdQueueEscape";
-            case 1 /* Greeting */:
-                if (character.queueGreetingDialogs)
-                    return character.queueGreetingDialogs[0];
-                return "StdQueueGreeting";
+            case 1 /* QueueConversation */:
+                if (character.queueConversationDialogs)
+                    return character.queueConversationDialogs[0];
+                return "StdQueueConversation";
+            case 2 /* HomeArrival */:
+                if (character.homeArrivalDialogs)
+                    return character.homeArrivalDialogs[0];
+                return "StdHomeArrival";
+            case 1 /* QueueConversation */:
+                if (character.homeConversationDialogs)
+                    return character.homeConversationDialogs[0];
+                return "StdHomeConversation";
         }
     };
     CharacterManager.prototype.GetRandomCharacter = function () {
@@ -193,16 +203,18 @@ var HomeModelState = (function () {
     return HomeModelState;
 })();
 var HomeModel = (function () {
-    function HomeModel(characterManager, timer) {
-        this.characterManager = characterManager;
+    function HomeModel(timer, characterManager, dialogManager) {
         this.timer = timer;
+        this.characterManager = characterManager;
+        this.dialogManager = dialogManager;
         this.maxFriends = 3; // has to be single-digit
         this.nx = 78;
         this.ny = 23;
         // IHomeModel implementation
+        this.DialogChanged = new Signal();
         this.FriendsArriving = new Signal();
         this.GuestsChanged = new Signal();
-        timer.AddEvent(this.OnAdvance.bind(this), 20);
+        timer.AddEvent(this.OnAdvance.bind(this), 25);
         this.canvas = [];
         for (var y = 0; y != this.ny; ++y)
             this.canvas.push(new Array(this.nx));
@@ -210,6 +222,12 @@ var HomeModel = (function () {
         this.guests = [];
         this.items = [1 /* TV */];
     }
+    HomeModel.prototype.AdvanceDialog = function (reply) {
+        this.dialogID = this.dialogManager.GetRefDialogID(this.dialogID, reply);
+        if (this.dialogID == null)
+            this.speakerID = null;
+        this.DialogChanged.Call();
+    };
     HomeModel.prototype.AreGuestsIn = function () {
         return this.waitingGuests.length + this.guests.length > 0;
     };
@@ -234,8 +252,14 @@ var HomeModel = (function () {
         }
         return { rows: this.MergeLines(this.canvas), characters: characters };
     };
+    HomeModel.prototype.GetDialog = function () {
+        return this.dialogManager.GetDialog(this.dialogID);
+    };
     HomeModel.prototype.GetFriends = function () {
         return this.characterManager.GetAllCharacters();
+    };
+    HomeModel.prototype.GetSpeaker = function () {
+        return this.characterManager.GetCharacter(this.speakerID);
     };
     HomeModel.prototype.InviteFriends = function () {
         if (this.selectedFriends.length == 0)
@@ -250,8 +274,15 @@ var HomeModel = (function () {
     HomeModel.prototype.IsFriendLimitReached = function () {
         return this.selectedFriends.length >= this.maxFriends;
     };
+    HomeModel.prototype.IsGuestAtTheDoor = function () {
+        return this.atEntrance;
+    };
     HomeModel.prototype.IsInviteEnabled = function () {
         return this.selectedFriends.length > 0;
+    };
+    HomeModel.prototype.LetTheGuestIn = function () {
+        this.atEntrance = false;
+        this.GuestsChanged.Call();
     };
     HomeModel.prototype.SetFriendStatus = function (character, enabled) {
         var f = this.selectedFriends;
@@ -267,18 +298,20 @@ var HomeModel = (function () {
     };
     // event handlers
     HomeModel.prototype.OnAdvance = function () {
-        if (this.atEntrance) {
-            this.atEntrance = false;
-            this.GuestsChanged.Call();
-        }
-        var waiting = this.waitingGuests;
-        if (waiting.length == 0)
+        if (this.atEntrance)
             return;
-        var i = Math.floor(Math.random() * waiting.length);
-        this.guests.push(waiting[i]);
-        waiting.splice(i, 1);
+        if (this.waitingGuests.length == 0)
+            return;
+        var i = Math.floor(Math.random() * this.waitingGuests.length);
+        var waiting = this.waitingGuests[i];
+        this.waitingGuests.splice(i, 1);
+        this.guests.push(waiting);
         this.atEntrance = true;
         this.GuestsChanged.Call();
+        var speaker = this.characterManager.GetCharacter(waiting);
+        this.speakerID = speaker.id;
+        this.dialogID = this.characterManager.GetDialogID(speaker.id, 2 /* HomeArrival */);
+        this.DialogChanged.Call();
     };
     // IPersistent implementation
     HomeModel.prototype.FromPersistentString = function (str) {
@@ -353,6 +386,7 @@ var HomePresenter = (function () {
         this.homeModel = homeModel;
         this.mainModel = mainModel;
         this.homeView = homeView;
+        homeModel.DialogChanged.Add(this.OnDialogChanged.bind(this));
         homeModel.FriendsArriving.Add(this.OnFriendsArriving.bind(this));
         homeModel.GuestsChanged.Add(this.OnGuestsChanged.bind(this));
         homeView.FriendSelected.Add(this.OnFriendSelected.bind(this));
@@ -361,10 +395,18 @@ var HomePresenter = (function () {
         homeView.GoToStore.Add(this.OnGoToStore.bind(this));
         homeView.InviteFriends.Add(this.OnInviteFriends.bind(this));
         homeView.OpenInvites.Add(this.OnOpenInvites.bind(this));
+        homeView.ReplyClicked.Add(this.OnReplyClicked.bind(this));
         homeView.Shown.Add(this.OnShown.bind(this));
     }
     HomePresenter.prototype.OnCloseInvites = function () {
         this.homeView.HideFriends();
+    };
+    HomePresenter.prototype.OnDialogChanged = function () {
+        var speaker = this.homeModel.GetSpeaker();
+        var dialog = this.homeModel.GetDialog();
+        this.homeView.SetDialog(speaker, dialog);
+        if (!dialog && this.homeModel.IsGuestAtTheDoor())
+            this.homeModel.LetTheGuestIn();
     };
     HomePresenter.prototype.OnFriendSelected = function () {
         this.homeModel.SetFriendStatus(this.homeView.GetSelectedFriend(), this.homeView.GetSelectedFriendStatus());
@@ -397,6 +439,9 @@ var HomePresenter = (function () {
         this.homeView.ShowFriends(this.homeModel.GetFriends());
         this.homeView.SetInviteStatus(this.homeModel.IsInviteEnabled());
     };
+    HomePresenter.prototype.OnReplyClicked = function () {
+        this.homeModel.AdvanceDialog(this.homeView.GetSelectedReply());
+    };
     HomePresenter.prototype.OnShown = function () {
         this.homeModel.ClearFriendSelection();
         this.homeView.SetCanvas(this.homeModel.GetCanvas());
@@ -424,6 +469,7 @@ var HomeView = (function () {
         this.GoToStore = new Signal();
         this.InviteFriends = new Signal();
         this.OpenInvites = new Signal();
+        this.ReplyClicked = new Signal();
         this.Shown = new Signal();
     }
     HomeView.prototype.DisableUnselectedFriends = function () {
@@ -444,6 +490,9 @@ var HomeView = (function () {
     HomeView.prototype.GetSelectedFriendStatus = function () {
         return this.selectedFriendStatus;
     };
+    HomeView.prototype.GetSelectedReply = function () {
+        return this.selectedReply;
+    };
     HomeView.prototype.HideFriends = function () {
         $("#home-invites").hide();
     };
@@ -463,6 +512,30 @@ var HomeView = (function () {
             html = html.replace(" " + i + " ", replacement);
         }
         view.html(html);
+    };
+    HomeView.prototype.SetDialog = function (speaker, dialog) {
+        var div = $("#home-dialog");
+        if (!dialog) {
+            div.hide();
+            return;
+        }
+        div.empty();
+        if (!dialog)
+            return;
+        div.append($("<p><strong>" + speaker.name + "</strong>: " + dialog.text + "</p>"));
+        var ol = $("<ol>");
+        for (var i = 0; i != dialog.replies.length; ++i) {
+            var OnClick = function (e) {
+                this.selectedReply = e.data;
+                this.ReplyClicked.Call();
+            };
+            var li = $("<li>");
+            li.text(dialog.replies[i].text);
+            li.click(i, OnClick.bind(this));
+            ol.append(li);
+        }
+        div.append(ol);
+        div.show();
     };
     HomeView.prototype.SetInviteStatus = function (status) {
         $("button#invite-friends").prop("disabled", !status);
@@ -509,8 +582,9 @@ var HomeView = (function () {
     };
     HomeView.prototype.Show = function (e) {
         var _this = this;
-        e.html("<table id='home'><tr><td id='home-header'><button id='go-queue'>в очередь</button><button id='go-store'>в магазин</button><button id='toggle-invites'>друзья</button></td></tr><tr><td><div id='home-invites' /><div id='home-view' /></td></tr></table>");
+        e.html("<table id='home'><tr><td id='home-header'><button id='go-queue'>в очередь</button><button id='go-store'>в магазин</button><button id='toggle-invites'>друзья</button><div id='home-invites' /></td></tr><tr><td id='home-body'><div id='home-dialog' /><div id='home-view' /></td></tr></table>");
         $("#home-invites").hide();
+        $("#home-dialog").hide();
         $("#go-queue").click(function () {
             _this.GoToQueue.Call();
         });
@@ -894,6 +968,11 @@ var QueueModel = (function () {
             return _this.characterManager.GetCharacter(p.characterID);
         });
     };
+    QueueModel.prototype.GetCurrentTicket = function () {
+        if (this.queue.length > 0)
+            return this.queue[0].ticket;
+        return null;
+    };
     QueueModel.prototype.GetDialog = function () {
         return this.dialogManager.GetDialog(this.dialogID);
     };
@@ -904,17 +983,12 @@ var QueueModel = (function () {
         }
         return null;
     };
-    QueueModel.prototype.GetCurrentTicket = function () {
-        if (this.queue.length > 0)
-            return this.queue[0].ticket;
-        return null;
-    };
     QueueModel.prototype.GetSpeaker = function () {
         return this.characterManager.GetCharacter(this.speakerID);
     };
     QueueModel.prototype.StartDialog = function (speaker) {
         this.speakerID = speaker.id;
-        this.dialogID = this.characterManager.GetDialogID(speaker.id, 1 /* Greeting */);
+        this.dialogID = this.characterManager.GetDialogID(speaker.id, 1 /* QueueConversation */);
         this.DialogChanged.Call();
     };
     // IPersistent implementation
@@ -956,7 +1030,7 @@ var QueueModel = (function () {
         if (this.queue.length == 0)
             return;
         if (this.speakerID && this.queue[0].characterID == this.speakerID) {
-            this.dialogID = this.characterManager.GetDialogID(this.speakerID, 0 /* Escape */);
+            this.dialogID = this.characterManager.GetDialogID(this.speakerID, 0 /* QueueEscape */);
             this.DialogChanged.Call();
         }
     };
@@ -1050,8 +1124,6 @@ var QueuePresenter = (function () {
 /// <reference path="IClientView.ts" />
 var QueueView = (function () {
     function QueueView() {
-        this.selectedCharacter = null;
-        this.selectedReply = -1;
         // IQueueView implementation
         this.GoToHome = new Signal();
         this.PersonClicked = new Signal();
@@ -1098,7 +1170,7 @@ var QueueView = (function () {
         $("#queue #current").text("текущий номер: " + ticket);
     };
     QueueView.prototype.SetDialog = function (speaker, dialog) {
-        var div = $("#queue #dialog");
+        var div = $("#queue-dialog");
         div.empty();
         if (!dialog)
             return;
@@ -1128,7 +1200,7 @@ var QueueView = (function () {
     };
     QueueView.prototype.Show = function (e) {
         var _this = this;
-        e.html("<table id='queue'><tr><td><button id='goHome'>вернуться домой</button></td></tr><tr><td id='player' /></tr><tr><td id='current' /></tr><tr><td id='people' /></tr><tr><td id='body'><div id='dialog' /></td></tr></table>");
+        e.html("<table id='queue'><tr><td><button id='goHome'>вернуться домой</button></td></tr><tr><td id='player' /></tr><tr><td id='current' /></tr><tr><td id='people' /></tr><tr><td id='body'><div id='queue-dialog' /></td></tr></table>");
         $("#goHome").click(function () {
             _this.GoToHome.Call();
         });
@@ -1374,7 +1446,7 @@ function Main(dialogs, characters) {
     var characterManager = new CharacterManager(characters);
     var timer = new Timer();
     var player = new Player(timer);
-    var homeModel = new HomeModel(characterManager, timer);
+    var homeModel = new HomeModel(timer, characterManager, dialogManager);
     var mainModel = new MainModel(player);
     var queueModel = new QueueModel(timer, characterManager, dialogManager);
     var saveModel = new SaveModel();

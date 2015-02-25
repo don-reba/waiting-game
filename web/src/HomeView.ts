@@ -5,6 +5,7 @@ class HomeView implements IHomeView, IClientView
 {
 	private selectedFriend       : ICharacter;
 	private selectedFriendStatus : boolean;
+	private selectedReply        : number;
 
 	// IHomeView implementation
 
@@ -14,6 +15,7 @@ class HomeView implements IHomeView, IClientView
 	GoToStore      = new Signal();
 	InviteFriends  = new Signal();
 	OpenInvites    = new Signal();
+	ReplyClicked   = new Signal();
 	Shown          = new Signal();
 
 	DisableUnselectedFriends() : void
@@ -41,6 +43,11 @@ class HomeView implements IHomeView, IClientView
 	GetSelectedFriendStatus() : boolean
 	{
 		return this.selectedFriendStatus;
+	}
+
+	GetSelectedReply() : number
+	{
+		return this.selectedReply;
 	}
 
 	HideFriends() : void
@@ -73,6 +80,38 @@ class HomeView implements IHomeView, IClientView
 			html = html.replace(" " + i + " ", replacement);
 		}
 		view.html(html);
+	}
+
+	SetDialog(speaker : ICharacter, dialog : IDialog) : void
+	{
+		var div = $("#home-dialog");
+		if (!dialog)
+		{
+			div.hide();
+			return;
+		}
+		div.empty();
+
+		if (!dialog)
+			return;
+
+		div.append($("<p><strong>" + speaker.name + "</strong>: " + dialog.text + "</p>"));
+
+		var ol = $("<ol>");
+		for (var i = 0; i != dialog.replies.length; ++i)
+		{
+			var OnClick = function(e)
+			{
+				this.selectedReply = e.data;
+				this.ReplyClicked.Call();
+			}
+			var li = $("<li>");
+			li.text(dialog.replies[i].text);
+			li.click(i, OnClick.bind(this));
+			ol.append(li);
+		}
+		div.append(ol);
+		div.show();
 	}
 
 	SetInviteStatus(status : boolean) : void
@@ -136,8 +175,9 @@ class HomeView implements IHomeView, IClientView
 
 	Show(e : JQuery) : void
 	{
-		e.html("<table id='home'><tr><td id='home-header'><button id='go-queue'>в очередь</button><button id='go-store'>в магазин</button><button id='toggle-invites'>друзья</button></td></tr><tr><td><div id='home-invites' /><div id='home-view' /></td></tr></table>");
+		e.html("<table id='home'><tr><td id='home-header'><button id='go-queue'>в очередь</button><button id='go-store'>в магазин</button><button id='toggle-invites'>друзья</button><div id='home-invites' /></td></tr><tr><td id='home-body'><div id='home-dialog' /><div id='home-view' /></td></tr></table>");
 		$("#home-invites").hide();
+		$("#home-dialog").hide();
 
 		$("#go-queue").click(() => { this.GoToQueue.Call() });
 

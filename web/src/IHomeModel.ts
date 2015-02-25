@@ -4,8 +4,11 @@
 
 interface IHomeModel
 {
+	DialogChanged   : Signal;
 	FriendsArriving : Signal;
 	GuestsChanged   : Signal;
+
+	AdvanceDialog(reply : number) : void;
 
 	AreGuestsIn() : boolean;
 
@@ -13,13 +16,21 @@ interface IHomeModel
 
 	GetCanvas() : HomeCanvas;
 
+	GetDialog() : IDialog;
+
 	GetFriends() : ICharacter[];
+
+	GetSpeaker() : ICharacter;
 
 	InviteFriends() : void;
 
 	IsFriendLimitReached() : boolean
 
+	IsGuestAtTheDoor() : boolean;
+
 	IsInviteEnabled() : boolean;
+
+	LetTheGuestIn() : void;
 
 	SetFriendStatus(character : ICharacter, enabled : boolean) : void;
 }

@@ -68,13 +68,6 @@ button {
 	height           : 100%;
 	overflow         : hidden;
 }
-#location #dialog li {
-	cursor              : pointer;
-	list-style-position : inside;
-}
-#location #dialog li:hover {
-	background-color : #E0E0E0;
-}
 
 /* save view */
 
@@ -117,7 +110,11 @@ button {
 	height          : 100%;
 }
 #home-header {
-	height : 2em;
+	height  : 2em;
+	z-index : 0;
+}
+#home-body {
+	position : relative;
 }
 #home-view {
 	background-color : #F0F0F0;
@@ -134,7 +131,29 @@ button {
 	height           : 100%;
 	z-index          : 0;
 }
+#home-dialog {
+	background-color : #D0D0D0;
+	border-radius    : 1em;
+	font-size        : 1.2em;
+	position         : absolute;
+	padding          : 2em;
+	text-align       : left;
 
+	right            : 8em;
+	bottom           : 4em;
+	left             : 8em;
+	top              : 4em;
+
+	z-index          : 1;
+}
+#location #home-dialog li {
+	cursor              : pointer;
+	list-style-type     : decimal;
+	list-style-position : inside;
+}
+#location #home-dialog li:hover {
+	background-color : #E0E0E0;
+}
 #home-view span.character {
 	box-sizing       : border-box;
 	padding          : 0;
@@ -183,10 +202,18 @@ button {
 	list-style-type : decimal;
 	padding         : 0.5em 0 0 0;
 }
-#queue #dialog {
+#queue-dialog {
 	display    : inline-block;
 	text-align : left;
 	font-size  : 1.2em;
+}
+#location #queue-dialog li {
+	cursor              : pointer;
+	list-style-type     : decimal;
+	list-style-position : inside;
+}
+#location #queue-dialog li:hover {
+	background-color : #E0E0E0;
 }
 
 /* store */

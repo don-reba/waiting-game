@@ -78,6 +78,13 @@ class QueueModel implements IQueueModel, IPersistent
 		return this.queue.map(p => { return this.characterManager.GetCharacter(p.characterID); });
 	}
 
+	GetCurrentTicket() : string
+	{
+		if (this.queue.length > 0)
+			return this.queue[0].ticket;
+		return null;
+	}
+
 	GetDialog() : IDialog
 	{
 		return this.dialogManager.GetDialog(this.dialogID);
@@ -93,13 +100,6 @@ class QueueModel implements IQueueModel, IPersistent
 		return null;
 	}
 
-	GetCurrentTicket() : string
-	{
-		if (this.queue.length > 0)
-			return this.queue[0].ticket;
-		return null;
-	}
-
 	GetSpeaker() : ICharacter
 	{
 		return this.characterManager.GetCharacter(this.speakerID);
@@ -108,7 +108,7 @@ class QueueModel implements IQueueModel, IPersistent
 	StartDialog(speaker : ICharacter) : void
 	{
 		this.speakerID = speaker.id;
-		this.dialogID  = this.characterManager.GetDialogID(speaker.id, DialogType.Greeting);
+		this.dialogID  = this.characterManager.GetDialogID(speaker.id, DialogType.QueueConversation);
 		this.DialogChanged.Call();
 	}
 
@@ -181,7 +181,7 @@ class QueueModel implements IQueueModel, IPersistent
 			return;
 		if (this.speakerID && this.queue[0].characterID == this.speakerID)
 		{
-			this.dialogID = this.characterManager.GetDialogID(this.speakerID, DialogType.Escape);
+			this.dialogID = this.characterManager.GetDialogID(this.speakerID, DialogType.QueueEscape);
 			this.DialogChanged.Call();
 		}
 	}

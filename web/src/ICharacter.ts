@@ -4,6 +4,8 @@ interface ICharacter
 	name  : string;
 	color : string;
 
-	queueGreetingDialogs? : string[];
-	queueEscapeDialogs?   : string[];
+	queueEscapeDialogs?       : string[];
+	queueConversationDialogs? : string[];
+	homeArrivalDialogs?       : string[];
+	homeConversationDialogs?  : string[];
 }
