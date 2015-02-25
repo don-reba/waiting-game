@@ -295,7 +295,7 @@ button {
 }
 .queue-person {
 	display : block;
-	margin : 1em 2em;
+	margin : 0em 2em;
 	white-space      : nowrap;
 	height : 2em;
 	line-height : 2em;

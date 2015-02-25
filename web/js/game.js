@@ -984,7 +984,7 @@ var QueueModel = (function () {
         this.timer = timer;
         this.characterManager = characterManager;
         this.dialogManager = dialogManager;
-        this.maxLength = 8;
+        this.maxLength = 5;
         // IQueueModel implementation
         this.CurrentTicketChanged = new Signal();
         this.DialogChanged = new Signal();
@@ -1211,19 +1211,25 @@ var QueueView = (function () {
                 this.selectedCharacter = e.data;
                 this.PersonClicked.Call();
             };
+            // goes up to 1.0 in increments of 0.1
+            var scale = (6 + i) / 10;
             var character = characters[i];
+            var button = $("<div class='queue-person'>");
+            button.css("transform", "scale(" + String(scale) + ")");
+            button.css("margin-top", String(2 * scale) + "em");
             if (character) {
-                var button = $("<div class='queue-person fg-clickable'>");
+                button.addClass("fg-clickable");
                 button.css("box-shadow", "0 0 0.3em " + character.color);
                 button.text(characters[i].name);
                 button.click(characters[i], OnClick.bind(this));
-                if (i == 0)
-                    button.prop("disabled", true);
-                people.append(button);
             }
             else {
-                people.append("&nbsp;\\o/&nbsp;");
+                button.html("&nbsp;\\o/&nbsp;");
+                button.css("border", "1px solid black");
             }
+            if (i == 0)
+                button.prop("disabled", true);
+            people.append(button);
         }
     };
     QueueView.prototype.SetCurrentTicket = function (ticket) {

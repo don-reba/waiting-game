@@ -27,7 +27,7 @@ class QueueModel implements IQueueModel, IPersistent
 	private dialogID  : string;
 	private speakerID : string;
 
-	private maxLength = 8;
+	private maxLength = 5;
 
 	constructor
 		( private timer            : Timer
