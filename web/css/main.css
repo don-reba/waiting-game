@@ -10,73 +10,154 @@ html {
 	height : 100%;
 }
 body {
-	background-color : #FAFAFA;
-	font-family      : Neucha;
-	font-size        : 100%;
-	text-align       : center;
-	height           : 100%;
+	font-family : Neucha;
+	font-size   : 100%;
+	text-align  : center;
+	height      : 100%;
 }
-h1#title {
+.bg-color {
+	background-color : #E6E6E6;
+}
+.fg-color {
+	background-color : #83B572;
+}
+.info-font {
+	font-size : 1.3em;
+}
+
+.bg-clickable       { cursor           : pointer; }
+.bg-clickable:hover { background-color : white;   }
+
+.fg-clickable       { cursor           : pointer; }
+.fg-clickable:hover { background-color : #B2D184; }
+
+.top-exterior {
+	position : absolute;
+	height   : 3.5em;
+	top      : -3.5em;
+	width    : 49em;
+}
+.right-exterior {
+	position : absolute;
+	overflow : visible;
+	width    : 0em;
+	height   : 30em;
+	right    : 0em;
+}
+.title {
 	font-size      : 3em;
-	padding-bottom : 0.5em;
+	text-align     : left;
+	vertical-align : baseline;
+	white-space    : nowrap;
+	width          : 0%;
 }
+.money-total {
+	text-align     : right;
+	vertical-align : baseline;
+	white-space    : nowrap;
+	width          : 100%;
+}
+.moustache {
+	font-family : Mustache;
+	position    : absolute;
+	font-size   : 2em;
+	left : 0.5em;
+}
+.buttons {
+	position   : absolute;
+	text-align : left;
+
+	top      : 0;
+	right    : 0;
+	left     : 0;
+
+	height   : 3em;
+}
+.buttons > div {
+	background-color : #83B572;
+	border           : 1px solid black;
+	cursor           : pointer;
+	display          : inline-block;
+	height           : 1.6em;
+	line-height      : 1.0em;
+	text-size        : 1em;
+	padding          : 0.2em 1em;
+	margin           : 0.7em 0.5em;
+}
+.buttons > div:hover {
+	background-color : #B2D184;
+}
+
+/* about menu */
+
+.about {
+	border        : 1px solid black;
+	border-radius : 50%;
+	position      : absolute;
+	line-height   : 1.1em;
+
+	bottom        : -1.1em;
+	right         : -1.1em;
+
+	width         : 1.1em;
+	height        : 1.1em;
+}
+.about-menu {
+	bottom   : 0em;
+	display  : none;
+	position : absolute;
+}
+.about-menu p {
+	margin      : 0.2em;
+	text-align  : left;
+	white-space : nowrap;
+}
+
 button {
 	cursor      : pointer;
 	font-family : Neucha;
 	white-space : nowrap;
 	padding     : 0.3em;
 }
-#main-table {
+.game {
+	margin          : 0em auto;
 	border-collapse : separate;
-	border-spacing  : 1em;
-	width           : 100%;
-	vertical-align  : top;
-}
-#game {
-	background-color : #F0F0F0;
-	box-shadow       : 0 0 4px #808080;
-	margin           : 0em auto;
+	border-spacing  : 0.5em;
+	margin-top      : 4em;
+	position        : relative;
 
-	border-collapse  : separate;
-	border-spacing   : 0.5em;
+	width           : 49em;
+	height          : 30em;
+}
+.location {
+	overflow : hidden;
+	position : absolute;
 
-	width            : 49em;
-	height           : 30em;
-}
-#header-left {
-	text-align : left;
-	width      : 100%;
-}
-#header-right {
-	width : 0%;
-}
-#money-total {
-	display     : inline;
-	white-space : nowrap;
-}
-#moustache {
-	display        : inline;
-	font-family    : Mustache;
-	font-size      : 1.5em;
-	overflow       : hidden;
-	padding-right  : 0.5em;
-	vertical-align : text-bottom;
-	white-space    : pre;
-	}
-#location {
-	background-color : #D0D0D0;
-	height           : 100%;
-	overflow         : hidden;
+	top    : 3em;
+	right  : 0;
+	bottom : 0;
+	left   : 0;
 }
 
 /* save view */
 
-#dev {
+.game-container {
+	position : absolute;
+
+	left     : 0em;
+	top      : 0em;
+
+	width    : 64em;
+	height   : 35.1em;
+}
+.dev {
 	background-color : #F0F0F0;
 	box-shadow       : 0 0 4px #808080;
+	position         : absolute;
 
-	max-height       : 40em;
-	width            : 100%;
+	left             : 64.5em;
+	right            : 0.5em;
+	top              : 4em;
 }
 #dev-contents {
 	text-align : left;
@@ -128,7 +209,6 @@ button {
 	white-space      : pre;
 
 	width            : 100%;
-	height           : 100%;
 	z-index          : 0;
 }
 #home-dialog {
@@ -146,13 +226,9 @@ button {
 
 	z-index          : 1;
 }
-#location #home-dialog li {
-	cursor              : pointer;
+#home-dialog li {
 	list-style-type     : decimal;
 	list-style-position : inside;
-}
-#location #home-dialog li:hover {
-	background-color : #E0E0E0;
 }
 #home-view span.character {
 	box-sizing       : border-box;
@@ -188,33 +264,78 @@ button {
 
 /* queue */
 
-#queue {
-	border-collapse : separate;
-	border-spacing  : 0.5em;
+.queue-ticket {
+	background-color : white;
+	padding          : 0.2em;
+	position         : absolute;
 
-	width           : 100%;
-	height          : 100%;
+	left : -7em;
+
+	width  : 6em;
+	height : 6em;
 }
-#queue #body {
-	height : 100%;
-	vertical-align : middle;
+.queue-ticket .number {
+	font-size   : 2em;
+	padding-top : 0.3em;
 }
-#queue ol {
-	list-style-type : decimal;
-	padding         : 0.5em 0 0 0;
+.my-ticket {
+	bottom : 6.5em;
 }
-#queue-dialog {
-	display    : inline-block;
+.current-ticket {
+	bottom : 0em;
+}
+.queue-people {
+	display  : inline-block;
+	position : absolute;
+	width    : 20em;
+
+	top    : 0;
+	bottom : 0;
+	left   : 0;
+}
+.queue-person {
+	display : block;
+	margin : 1em 2em;
+	white-space      : nowrap;
+	height : 2em;
+	line-height : 2em;
+	border-radius : 1em;
+}
+.queue-spacer {
+	display  : inline-block;
+	position : absolute;
+	width    : 0.5em;
+
+	top    : 0;
+	bottom : 0;
+	left   : 20em;
+}
+.queue-body {
+	display  : inline-block;
+	position : absolute;
+
+	top      : 0;
+	right    : 0;
+	bottom   : 0;
+	left     : 20.5em;
+}
+
+.queue-dialog {
+	border        : 1px solid black;
+	border-radius : 1em;
+	margin        : 0 auto;
+	min-height    : 2em;
+	padding       : 1em;
+	position      : relative;
 	text-align : left;
-	font-size  : 1.2em;
+	width         : 24em;
+
+	top           : 50%;
+	transform     : translateY(-50%);
 }
-#location #queue-dialog li {
-	cursor              : pointer;
+.queue-dialog li {
 	list-style-type     : decimal;
 	list-style-position : inside;
-}
-#location #queue-dialog li:hover {
-	background-color : #E0E0E0;
 }
 
 /* store */

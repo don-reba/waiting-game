@@ -39,4 +39,8 @@ interface IHomeView
 	SetInviteStatus(status : boolean) : void;
 
 	ShowFriends(characters : ICharacter[]) : void;
+
+	ShowFriendsButton() : void;
+
+	ShowTravelButtons() : void;
 }

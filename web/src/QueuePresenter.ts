@@ -23,13 +23,11 @@ class QueuePresenter
 		queueView.Shown.Add(this.OnQueueShown.bind(this));
 	}
 
+	// event handlers
+
 	private OnCurrentTicketChanged() : void
 	{
-		var ticket = this.queueModel.GetCurrentTicket();
-		if (ticket == null)
-			this.queueView.ClearCurrentTicket();
-		else
-			this.queueView.SetCurrentTicket(ticket);
+		this.UpdateCurrentTicket();
 	}
 
 	private OnDialogChanged() : void
@@ -59,19 +57,15 @@ class QueuePresenter
 
 	private OnPlayerTicketChanged() : void
 	{
-		var ticket = this.queueModel.GetPlayerTicket();
-		if (ticket == null)
-			this.queueView.ClearPlayerTicket();
-		else
-			this.queueView.SetPlayerTicket(ticket);
+		this.UpdatePlayerTicket();
 	}
 
 	private OnQueueShown() : void
 	{
 		this.queueModel.EnterQueue();
 
-		this.queueView.SetPlayerTicket(this.queueModel.GetPlayerTicket());
-		this.queueView.SetCurrentTicket(this.queueModel.GetCurrentTicket());
+		this.UpdatePlayerTicket();
+		this.UpdateCurrentTicket();
 		this.queueView.SetCharacters(this.queueModel.GetCharacters());
 		this.queueView.SetDialog(this.queueModel.GetSpeaker(), this.queueModel.GetDialog());
 	}
@@ -79,5 +73,25 @@ class QueuePresenter
 	private OnReplyClicked() : void
 	{
 		this.queueModel.AdvanceDialog(this.queueView.GetSelectedReply());
+	}
+
+	// private implementation
+
+	private UpdateCurrentTicket()
+	{
+		var ticket = this.queueModel.GetCurrentTicket();
+		if (ticket == null)
+			this.queueView.ClearCurrentTicket();
+		else
+			this.queueView.SetCurrentTicket(ticket);
+	}
+
+	private UpdatePlayerTicket()
+	{
+		var ticket = this.queueModel.GetPlayerTicket();
+		if (ticket == null)
+			this.queueView.ClearPlayerTicket();
+		else
+			this.queueView.SetPlayerTicket(ticket);
 	}
 }

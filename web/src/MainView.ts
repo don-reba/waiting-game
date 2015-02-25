@@ -6,8 +6,9 @@ class MainView implements IMainView
 
 	constructor(private clientViews : IClientView[])
 	{
-		var button = $("#reset-game");
-		button.click(() => { this.ResetRequested.Call(); });
+		$("#reset-game").click(() => { this.ResetRequested.Call() });
+
+		$("#about").click(() => { $("#about-menu").toggle() });
 	}
 
 	// IMainView implementation
@@ -28,9 +29,10 @@ class MainView implements IMainView
 		if (this.activeView)
 			this.activeView.Hide();
 
+		$("#buttons").empty();
+
 		var loc = $("#location");
 		loc.empty();
-		loc.removeClass();
 		newActiveView.Show(loc);
 
 		this.activeView = newActiveView;

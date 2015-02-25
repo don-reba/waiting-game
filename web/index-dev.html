@@ -13,34 +13,34 @@
 	</head>
 	<body>
 		<!-- content -->
-		<table id="main-table">
-			<tr>
-				<td>
-					<table id="game">
-						<tr>
-							<td id="header-left">
-								<p id="moustache"></p>
-								<p id="money-total"></p>
-							</td>
-							<td id="header-right">
-								<button id="reset-game">начать заново</button>
-							</td>
-						</tr>
-						<tr>
-							<td id="location" colspan="2"></td>
-						</tr>
-					</table>
-				</td>
-				<td id="dev">
-					<div id="dev-header">
-						<button id="save-load">load</button>
-						<button id="save-save">save</button>
-						<button id="save-clear">clear local storage</button>
+		<div class="game-container">
+			<div id="game" class="game fg-color">
+				<table class="top-exterior">
+					<tr>
+						<td class="title">Игра Очередей</td>
+						<td id="money-total" class="money-total info-font"></td>
+					</tr>
+				</table>
+				<div class="right-exterior">
+					<div id="moustache" class="moustache"></div>
+					<div id="about-menu" class="about-menu info-font">
+						<p class="bg-clickable">об игре</p>
+						<p id="reset-game" class="bg-clickable">начать заново</p>
 					</div>
-					<div id="dev-contents">&nbsp;</div>
-				</td>
-			</tr>
-		</table>
+				</div>
+				<div id="about" class="about bg-clickable">?</div>
+				<div id="buttons" class="buttons"></div>
+				<div id="location" class="location"></div>
+			</div>
+		</div>
+		<div class="dev">
+			<div id="dev-header">
+				<button id="save-load">load</button>
+				<button id="save-save">save</button>
+				<button id="save-clear">clear local storage</button>
+			</div>
+			<div id="dev-contents">&nbsp;</div>
+		</div>
 
 		<!-- scripts -->
 		<script type="text/javascript" src="js/jquery-2.1.3.js"></script>

@@ -16,12 +16,12 @@ class QueueView implements IQueueView, IClientView
 
 	ClearCurrentTicket() : void
 	{
-		$("#queue #current").text("");
+		$("#current-ticket").hide();
 	}
 
 	ClearPlayerTicket() : void
 	{
-		$("#queue #player").text("");
+		$("#my-ticket").hide();
 	}
 
 	GetSelectedReply() : number
@@ -36,7 +36,7 @@ class QueueView implements IQueueView, IClientView
 
 	SetCharacters(characters : ICharacter[]) : void
 	{
-		var people = $("#queue #people");
+		var people = $("#queue-people");
 		people.empty();
 
 		for (var i = 0; i != characters.length; ++i)
@@ -49,8 +49,8 @@ class QueueView implements IQueueView, IClientView
 			var character = characters[i];
 			if (character)
 			{
-				var button = $("<button>");
-				button.css("background-color", character.color);
+				var button = $("<div class='queue-person fg-clickable'>");
+				button.css("box-shadow", "0 0 0.3em " + character.color);
 				button.text(characters[i].name);
 				button.click(characters[i], OnClick.bind(this));
 				if (i == 0)
@@ -66,7 +66,7 @@ class QueueView implements IQueueView, IClientView
 
 	SetCurrentTicket(ticket : string) : void
 	{
-		$("#queue #current").text("текущий номер: " + ticket);
+		$("#current-ticket .number").text(ticket);
 	}
 
 	SetDialog(speaker : ICharacter, dialog : IDialog) : void
@@ -88,7 +88,7 @@ class QueueView implements IQueueView, IClientView
 		var ol = $("<ol>");
 		for (var i = 0; i != dialog.replies.length; ++i)
 		{
-			var li = $("<li>");
+			var li = $("<li class='fg-clickable'>");
 			li.html(dialog.replies[i].text);
 			li.click(i, OnClick.bind(this));
 			ol.append(li);
@@ -98,7 +98,7 @@ class QueueView implements IQueueView, IClientView
 
 	SetPlayerTicket(ticket : string) : void
 	{
-		$("#queue #player").text("ваш номер: " + ticket);
+		$("#my-ticket .number").text(ticket);
 	}
 
 	// IClientView implementation
@@ -115,9 +115,19 @@ class QueueView implements IQueueView, IClientView
 
 	Show(e : JQuery) : void
 	{
-		e.html("<table id='queue'><tr><td><button id='goHome'>вернуться домой</button></td></tr><tr><td id='player' /></tr><tr><td id='current' /></tr><tr><td id='people' /></tr><tr><td id='body'><div id='queue-dialog' /></td></tr></table>");
+		e.append("<div id='queue-people' class='queue-people'>");
+		e.append("<div class='queue-spacer bg-color'>");
+		e.append("<div id='queue-body' class='queue-body'><div id='queue-dialog' class='queue-dialog' /></div>");
 
-		$("#goHome").click(() => { this.GoToHome.Call() });
+		var goHome = $("<div id='go-home'>");
+		goHome.text("вернуться домой");
+		goHome.click(() => { this.GoToHome.Call() });
+
+		$("#buttons").append(goHome);
+
+		var gameDiv = $("#game");
+		gameDiv.append("<div id='my-ticket' class='queue-ticket my-ticket'><p class='info-font'>ваш<br>номер</p><div class='number' /></div>");
+		gameDiv.append("<div id='current-ticket' class='queue-ticket current-ticket'><p class='info-font'>текущий<br>номер</p><div class='number' /></div>");
 
 		this.Shown.Call();
 	}

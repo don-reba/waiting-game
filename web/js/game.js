@@ -425,8 +425,7 @@ var HomePresenter = (function () {
         this.homeView.SetInviteStatus(this.homeModel.IsInviteEnabled());
     };
     HomePresenter.prototype.OnFriendsArriving = function () {
-        this.homeView.HideFriendsButton();
-        //this.homeView.HideTravelButtons();
+        this.UpdateButtonStates();
         this.homeView.SetCanvas(this.homeModel.GetCanvas());
     };
     HomePresenter.prototype.OnGuestClicked = function () {
@@ -455,11 +454,19 @@ var HomePresenter = (function () {
     };
     HomePresenter.prototype.OnShown = function () {
         this.homeModel.ClearFriendSelection();
+        this.UpdateButtonStates();
         this.homeView.SetCanvas(this.homeModel.GetCanvas());
+        this.homeView.SetDialog(this.homeModel.GetSpeaker(), this.homeModel.GetDialog());
+    };
+    HomePresenter.prototype.UpdateButtonStates = function () {
         if (this.homeModel.AreGuestsIn()) {
             this.homeView.HideFriendsButton();
+            this.homeView.HideTravelButtons();
         }
-        this.homeView.SetDialog(this.homeModel.GetSpeaker(), this.homeModel.GetDialog());
+        else {
+            this.homeView.ShowFriendsButton();
+            this.homeView.ShowTravelButtons();
+        }
     };
     return HomePresenter;
 })();
@@ -513,11 +520,11 @@ var HomeView = (function () {
         $("#home-invites").hide();
     };
     HomeView.prototype.HideFriendsButton = function () {
-        $("button#toggle-invites").hide();
+        $("#toggle-invites").hide();
     };
     HomeView.prototype.HideTravelButtons = function () {
-        $("button#go-queue").hide();
-        $("button#go-store").hide();
+        $("#go-queue").hide();
+        $("#go-store").hide();
     };
     HomeView.prototype.SetCanvas = function (canvas) {
         var OnClickCharacter = function (e) {
@@ -556,7 +563,7 @@ var HomeView = (function () {
                 this.selectedReply = e.data;
                 this.ReplyClicked.Call();
             };
-            var li = $("<li>");
+            var li = $("<li class='fg-clickable'>");
             li.html(dialog.replies[i].text);
             li.click(i, OnClick.bind(this));
             ol.append(li);
@@ -565,7 +572,7 @@ var HomeView = (function () {
         div.show();
     };
     HomeView.prototype.SetInviteStatus = function (status) {
-        $("button#invite-friends").prop("disabled", !status);
+        $("#invite-friends").prop("disabled", !status);
     };
     HomeView.prototype.ShowFriends = function (characters) {
         var _this = this;
@@ -601,6 +608,13 @@ var HomeView = (function () {
         this.AlignToBottom($("#toggle-invites"), invites);
         invites.show();
     };
+    HomeView.prototype.ShowFriendsButton = function () {
+        $("#toggle-invites").show();
+    };
+    HomeView.prototype.ShowTravelButtons = function () {
+        $("#go-queue").show();
+        $("#go-store").show();
+    };
     // IClientView implementation
     HomeView.prototype.GetType = function () {
         return 0 /* Home */;
@@ -609,21 +623,30 @@ var HomeView = (function () {
     };
     HomeView.prototype.Show = function (e) {
         var _this = this;
-        e.html("<table id='home'><tr><td id='home-header'><button id='go-queue'>в очередь</button><button id='go-store'>в магазин</button><button id='toggle-invites'>друзья</button><div id='home-invites' /></td></tr><tr><td id='home-body'><div id='home-dialog' /><div id='home-view' /></td></tr></table>");
+        e.html("<div id='home-invites'></div><div id='home-dialog'></div><div id='home-view'></div>");
         $("#home-invites").hide();
         $("#home-dialog").hide();
-        $("#go-queue").click(function () {
+        var goQueue = $("<div id='go-queue'>");
+        goQueue.text("в очередь");
+        goQueue.hide();
+        goQueue.click(function () {
             _this.GoToQueue.Call();
         });
-        $("#go-store").click(function () {
+        var goStore = $("<div id='go-store'>");
+        goStore.text("в магазин");
+        goStore.hide();
+        goStore.click(function () {
             _this.GoToStore.Call();
         });
-        $("#toggle-invites").click(function () {
+        var toggleInvites = $("<div id='toggle-invites'>");
+        toggleInvites.text("друзья…");
+        toggleInvites.click(function () {
             if ($("#home-invites").is(":visible"))
                 _this.CloseInvites.Call();
             else
                 _this.OpenInvites.Call();
         });
+        $("#buttons").append(goQueue).append(goStore).append(toggleInvites);
         this.Shown.Call();
     };
     // private implementation
@@ -750,9 +773,11 @@ var MainView = (function () {
         this.clientViews = clientViews;
         // IMainView implementation
         this.ResetRequested = new Signal();
-        var button = $("#reset-game");
-        button.click(function () {
+        $("#reset-game").click(function () {
             _this.ResetRequested.Call();
+        });
+        $("#about").click(function () {
+            $("#about-menu").toggle();
         });
     }
     MainView.prototype.SetClientView = function (viewType) {
@@ -766,9 +791,9 @@ var MainView = (function () {
             return;
         if (this.activeView)
             this.activeView.Hide();
+        $("#buttons").empty();
         var loc = $("#location");
         loc.empty();
-        loc.removeClass();
         newActiveView.Show(loc);
         this.activeView = newActiveView;
     };
@@ -1106,12 +1131,9 @@ var QueuePresenter = (function () {
         queueView.ReplyClicked.Add(this.OnReplyClicked.bind(this));
         queueView.Shown.Add(this.OnQueueShown.bind(this));
     }
+    // event handlers
     QueuePresenter.prototype.OnCurrentTicketChanged = function () {
-        var ticket = this.queueModel.GetCurrentTicket();
-        if (ticket == null)
-            this.queueView.ClearCurrentTicket();
-        else
-            this.queueView.SetCurrentTicket(ticket);
+        this.UpdateCurrentTicket();
     };
     QueuePresenter.prototype.OnDialogChanged = function () {
         this.queueView.SetDialog(this.queueModel.GetSpeaker(), this.queueModel.GetDialog());
@@ -1129,21 +1151,32 @@ var QueuePresenter = (function () {
         this.queueModel.StartDialog(this.queueView.GetSpeaker());
     };
     QueuePresenter.prototype.OnPlayerTicketChanged = function () {
-        var ticket = this.queueModel.GetPlayerTicket();
-        if (ticket == null)
-            this.queueView.ClearPlayerTicket();
-        else
-            this.queueView.SetPlayerTicket(ticket);
+        this.UpdatePlayerTicket();
     };
     QueuePresenter.prototype.OnQueueShown = function () {
         this.queueModel.EnterQueue();
-        this.queueView.SetPlayerTicket(this.queueModel.GetPlayerTicket());
-        this.queueView.SetCurrentTicket(this.queueModel.GetCurrentTicket());
+        this.UpdatePlayerTicket();
+        this.UpdateCurrentTicket();
         this.queueView.SetCharacters(this.queueModel.GetCharacters());
         this.queueView.SetDialog(this.queueModel.GetSpeaker(), this.queueModel.GetDialog());
     };
     QueuePresenter.prototype.OnReplyClicked = function () {
         this.queueModel.AdvanceDialog(this.queueView.GetSelectedReply());
+    };
+    // private implementation
+    QueuePresenter.prototype.UpdateCurrentTicket = function () {
+        var ticket = this.queueModel.GetCurrentTicket();
+        if (ticket == null)
+            this.queueView.ClearCurrentTicket();
+        else
+            this.queueView.SetCurrentTicket(ticket);
+    };
+    QueuePresenter.prototype.UpdatePlayerTicket = function () {
+        var ticket = this.queueModel.GetPlayerTicket();
+        if (ticket == null)
+            this.queueView.ClearPlayerTicket();
+        else
+            this.queueView.SetPlayerTicket(ticket);
     };
     return QueuePresenter;
 })();
@@ -1159,10 +1192,10 @@ var QueueView = (function () {
         this.Shown = new Signal();
     }
     QueueView.prototype.ClearCurrentTicket = function () {
-        $("#queue #current").text("");
+        $("#current-ticket").hide();
     };
     QueueView.prototype.ClearPlayerTicket = function () {
-        $("#queue #player").text("");
+        $("#my-ticket").hide();
     };
     QueueView.prototype.GetSelectedReply = function () {
         return this.selectedReply;
@@ -1171,7 +1204,7 @@ var QueueView = (function () {
         return this.selectedCharacter;
     };
     QueueView.prototype.SetCharacters = function (characters) {
-        var people = $("#queue #people");
+        var people = $("#queue-people");
         people.empty();
         for (var i = 0; i != characters.length; ++i) {
             var OnClick = function (e) {
@@ -1180,8 +1213,8 @@ var QueueView = (function () {
             };
             var character = characters[i];
             if (character) {
-                var button = $("<button>");
-                button.css("background-color", character.color);
+                var button = $("<div class='queue-person fg-clickable'>");
+                button.css("box-shadow", "0 0 0.3em " + character.color);
                 button.text(characters[i].name);
                 button.click(characters[i], OnClick.bind(this));
                 if (i == 0)
@@ -1194,7 +1227,7 @@ var QueueView = (function () {
         }
     };
     QueueView.prototype.SetCurrentTicket = function (ticket) {
-        $("#queue #current").text("текущий номер: " + ticket);
+        $("#current-ticket .number").text(ticket);
     };
     QueueView.prototype.SetDialog = function (speaker, dialog) {
         var OnClick = function (e) {
@@ -1208,7 +1241,7 @@ var QueueView = (function () {
         div.append($("<p><strong>" + speaker.name + "</strong>: " + dialog.text + "</p>"));
         var ol = $("<ol>");
         for (var i = 0; i != dialog.replies.length; ++i) {
-            var li = $("<li>");
+            var li = $("<li class='fg-clickable'>");
             li.html(dialog.replies[i].text);
             li.click(i, OnClick.bind(this));
             ol.append(li);
@@ -1216,7 +1249,7 @@ var QueueView = (function () {
         div.append(ol);
     };
     QueueView.prototype.SetPlayerTicket = function (ticket) {
-        $("#queue #player").text("ваш номер: " + ticket);
+        $("#my-ticket .number").text(ticket);
     };
     // IClientView implementation
     QueueView.prototype.GetType = function () {
@@ -1227,10 +1260,18 @@ var QueueView = (function () {
     };
     QueueView.prototype.Show = function (e) {
         var _this = this;
-        e.html("<table id='queue'><tr><td><button id='goHome'>вернуться домой</button></td></tr><tr><td id='player' /></tr><tr><td id='current' /></tr><tr><td id='people' /></tr><tr><td id='body'><div id='queue-dialog' /></td></tr></table>");
-        $("#goHome").click(function () {
+        e.append("<div id='queue-people' class='queue-people'>");
+        e.append("<div class='queue-spacer bg-color'>");
+        e.append("<div id='queue-body' class='queue-body'><div id='queue-dialog' class='queue-dialog' /></div>");
+        var goHome = $("<div id='go-home'>");
+        goHome.text("вернуться домой");
+        goHome.click(function () {
             _this.GoToHome.Call();
         });
+        $("#buttons").append(goHome);
+        var gameDiv = $("#game");
+        gameDiv.append("<div id='my-ticket' class='queue-ticket my-ticket'><p class='info-font'>ваш<br>номер</p><div class='number' /></div>");
+        gameDiv.append("<div id='current-ticket' class='queue-ticket current-ticket'><p class='info-font'>текущий<br>номер</p><div class='number' /></div>");
         this.Shown.Call();
     };
     return QueueView;

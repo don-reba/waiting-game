@@ -3,7 +3,7 @@
 	, "text" : "Эй, как дела?"
 	, "replies" :
 		[ { "text" : "Неплохо…",       "ref" : null }
-		, { "text" : "Как вы смеете!", "ref" : "StdQueueGreeting2" }
+		, { "text" : "Как вы смеете!", "ref" : "StdQueueConversation2" }
 		]
 	},
 	{ "id"   : "StdQueueConversation2"
@@ -33,8 +33,8 @@
 	{ "id"   : "ShadyCharacterDescriptionIntro"
 	, "text" : "<aside>Человек с набриллиантиненными волосами и цветным галстуком широко улыбается вам. </aside>"
 	, "replies" :
-		[ { "text" : "<i>Поздороваться.</i>", "ref" : "ShadyCharacterIntroductionIntro" }
-		, { "text" : "<i>Отвернуться. У него может быть инсульт!</i>", "ref" : null }
+		[ { "text" : "Поздороваться.", "ref" : "ShadyCharacterIntroductionIntro" }
+		, { "text" : "Отвернуться. У него может быть инсульт!", "ref" : null }
 		]
 	},
 	{ "id"   : "ShadyCharacterIntroductionIntro"
@@ -95,8 +95,8 @@
 	{ "id"   : "VillainDescriptionIntro"
 	, "text" : "<aside> При виде вас на лице всклокоченного человека в чёрной мантии появляется недовольная ухмылка. </aside>"
 	, "replies" :
-		[ { "text" : "<i>Подойти.</i>", "ref" : "VillainIntroductionIntro" }
-		, { "text" : "<i>Какой подозрительный тип…</i>", "ref" : null }
+		[ { "text" : "Подойти.", "ref" : "VillainIntroductionIntro" }
+		, { "text" : "Какой подозрительный тип…", "ref" : null }
 		]
 	},
 	{ "id"   : "VillainIntroductionIntro"

@@ -11,23 +11,26 @@
 		<link rel="stylesheet" type="text/css" href="css/reset.css" />
 		<link rel="stylesheet" type="text/css" href="css/main.css" />
 	</head>
-	<body>
+	<body class="bg-color">
 		<!-- content -->
-		<h1 id="title">Игра Очередей</h1>
-		<table id="game">
-			<tr>
-				<td id="header-left">
-					<p id="moustache" />
-					<p id="money-total" />
-				</td>
-				<td id="header-right">
-					<button id="reset-game">начать заново</button>
-				</td>
-			</tr>
-			<tr>
-				<td id="location" colspan="2" />
-			</tr>
-		</table>
+		<div id="game" class="game fg-color">
+			<table class="top-exterior">
+				<tr>
+					<td class="title">Игра Очередей</td>
+					<td id="money-total" class="money-total info-font"></td>
+				</tr>
+			</table>
+			<div class="right-exterior">
+				<div id="moustache" class="moustache"></div>
+				<div id="about-menu" class="about-menu info-font">
+					<p class="bg-clickable">об игре</p>
+					<p id="reset-game" class="bg-clickable">начать заново</p>
+				</div>
+			</div>
+			<div id="about" class="about bg-clickable">?</div>
+			<div id="buttons" class="buttons"></div>
+			<div id="location" class="location"></div>
+		</div>
 
 		<!-- scripts -->
 		<script type="text/javascript" src="js/jquery-2.1.3.js"></script>

@@ -49,7 +49,7 @@
 	, "color" : "#FE4365"
 	},
 	{ "id"    : "TerminallyIll"
-	, "name"  : "Тяжёлобольной"
+	, "name"  : "Тяжелобольной"
 	, "color" : "#F0F0D8"
 	},
 	{ "id"    : "Villain"

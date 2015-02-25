@@ -64,13 +64,13 @@ class HomeView implements IHomeView, IClientView
 
 	HideFriendsButton() : void
 	{
-		$("button#toggle-invites").hide();
+		$("#toggle-invites").hide();
 	}
 
 	HideTravelButtons() : void
 	{
-		$("button#go-queue").hide();
-		$("button#go-store").hide();
+		$("#go-queue").hide();
+		$("#go-store").hide();
 	}
 
 	SetCanvas(canvas : HomeCanvas) : void
@@ -128,7 +128,7 @@ class HomeView implements IHomeView, IClientView
 				this.selectedReply = e.data;
 				this.ReplyClicked.Call();
 			}
-			var li = $("<li>");
+			var li = $("<li class='fg-clickable'>");
 			li.html(dialog.replies[i].text);
 			li.click(i, OnClick.bind(this));
 			ol.append(li);
@@ -139,7 +139,7 @@ class HomeView implements IHomeView, IClientView
 
 	SetInviteStatus(status : boolean) : void
 	{
-		$("button#invite-friends").prop("disabled", !status);
+		$("#invite-friends").prop("disabled", !status);
 	}
 
 	ShowFriends(characters : ICharacter[]) : void
@@ -182,7 +182,17 @@ class HomeView implements IHomeView, IClientView
 		this.AlignToBottom($("#toggle-invites"), invites);
 
 		invites.show();
+	}
 
+	ShowFriendsButton() : void
+	{
+		$("#toggle-invites").show();
+	}
+
+	ShowTravelButtons() : void
+	{
+		$("#go-queue").show();
+		$("#go-store").show();
 	}
 
 	// IClientView implementation
@@ -198,15 +208,26 @@ class HomeView implements IHomeView, IClientView
 
 	Show(e : JQuery) : void
 	{
-		e.html("<table id='home'><tr><td id='home-header'><button id='go-queue'>в очередь</button><button id='go-store'>в магазин</button><button id='toggle-invites'>друзья</button><div id='home-invites' /></td></tr><tr><td id='home-body'><div id='home-dialog' /><div id='home-view' /></td></tr></table>");
+		e.html("<div id='home-invites'></div><div id='home-dialog'></div><div id='home-view'></div>");
+
 		$("#home-invites").hide();
 		$("#home-dialog").hide();
 
-		$("#go-queue").click(() => { this.GoToQueue.Call() });
+		var goQueue = $("<div id='go-queue'>");
+		goQueue.text("в очередь");
+		goQueue.hide();
+		goQueue.click(() => { this.GoToQueue.Call() });
 
-		$("#go-store").click(() => { this.GoToStore.Call() });
+		var goStore = $("<div id='go-store'>");
+		goStore.text("в магазин");
+		goStore.hide();
+		goStore.click(() => { this.GoToStore.Call() });
 
-		$("#toggle-invites").click(() => { if ($("#home-invites").is(":visible")) this.CloseInvites.Call(); else this.OpenInvites.Call() });
+		var toggleInvites = $("<div id='toggle-invites'>");
+		toggleInvites.text("друзья…");
+		toggleInvites.click(() => { if ($("#home-invites").is(":visible")) this.CloseInvites.Call(); else this.OpenInvites.Call() });
+
+		$("#buttons").append(goQueue).append(goStore).append(toggleInvites);
 
 		this.Shown.Call();
 	}
