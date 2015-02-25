@@ -965,8 +965,8 @@ var QueueModel = (function () {
         this.DialogChanged = new Signal();
         this.PeopleChanged = new Signal();
         this.PlayerTicketChanged = new Signal();
-        timer.AddEvent(this.OnAdvance.bind(this), 20);
-        timer.AddEvent(this.OnKnock.bind(this), 19);
+        timer.AddEvent(this.OnAdvance.bind(this), 40);
+        timer.AddEvent(this.OnKnock.bind(this), 37);
         this.ticket = 0;
         this.queue = [];
         for (var i = 0; i != this.maxLength; ++i)

@@ -54,6 +54,7 @@
 	{ "id"    : "Villain"
 	, "name"  : "Злодей"
 	, "color" : "#77CCA4"
+	, "queueConversationDialogs" : [ "VillainIntroductionIntro" ]
 	},
 	{ "id"    : "Robochef"
 	, "name"  : "Робоповар"

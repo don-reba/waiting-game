@@ -35,8 +35,8 @@ class QueueModel implements IQueueModel, IPersistent
 		, private dialogManager    : DialogManager
 		)
 	{
-		timer.AddEvent(this.OnAdvance.bind(this), 20);
-		timer.AddEvent(this.OnKnock.bind(this),   19);
+		timer.AddEvent(this.OnAdvance.bind(this), 40);
+		timer.AddEvent(this.OnKnock.bind(this),   37);
 
 		this.ticket = 0;
 
