@@ -8,6 +8,7 @@ interface IHomeView
 	FriendSelected : Signal;
 	GoToQueue      : Signal;
 	GoToStore      : Signal;
+	GuestClicked   : Signal;
 	InviteFriends  : Signal;
 	OpenInvites    : Signal;
 	ReplyClicked   : Signal;
@@ -20,6 +21,8 @@ interface IHomeView
 	GetSelectedFriend() : ICharacter;
 
 	GetSelectedFriendStatus() : boolean;
+
+	GetSelectedGuest() : ICharacter;
 
 	GetSelectedReply() : number;
 

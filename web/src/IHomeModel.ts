@@ -33,4 +33,6 @@ interface IHomeModel
 	LetTheGuestIn() : void;
 
 	SetFriendStatus(character : ICharacter, enabled : boolean) : void;
+
+	StartDialog(speaker : ICharacter) : void;
 }

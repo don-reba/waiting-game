@@ -161,6 +161,13 @@ class HomeModel implements IHomeModel, IPersistent
 		}
 	}
 
+	StartDialog(speaker : ICharacter) : void
+	{
+		this.speakerID = speaker.id;
+		this.dialogID  = this.characterManager.GetDialogID(speaker.id, DialogType.HomeConversation);
+		this.DialogChanged.Call();
+	}
+
 	// event handlers
 
 	private OnAdvance() : void

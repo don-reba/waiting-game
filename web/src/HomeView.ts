@@ -5,6 +5,7 @@ class HomeView implements IHomeView, IClientView
 {
 	private selectedFriend       : ICharacter;
 	private selectedFriendStatus : boolean;
+	private selectedGuest        : ICharacter;
 	private selectedReply        : number;
 
 	// IHomeView implementation
@@ -13,6 +14,7 @@ class HomeView implements IHomeView, IClientView
 	FriendSelected = new Signal();
 	GoToQueue      = new Signal();
 	GoToStore      = new Signal();
+	GuestClicked   = new Signal();
 	InviteFriends  = new Signal();
 	OpenInvites    = new Signal();
 	ReplyClicked   = new Signal();
@@ -45,6 +47,11 @@ class HomeView implements IHomeView, IClientView
 		return this.selectedFriendStatus;
 	}
 
+	GetSelectedGuest() : ICharacter
+	{
+		return this.selectedGuest;
+	}
+
 	GetSelectedReply() : number
 	{
 		return this.selectedReply;
@@ -68,6 +75,12 @@ class HomeView implements IHomeView, IClientView
 
 	SetCanvas(canvas : HomeCanvas) : void
 	{
+		var OnClickCharacter = function(e)
+		{
+			this.selectedGuest = e.data;
+			this.GuestClicked.Call();
+		}
+
 		var view = $("#home-view");
 		var html = canvas.rows.join("<br>");
 
@@ -75,11 +88,21 @@ class HomeView implements IHomeView, IClientView
 		{
 			var c = canvas.characters[i];
 			var replacement = c
-				? "<span id='character-" + c.name + "' class='character' style='background-color:" + c.color + "'>\\o/</span>"
+				? "<span id='character-" + c.id + "' class='character' style='background-color:" + c.color + "'>\\o/</span>"
 				: "<span class='player'>\\o/</span>";
 			html = html.replace(" " + i + " ", replacement);
 		}
 		view.html(html);
+
+		for (var i = 0; i != canvas.characters.length; ++i)
+		{
+			var c = canvas.characters[i];
+			if (c)
+			{
+				var span = $("#character-" + c.id);
+				span.click(c, OnClickCharacter.bind(this));
+			}
+		}
 	}
 
 	SetDialog(speaker : ICharacter, dialog : IDialog) : void

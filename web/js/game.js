@@ -44,7 +44,7 @@ var CharacterManager = (function () {
                 if (character.homeArrivalDialogs)
                     return character.homeArrivalDialogs[0];
                 return "StdHomeArrival";
-            case 1 /* QueueConversation */:
+            case 3 /* HomeConversation */:
                 if (character.homeConversationDialogs)
                     return character.homeConversationDialogs[0];
                 return "StdHomeConversation";
@@ -296,6 +296,11 @@ var HomeModel = (function () {
                 f.splice(i, 1);
         }
     };
+    HomeModel.prototype.StartDialog = function (speaker) {
+        this.speakerID = speaker.id;
+        this.dialogID = this.characterManager.GetDialogID(speaker.id, 3 /* HomeConversation */);
+        this.DialogChanged.Call();
+    };
     // event handlers
     HomeModel.prototype.OnAdvance = function () {
         if (this.atEntrance)
@@ -393,6 +398,7 @@ var HomePresenter = (function () {
         homeView.CloseInvites.Add(this.OnCloseInvites.bind(this));
         homeView.GoToQueue.Add(this.OnGoToQueue.bind(this));
         homeView.GoToStore.Add(this.OnGoToStore.bind(this));
+        homeView.GuestClicked.Add(this.OnGuestClicked.bind(this));
         homeView.InviteFriends.Add(this.OnInviteFriends.bind(this));
         homeView.OpenInvites.Add(this.OnOpenInvites.bind(this));
         homeView.ReplyClicked.Add(this.OnReplyClicked.bind(this));
@@ -420,6 +426,9 @@ var HomePresenter = (function () {
         this.homeView.HideFriendsButton();
         //this.homeView.HideTravelButtons();
         this.homeView.SetCanvas(this.homeModel.GetCanvas());
+    };
+    HomePresenter.prototype.OnGuestClicked = function () {
+        this.homeModel.StartDialog(this.homeView.GetSelectedGuest());
     };
     HomePresenter.prototype.OnGoToQueue = function () {
         this.mainModel.SetView(1 /* Queue */);
@@ -467,6 +476,7 @@ var HomeView = (function () {
         this.FriendSelected = new Signal();
         this.GoToQueue = new Signal();
         this.GoToStore = new Signal();
+        this.GuestClicked = new Signal();
         this.InviteFriends = new Signal();
         this.OpenInvites = new Signal();
         this.ReplyClicked = new Signal();
@@ -490,6 +500,9 @@ var HomeView = (function () {
     HomeView.prototype.GetSelectedFriendStatus = function () {
         return this.selectedFriendStatus;
     };
+    HomeView.prototype.GetSelectedGuest = function () {
+        return this.selectedGuest;
+    };
     HomeView.prototype.GetSelectedReply = function () {
         return this.selectedReply;
     };
@@ -504,14 +517,25 @@ var HomeView = (function () {
         $("button#go-store").hide();
     };
     HomeView.prototype.SetCanvas = function (canvas) {
+        var OnClickCharacter = function (e) {
+            this.selectedGuest = e.data;
+            this.GuestClicked.Call();
+        };
         var view = $("#home-view");
         var html = canvas.rows.join("<br>");
         for (var i = 0; i != canvas.characters.length; ++i) {
             var c = canvas.characters[i];
-            var replacement = c ? "<span id='character-" + c.name + "' class='character' style='background-color:" + c.color + "'>\\o/</span>" : "<span class='player'>\\o/</span>";
+            var replacement = c ? "<span id='character-" + c.id + "' class='character' style='background-color:" + c.color + "'>\\o/</span>" : "<span class='player'>\\o/</span>";
             html = html.replace(" " + i + " ", replacement);
         }
         view.html(html);
+        for (var i = 0; i != canvas.characters.length; ++i) {
+            var c = canvas.characters[i];
+            if (c) {
+                var span = $("#character-" + c.id);
+                span.click(c, OnClickCharacter.bind(this));
+            }
+        }
     };
     HomeView.prototype.SetDialog = function (speaker, dialog) {
         var div = $("#home-dialog");
@@ -1170,6 +1194,10 @@ var QueueView = (function () {
         $("#queue #current").text("текущий номер: " + ticket);
     };
     QueueView.prototype.SetDialog = function (speaker, dialog) {
+        var OnClick = function (e) {
+            this.selectedReply = e.data;
+            this.ReplyClicked.Call();
+        };
         var div = $("#queue-dialog");
         div.empty();
         if (!dialog)
@@ -1177,10 +1205,6 @@ var QueueView = (function () {
         div.append($("<p><strong>" + speaker.name + "</strong>: " + dialog.text + "</p>"));
         var ol = $("<ol>");
         for (var i = 0; i != dialog.replies.length; ++i) {
-            var OnClick = function (e) {
-                this.selectedReply = e.data;
-                this.ReplyClicked.Call();
-            };
             var li = $("<li>");
             li.text(dialog.replies[i].text);
             li.click(i, OnClick.bind(this));

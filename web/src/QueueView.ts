@@ -71,6 +71,12 @@ class QueueView implements IQueueView, IClientView
 
 	SetDialog(speaker : ICharacter, dialog : IDialog) : void
 	{
+		var OnClick = function(e)
+		{
+			this.selectedReply = e.data;
+			this.ReplyClicked.Call();
+		}
+
 		var div = $("#queue-dialog");
 		div.empty();
 
@@ -82,11 +88,6 @@ class QueueView implements IQueueView, IClientView
 		var ol = $("<ol>");
 		for (var i = 0; i != dialog.replies.length; ++i)
 		{
-			var OnClick = function(e)
-			{
-				this.selectedReply = e.data;
-				this.ReplyClicked.Call();
-			}
 			var li = $("<li>");
 			li.text(dialog.replies[i].text);
 			li.click(i, OnClick.bind(this));

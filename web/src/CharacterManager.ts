@@ -46,7 +46,7 @@ class CharacterManager
 				if (character.homeArrivalDialogs)
 					return character.homeArrivalDialogs[0];
 				return "StdHomeArrival";
-			case DialogType.QueueConversation:
+			case DialogType.HomeConversation:
 				if (character.homeConversationDialogs)
 					return character.homeConversationDialogs[0];
 				return "StdHomeConversation";

@@ -18,6 +18,7 @@ class HomePresenter
 		homeView.CloseInvites.Add(this.OnCloseInvites.bind(this));
 		homeView.GoToQueue.Add(this.OnGoToQueue.bind(this));
 		homeView.GoToStore.Add(this.OnGoToStore.bind(this));
+		homeView.GuestClicked.Add(this.OnGuestClicked.bind(this));
 		homeView.InviteFriends.Add(this.OnInviteFriends.bind(this));
 		homeView.OpenInvites.Add(this.OnOpenInvites.bind(this));
 		homeView.ReplyClicked.Add(this.OnReplyClicked.bind(this));
@@ -55,6 +56,11 @@ class HomePresenter
 		this.homeView.HideFriendsButton();
 		//this.homeView.HideTravelButtons();
 		this.homeView.SetCanvas(this.homeModel.GetCanvas());
+	}
+
+	private OnGuestClicked() : void
+	{
+		this.homeModel.StartDialog(this.homeView.GetSelectedGuest());
 	}
 
 	private OnGoToQueue() : void

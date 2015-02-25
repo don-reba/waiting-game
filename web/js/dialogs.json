@@ -27,7 +27,7 @@
 	{ "id"   : "StdHomeConversation"
 	, "text" : "…"
 	, "replies" :
-		[ { "text" : "…", "ref" : null }
+		[ { "text" : "Погодите, я забыла утюг на плите!", "ref" : null }
 		]
 	}
 ]
