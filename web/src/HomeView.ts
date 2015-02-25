@@ -129,7 +129,7 @@ class HomeView implements IHomeView, IClientView
 				this.ReplyClicked.Call();
 			}
 			var li = $("<li>");
-			li.text(dialog.replies[i].text);
+			li.html(dialog.replies[i].text);
 			li.click(i, OnClick.bind(this));
 			ol.append(li);
 		}

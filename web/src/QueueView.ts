@@ -89,7 +89,7 @@ class QueueView implements IQueueView, IClientView
 		for (var i = 0; i != dialog.replies.length; ++i)
 		{
 			var li = $("<li>");
-			li.text(dialog.replies[i].text);
+			li.html(dialog.replies[i].text);
 			li.click(i, OnClick.bind(this));
 			ol.append(li);
 		}
