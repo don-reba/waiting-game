@@ -47,7 +47,7 @@ class Timer implements IPersistent
 		return JSON.stringify(new TimerState(this.ticks));
 	}
 
-	// private implementation
+	// event handlers
 
 	private OnTick() : void
 	{

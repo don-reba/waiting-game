@@ -61,10 +61,14 @@
 	, "name"  : "Злодей"
 	, "color" : "#77CCA4"
 	, "queueConversation" :
-		[ { "dialog" : "VillainDescriptionIntro", "requires" : ["VillainIntro"] }
-		, { "dialog" : "VillainIntroductionIntro", "requires" : [ "VillainIntroductionPending" ] }
-		, { "dialog" : "VillainOffendedIntro", "requires" : [ "VillainOffended" ] }
+		[ { "dialog" : "VillainDescriptionIntro",          "requires" : ["VillainIntro"] }
+		, { "dialog" : "VillainIntroductionIntro",         "requires" : [ "VillainIntroductionPending" ] }
+		, { "dialog" : "VillainOffendedIntro",             "requires" : [ "VillainOffended" ] }
+		, { "dialog" : "VillainDoomsdayQuestIntro",        "requires" : [ "VillainQuestPending" ] }
+		, { "dialog" : "VillainDoomsdayQuestReceiveIntro", "requires" : [ "DoomsdayQuestReport" ] }
 		]
+	, "queueEscape" :
+		[ { "dialog" : "VillainQueueEscape" } ]
 	},
 	{ "id"    : "Robochef"
 	, "name"  : "Робоповар"
