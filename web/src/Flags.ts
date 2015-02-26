@@ -13,6 +13,13 @@ class Flags implements IPersistent
 
 	// public interface
 
+	Clear(flag : string) : void
+	{
+		var i = this.flags.indexOf(flag);
+		if (i >= 0)
+			this.flags.splice(i, 1);
+	}
+
 	IsSet(flag : string) : boolean
 	{
 		var Check = this.checks[flag];

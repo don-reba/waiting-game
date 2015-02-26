@@ -5,6 +5,11 @@ var Flags = (function () {
         this.checks = {};
     }
     // public interface
+    Flags.prototype.Clear = function (flag) {
+        var i = this.flags.indexOf(flag);
+        if (i >= 0)
+            this.flags.splice(i, 1);
+    };
     Flags.prototype.IsSet = function (flag) {
         var Check = this.checks[flag];
         if (Check)
@@ -87,9 +92,9 @@ var CharacterManager = (function () {
                 break;
         }
         if (conversations) {
-            var dialog = this.ChooseConversation(conversations).dialog;
-            if (dialog)
-                return dialog;
+            var conversation = this.ChooseConversation(conversations);
+            if (conversation)
+                return conversation.dialog;
         }
         return defaultID;
     };
@@ -103,7 +108,6 @@ var CharacterManager = (function () {
             if (!c.requires || c.requires.every(this.flags.IsSet.bind(this.flags)))
                 return c;
         }
-        return conversations[0];
     };
     return CharacterManager;
 })();
@@ -194,6 +198,19 @@ var DialogManager = (function () {
         for (var i = 0; i != dialogs.length; ++i)
             this.map[dialogs[i].id] = dialogs[i];
     }
+    DialogManager.prototype.ActivateDialog = function (dialogID) {
+        if (!dialogID)
+            return;
+        var dialog = this.map[dialogID];
+        if (dialog.sets) {
+            for (var i = 0; i != dialog.sets.length; ++i)
+                this.flags.Set(dialog.sets[i]);
+        }
+        if (dialog.clears) {
+            for (var i = 0; i != dialog.clears.length; ++i)
+                this.flags.Clear(dialog.clears[i]);
+        }
+    };
     DialogManager.prototype.GetDialog = function (dialogID) {
         if (dialogID)
             return this.map[dialogID];
@@ -1075,6 +1092,7 @@ var QueueModel = (function () {
         if (this.dialogID == null)
             this.speakerID = null;
         this.DialogChanged.Call();
+        this.dialogManager.ActivateDialog(this.dialogID);
     };
     QueueModel.prototype.EndDialog = function () {
         this.dialogID = null;
@@ -1116,6 +1134,7 @@ var QueueModel = (function () {
         this.dialogID = this.characterManager.GetDialogID(speaker.id, 1 /* QueueConversation */);
         this.DialogChanged.Call();
         this.player.IntroduceTo(speaker);
+        this.dialogManager.ActivateDialog(this.dialogID);
     };
     // IPersistent implementation
     QueueModel.prototype.FromPersistentString = function (str) {

@@ -14,6 +14,25 @@ class DialogManager
 			this.map[dialogs[i].id] = dialogs[i];
 	}
 
+	ActivateDialog(dialogID : string) : string
+	{
+		if (!dialogID)
+			return;
+		var dialog = this.map[dialogID];
+
+		if (dialog.sets)
+		{
+			for (var i = 0; i != dialog.sets.length; ++i)
+				this.flags.Set(dialog.sets[i]);
+		}
+
+		if (dialog.clears)
+		{
+			for (var i = 0; i != dialog.clears.length; ++i)
+				this.flags.Clear(dialog.clears[i]);
+		}
+	}
+
 	GetDialog(dialogID : string) : IDialog
 	{
 		if (dialogID)

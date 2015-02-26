@@ -10,4 +10,5 @@ interface IDialog
 	text    : string;
 	replies : Reply[];
 	sets?   : string[];
+	clears? : string[];
 }

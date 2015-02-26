@@ -65,9 +65,9 @@ class CharacterManager
 		}
 		if (conversations)
 		{
-			var dialog = this.ChooseConversation(conversations).dialog;
-			if (dialog)
-				return dialog;
+			var conversation = this.ChooseConversation(conversations);
+			if (conversation)
+				return conversation.dialog;
 		}
 		return defaultID;
 	}
@@ -87,6 +87,5 @@ class CharacterManager
 			if (!c.requires || c.requires.every(this.flags.IsSet.bind(this.flags)))
 				return c;
 		}
-		return conversations[0];
 	}
 }

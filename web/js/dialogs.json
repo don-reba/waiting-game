@@ -36,6 +36,7 @@
 		[ { "text" : "Поздороваться.", "ref" : "ShadyIntroductionIntro" }
 		, { "text" : "Отвернуться. У него может быть инсульт!", "ref" : null }
 		]
+	, "sets" : [ "MachinationsQuestPending" ]
 	},
 	{ "id"   : "ShadyIntroductionIntro"
 	, "text" : "Приветствую! Когда я увидел вас, то сразу сказал себе: «Вот настоящий ценитель запонок!» Так какие бы вы хотели: золотые, циркониевые, из пробкового дерева, с защитой от вампиризма?"
@@ -85,6 +86,8 @@
 	, "replies" :
 		[ { "text" : "До встречи.", "ref" : null }
 		]
+	, "sets"   : [ "MachinationsQuest" ]
+	, "clears" : [ "MachinationsQuestPending" ]
 	},
 	{ "id"   : "ShadyIntroductionRefuse"
 	, "text" : "Как пожелаете! Но предложение остаётся в силе, если передумаете. Мы ещё встретимся!"

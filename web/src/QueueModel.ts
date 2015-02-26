@@ -58,6 +58,8 @@ class QueueModel implements IQueueModel, IPersistent
 		if (this.dialogID == null)
 			this.speakerID = null;
 		this.DialogChanged.Call();
+
+		this.dialogManager.ActivateDialog(this.dialogID);
 	}
 
 	EndDialog() : void
@@ -113,6 +115,7 @@ class QueueModel implements IQueueModel, IPersistent
 		this.DialogChanged.Call();
 
 		this.player.IntroduceTo(speaker);
+		this.dialogManager.ActivateDialog(this.dialogID);
 	}
 
 	// IPersistent implementation

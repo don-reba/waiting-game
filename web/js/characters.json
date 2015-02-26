@@ -16,7 +16,7 @@
 	, "color" : "#FBB829"
 	, "queueConversationConversations" :
 		[ { "dialog" : "ShadyDescriptionIntro", "requires" : [ "ShadyIntro" ] }
-		, { "dialog" : "ShadyIntroductionIntro" }
+		, { "dialog" : "ShadyIntroductionMachinationsQuest", "requires" : [ "MachinationsQuestPending" ] }
 		]
 	},
 	{ "id"    : "Hat"
