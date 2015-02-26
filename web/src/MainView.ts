@@ -38,9 +38,9 @@ class MainView implements IMainView
 		this.activeView = newActiveView;
 	}
 
-	SetMoney(money : number) : void
+	SetMoney(money : string) : void
 	{
-		$("#money-total").text(Math.floor(money) + " ₽");
+		$("#money-total").text(money);
 	}
 
 	SetMoustache(moustache : Moustache) : void

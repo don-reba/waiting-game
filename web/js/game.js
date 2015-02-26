@@ -1,3 +1,34 @@
+/// <reference path="IPersistent.ts" />
+var Flags = (function () {
+    function Flags() {
+        this.flags = [];
+        this.checks = {};
+    }
+    // public interface
+    Flags.prototype.IsSet = function (flag) {
+        var Check = this.checks[flag];
+        if (Check)
+            return Check();
+        return this.flags.indexOf(flag) >= 0;
+    };
+    Flags.prototype.Set = function (flag) {
+        if (this.flags.indexOf(flag) < 0)
+            this.flags.push(flag);
+    };
+    Flags.prototype.SetCheck = function (flag, Check) {
+        this.checks[flag] = Check;
+    };
+    // IPersistent implementation
+    Flags.prototype.FromPersistentString = function (str) {
+        var state = JSON.parse(str);
+        this.flags = state.flags;
+    };
+    Flags.prototype.ToPersistentString = function () {
+        var state = { flags: this.flags };
+        return JSON.stringify(state);
+    };
+    return Flags;
+})();
 var Util;
 (function (Util) {
     function Sample(a) {
@@ -7,6 +38,7 @@ var Util;
     Util.Sample = Sample;
 })(Util || (Util = {}));
 /// <reference path="ICharacter.ts" />
+/// <reference path="Flags.ts"      />
 /// <reference path="Util.ts"       />
 var DialogType;
 (function (DialogType) {
@@ -16,11 +48,14 @@ var DialogType;
     DialogType[DialogType["HomeConversation"] = 3] = "HomeConversation";
 })(DialogType || (DialogType = {}));
 var CharacterManager = (function () {
-    function CharacterManager(characters) {
+    // public interface
+    function CharacterManager(characters, flags) {
         this.characters = characters;
+        this.flags = flags;
         this.map = {};
-        for (var i = 0; i != characters.length; ++i)
+        for (var i = 0; i != characters.length; ++i) {
             this.map[characters[i].id] = characters[i];
+        }
     }
     CharacterManager.prototype.GetAllCharacters = function () {
         return this.characters;
@@ -30,28 +65,45 @@ var CharacterManager = (function () {
             return this.map[id];
     };
     CharacterManager.prototype.GetDialogID = function (characterID, dialogType) {
+        var conversations;
+        var defaultID;
         var character = this.map[characterID];
         switch (dialogType) {
             case 0 /* QueueEscape */:
-                if (character.queueEscapeDialogs)
-                    return character.queueEscapeDialogs[0];
-                return "StdQueueEscape";
+                conversations = character.queueEscapeConversations;
+                defaultID = "StdQueueEscape";
+                break;
             case 1 /* QueueConversation */:
-                if (character.queueConversationDialogs)
-                    return character.queueConversationDialogs[0];
-                return "StdQueueConversation";
+                conversations = character.queueConversationConversations;
+                defaultID = "StdQueueConversation";
+                break;
             case 2 /* HomeArrival */:
-                if (character.homeArrivalDialogs)
-                    return character.homeArrivalDialogs[0];
-                return "StdHomeArrival";
+                conversations = character.homeArrivalConversations;
+                defaultID = "StdHomeArrival";
+                break;
             case 3 /* HomeConversation */:
-                if (character.homeConversationDialogs)
-                    return character.homeConversationDialogs[0];
-                return "StdHomeConversation";
+                conversations = character.homeConversationConversations;
+                defaultID = "StdHomeConversation";
+                break;
         }
+        if (conversations) {
+            var dialog = this.ChooseConversation(conversations).dialog;
+            if (dialog)
+                return dialog;
+        }
+        return defaultID;
     };
     CharacterManager.prototype.GetRandomCharacter = function () {
         return Util.Sample(this.characters);
+    };
+    // private implementation
+    CharacterManager.prototype.ChooseConversation = function (conversations) {
+        for (var i = 0; i != conversations.length; ++i) {
+            var c = conversations[i];
+            if (!c.requires || c.requires.every(this.flags.IsSet.bind(this.flags)))
+                return c;
+        }
+        return conversations[0];
     };
     return CharacterManager;
 })();
@@ -132,21 +184,24 @@ var Reply = (function () {
     }
     return Reply;
 })();
+/// <reference path="Flags.ts"   />
 /// <reference path="IDialog.ts" />
 var DialogManager = (function () {
-    function DialogManager(dialogs) {
-        this.dialogs = {};
+    function DialogManager(dialogs, flags) {
+        this.dialogs = dialogs;
+        this.flags = flags;
+        this.map = {};
         for (var i = 0; i != dialogs.length; ++i)
-            this.dialogs[dialogs[i].id] = dialogs[i];
+            this.map[dialogs[i].id] = dialogs[i];
     }
     DialogManager.prototype.GetDialog = function (dialogID) {
         if (dialogID)
-            return this.dialogs[dialogID];
+            return this.map[dialogID];
         return null;
     };
     DialogManager.prototype.GetRefDialogID = function (dialogID, option) {
         if (dialogID)
-            return this.dialogs[dialogID].replies[option].ref;
+            return this.map[dialogID].replies[option].ref;
         return null;
     };
     return DialogManager;
@@ -706,7 +761,9 @@ var MainModel = (function () {
         return this.view;
     };
     MainModel.prototype.GetMoney = function () {
-        return this.player.GetMoney();
+        var money = Math.floor(this.player.GetMoney());
+        var rate = Math.round(this.player.GetRate() * 10) / 10;
+        return String(money) + " руб. (" + String(rate) + " руб./с)";
     };
     MainModel.prototype.GetMoustache = function () {
         return this.player.GetMoustache();
@@ -798,7 +855,7 @@ var MainView = (function () {
         this.activeView = newActiveView;
     };
     MainView.prototype.SetMoney = function (money) {
-        $("#money-total").text(Math.floor(money) + " ₽");
+        $("#money-total").text(money);
     };
     MainView.prototype.SetMoustache = function (moustache) {
         var text = "";
@@ -869,7 +926,7 @@ var Timer = (function () {
 var PersistentState = (function () {
     function PersistentState(items, timer) {
         this.items = items;
-        this.version = "5";
+        this.version = "8";
         timer.AddEvent(this.Save.bind(this), 20);
     }
     // get the state string from each item and store it in local storage
@@ -915,6 +972,7 @@ var Moustache;
     Moustache[Moustache["French"] = 2] = "French";
     Moustache[Moustache["Handlebar"] = 3] = "Handlebar";
 })(Moustache || (Moustache = {}));
+/// <reference path="ICharacter.ts"  />
 /// <reference path="IPersistent.ts" />
 /// <reference path="Moustache.ts"   />
 /// <reference path="Signal.ts"      />
@@ -927,17 +985,30 @@ var Player = (function () {
     function Player(timer) {
         this.moustache = 0 /* None */;
         this.money = 0;
-        this.rate = 1;
+        this.rate = 0.5;
+        this.hasMet = [];
         this.MoustacheChanged = new Signal();
         this.MoneyChanged = new Signal();
         this.RateChanged = new Signal();
-        timer.AddEvent(this.OnPay.bind(this), 20);
+        timer.AddEvent(this.OnPay.bind(this), 10);
     }
     Player.prototype.GetMoney = function () {
         return this.money;
     };
+    Player.prototype.GetRate = function () {
+        return this.rate;
+    };
     Player.prototype.GetMoustache = function () {
         return this.moustache;
+    };
+    // complexity: linear
+    Player.prototype.HasNotMet = function (character) {
+        return this.hasMet.indexOf(character.id) < 0;
+    };
+    // complexity: linear
+    Player.prototype.IntroduceTo = function (character) {
+        if (this.hasMet.indexOf(character.id) < 0)
+            this.hasMet.push(character.id);
     };
     Player.prototype.SetMoney = function (money) {
         this.money = money;
@@ -953,9 +1024,10 @@ var Player = (function () {
         this.moustache = state.moustache;
         this.money = state.money;
         this.rate = state.rate;
+        this.hasMet = state.hasMet;
     };
     Player.prototype.ToPersistentString = function () {
-        var state = { moustache: this.moustache, money: this.money, rate: this.rate };
+        var state = { moustache: this.moustache, money: this.money, rate: this.rate, hasMet: this.hasMet };
         return JSON.stringify(state);
     };
     // private implementation
@@ -980,11 +1052,12 @@ var QueueModelState = (function () {
     return QueueModelState;
 })();
 var QueueModel = (function () {
-    function QueueModel(timer, characterManager, dialogManager) {
+    function QueueModel(timer, characterManager, dialogManager, player) {
         this.timer = timer;
         this.characterManager = characterManager;
         this.dialogManager = dialogManager;
-        this.maxLength = 5;
+        this.player = player;
+        this.maxLength = 6;
         // IQueueModel implementation
         this.CurrentTicketChanged = new Signal();
         this.DialogChanged = new Signal();
@@ -1042,18 +1115,18 @@ var QueueModel = (function () {
         this.speakerID = speaker.id;
         this.dialogID = this.characterManager.GetDialogID(speaker.id, 1 /* QueueConversation */);
         this.DialogChanged.Call();
+        this.player.IntroduceTo(speaker);
     };
     // IPersistent implementation
     QueueModel.prototype.FromPersistentString = function (str) {
         var state = JSON.parse(str);
         this.queue = state.queue;
-        this.player = state.player;
         this.ticket = state.ticket;
         this.dialogID = state.dialogID;
         this.speakerID = state.speakerID;
     };
     QueueModel.prototype.ToPersistentString = function () {
-        var state = { queue: this.queue, player: this.player, ticket: this.ticket, dialogID: this.dialogID, speakerID: this.speakerID };
+        var state = { queue: this.queue, ticket: this.ticket, dialogID: this.dialogID, speakerID: this.speakerID };
         return JSON.stringify(state);
     };
     // private implementation
@@ -1212,7 +1285,7 @@ var QueueView = (function () {
                 this.PersonClicked.Call();
             };
             // goes up to 1.0 in increments of 0.1
-            var scale = (6 + i) / 10;
+            var scale = (5 + i) / 10;
             var character = characters[i];
             var button = $("<div class='queue-person'>");
             button.css("transform", "scale(" + String(scale) + ")");
@@ -1500,6 +1573,7 @@ var StoreView = (function () {
 /// <reference path="HomePresenter.ts"    />
 /// <reference path="HomeView.ts"         />
 /// <reference path="DialogManager.ts"    />
+/// <reference path="Flags.ts"            />
 /// <reference path="MainModel.ts"        />
 /// <reference path="MainPresenter.ts"    />
 /// <reference path="MainView.ts"         />
@@ -1515,14 +1589,23 @@ var StoreView = (function () {
 /// <reference path="StorePresenter.ts"   />
 /// <reference path="StoreView.ts"        />
 /// <reference path="Timer.ts"            />
+function MapCharacterNameIntroFlags(flags, player, characterManager) {
+    var characters = characterManager.GetAllCharacters();
+    for (var i = 0; i != characters.length; ++i) {
+        var c = characters[i];
+        var f = c.id + "Intro";
+        flags.SetCheck(f, player.HasNotMet.bind(player, c));
+    }
+}
 function Main(dialogs, characters) {
-    var dialogManager = new DialogManager(dialogs);
-    var characterManager = new CharacterManager(characters);
+    var flags = new Flags();
+    var dialogManager = new DialogManager(dialogs, flags);
+    var characterManager = new CharacterManager(characters, flags);
     var timer = new Timer();
     var player = new Player(timer);
     var homeModel = new HomeModel(timer, characterManager, dialogManager);
     var mainModel = new MainModel(player);
-    var queueModel = new QueueModel(timer, characterManager, dialogManager);
+    var queueModel = new QueueModel(timer, characterManager, dialogManager, player);
     var saveModel = new SaveModel();
     var storeModel = new StoreModel(player);
     var homeView = new HomeView();
@@ -1535,8 +1618,9 @@ function Main(dialogs, characters) {
     var queuePresenter = new QueuePresenter(mainModel, queueModel, queueView);
     var savePrsenter = new SavePresenter(saveModel, saveView);
     var storePresenter = new StorePresenter(mainModel, storeModel, storeView);
-    var persistentItems = [["main", mainModel], ["home", homeModel], ["queue", queueModel], ["player", player], ["timer", timer]];
+    var persistentItems = [["main", mainModel], ["home", homeModel], ["queue", queueModel], ["player", player], ["timer", timer], ["flags", flags]];
     var persistentState = new PersistentState(persistentItems, timer);
+    MapCharacterNameIntroFlags(flags, player, characterManager);
     persistentState.Load();
     mainPresenter.LightsCameraAction();
     timer.Start(100);

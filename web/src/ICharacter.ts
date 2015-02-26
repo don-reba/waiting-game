@@ -1,11 +1,17 @@
+interface IConversation
+{
+	dialog : string;
+	requires? : string[];
+}
+
 interface ICharacter
 {
 	id    : string;
 	name  : string;
 	color : string;
 
-	queueEscapeDialogs?       : string[];
-	queueConversationDialogs? : string[];
-	homeArrivalDialogs?       : string[];
-	homeConversationDialogs?  : string[];
+	queueEscapeConversations?       : IConversation[];
+	queueConversationConversations? : IConversation[];
+	homeArrivalConversations?       : IConversation[];
+	homeConversationConversations?  : IConversation[];
 }

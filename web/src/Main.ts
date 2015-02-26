@@ -3,6 +3,7 @@
 /// <reference path="HomePresenter.ts"    />
 /// <reference path="HomeView.ts"         />
 /// <reference path="DialogManager.ts"    />
+/// <reference path="Flags.ts"            />
 /// <reference path="MainModel.ts"        />
 /// <reference path="MainPresenter.ts"    />
 /// <reference path="MainView.ts"         />
@@ -19,10 +20,27 @@
 /// <reference path="StoreView.ts"        />
 /// <reference path="Timer.ts"            />
 
+function MapCharacterNameIntroFlags
+	( flags            : Flags
+	, player           : Player
+	, characterManager : CharacterManager
+	)
+{
+	var characters = characterManager.GetAllCharacters();
+	for (var i = 0; i != characters.length; ++i)
+	{
+		var c = characters[i]
+		var f = c.id + "Intro";
+		flags.SetCheck(f, player.HasNotMet.bind(player, c));
+	}
+}
+
 function Main(dialogs : IDialog[], characters : ICharacter[])
 {
-	var dialogManager    = new DialogManager(dialogs);
-	var characterManager = new CharacterManager(characters);
+	var flags = new Flags();
+
+	var dialogManager    = new DialogManager(dialogs, flags);
+	var characterManager = new CharacterManager(characters, flags);
 
 	var timer = new Timer();
 
@@ -30,7 +48,7 @@ function Main(dialogs : IDialog[], characters : ICharacter[])
 
 	var homeModel  = new HomeModel(timer, characterManager, dialogManager);
 	var mainModel  = new MainModel(player);
-	var queueModel = new QueueModel(timer, characterManager, dialogManager);
+	var queueModel = new QueueModel(timer, characterManager, dialogManager, player);
 	var saveModel  = new SaveModel();
 	var storeModel = new StoreModel(player);
 
@@ -53,8 +71,11 @@ function Main(dialogs : IDialog[], characters : ICharacter[])
 		, [ "queue",  queueModel ]
 		, [ "player", player     ]
 		, [ "timer",  timer      ]
+		, [ "flags",  flags      ]
 		];
 	var persistentState = new PersistentState(persistentItems, timer);
+
+	MapCharacterNameIntroFlags(flags, player, characterManager);
 
 	persistentState.Load();
 

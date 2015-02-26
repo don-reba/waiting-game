@@ -9,4 +9,5 @@ interface IDialog
 	id      : string;
 	text    : string;
 	replies : Reply[];
+	sets?   : string[];
 }

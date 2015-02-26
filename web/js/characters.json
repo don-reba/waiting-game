@@ -11,10 +11,13 @@
 	, "name"  : "Молчаливый друг"
 	, "color" : "#FF0066"
 	},
-	{ "id"    : "ShadyCharacter"
+	{ "id"    : "Shady"
 	, "name"  : "Тёмная личность"
 	, "color" : "#FBB829"
-	, "queueConversationDialogs" : [ "ShadyCharacterDescriptionIntro", "ShadyCharacterIntroductionIntro" ]
+	, "queueConversationConversations" :
+		[ { "dialog" : "ShadyDescriptionIntro", "requires" : [ "ShadyIntro" ] }
+		, { "dialog" : "ShadyIntroductionIntro" }
+		]
 	},
 	{ "id"    : "Hat"
 	, "name"  : "Шляпа"
@@ -48,14 +51,17 @@
 	, "name"  : "Кот"
 	, "color" : "#FE4365"
 	},
-	{ "id"    : "TerminallyIll"
+	{ "id"    : "Patient"
 	, "name"  : "Тяжелобольной"
 	, "color" : "#F0F0D8"
 	},
 	{ "id"    : "Villain"
 	, "name"  : "Злодей"
 	, "color" : "#77CCA4"
-	, "queueConversationDialogs" : [ "VillainDescriptionIntro", "VillainIntroductionIntro" ]
+	, "queueConversationConversations" :
+		[ { "dialog" : "VillainDescriptionIntro", "requires" : ["VillainIntro"] }
+		, { "dialog" : "VillainIntroductionIntro", "requires" : [ "VillainIntroductionPending" ] }
+		]
 	},
 	{ "id"    : "Robochef"
 	, "name"  : "Робоповар"

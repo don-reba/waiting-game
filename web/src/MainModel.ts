@@ -29,9 +29,11 @@ class MainModel implements IMainModel, IPersistent
 		return this.view;
 	}
 
-	GetMoney() : number
+	GetMoney() : string
 	{
-		return this.player.GetMoney();
+		var money = Math.floor(this.player.GetMoney());
+		var rate  = Math.round(this.player.GetRate() * 10) / 10;
+		return String(money) + " руб. (" + String(rate) + " руб./с)";
 	}
 
 	GetMoustache() : Moustache

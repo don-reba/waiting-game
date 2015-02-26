@@ -48,7 +48,7 @@ class QueueView implements IQueueView, IClientView
 			}
 
 			// goes up to 1.0 in increments of 0.1
-			var scale = (6 + i) / 10;
+			var scale = (5 + i) / 10;
 
 			var character = characters[i];
 

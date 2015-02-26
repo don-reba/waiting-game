@@ -6,7 +6,7 @@ interface IMainView
 
 	SetClientView(view : ClientViewType) : void;
 
-	SetMoney(money : number) : void;
+	SetMoney(money : string) : void;
 
 	SetMoustache(moustache : Moustache) : void;
 }

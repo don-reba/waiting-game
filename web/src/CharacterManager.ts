@@ -1,4 +1,5 @@
 /// <reference path="ICharacter.ts" />
+/// <reference path="Flags.ts"      />
 /// <reference path="Util.ts"       />
 
 enum DialogType
@@ -11,12 +12,19 @@ enum DialogType
 
 class CharacterManager
 {
-	map : { [ id : string ] : ICharacter; } = {}
+	private map : { [ id : string ] : ICharacter; } = {}
 
-	constructor(private characters : ICharacter[])
+	// public interface
+
+	constructor
+		( private characters : ICharacter[]
+		, private flags      : Flags
+		)
 	{
 		for (var i = 0; i != characters.length; ++i)
+		{
 			this.map[characters[i].id] = characters[i];
+		}
 	}
 
 	GetAllCharacters() : ICharacter[]
@@ -31,30 +39,54 @@ class CharacterManager
 
 	GetDialogID(characterID : string, dialogType : DialogType) : string
 	{
+		var conversations : IConversation[];
+		var defaultID     : string;
+
 		var character = this.map[characterID];
+
 		switch (dialogType)
 		{
 			case DialogType.QueueEscape:
-				if (character.queueEscapeDialogs)
-					return character.queueEscapeDialogs[0];
-				return "StdQueueEscape";
+				conversations = character.queueEscapeConversations;
+				defaultID     = "StdQueueEscape";
+				break;
 			case DialogType.QueueConversation:
-				if (character.queueConversationDialogs)
-					return character.queueConversationDialogs[0];
-				return "StdQueueConversation";
+				conversations = character.queueConversationConversations;
+				defaultID     = "StdQueueConversation";
+				break;
 			case DialogType.HomeArrival:
-				if (character.homeArrivalDialogs)
-					return character.homeArrivalDialogs[0];
-				return "StdHomeArrival";
+				conversations = character.homeArrivalConversations;
+				defaultID     = "StdHomeArrival";
+				break;
 			case DialogType.HomeConversation:
-				if (character.homeConversationDialogs)
-					return character.homeConversationDialogs[0];
-				return "StdHomeConversation";
+				conversations = character.homeConversationConversations;
+				defaultID     = "StdHomeConversation";
+				break;
 		}
+		if (conversations)
+		{
+			var dialog = this.ChooseConversation(conversations).dialog;
+			if (dialog)
+				return dialog;
+		}
+		return defaultID;
 	}
 
 	GetRandomCharacter() : ICharacter
 	{
 		return Util.Sample(this.characters);
+	}
+
+	// private implementation
+
+	ChooseConversation(conversations : IConversation[]) : IConversation
+	{
+		for (var i = 0; i != conversations.length; ++i)
+		{
+			var c = conversations[i];
+			if (!c.requires || c.requires.every(this.flags.IsSet.bind(this.flags)))
+				return c;
+		}
+		return conversations[0];
 	}
 }

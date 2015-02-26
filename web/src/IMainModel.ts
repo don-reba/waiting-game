@@ -8,7 +8,7 @@ interface IMainModel
 
 	GetView() : ClientViewType;
 
-	GetMoney() : number;
+	GetMoney() : string;
 
 	GetMoustache() : Moustache;
 

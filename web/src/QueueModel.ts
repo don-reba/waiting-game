@@ -13,7 +13,6 @@ class QueuePosition
 class QueueModelState
 {
 	queue     : QueuePosition[];
-	player    : QueuePosition;
 	ticket    : number;
 	dialogID  : string;
 	speakerID : string;
@@ -22,17 +21,18 @@ class QueueModelState
 class QueueModel implements IQueueModel, IPersistent
 {
 	private queue     : QueuePosition[];
-	private player    : QueuePosition;
+	private playerPos : QueuePosition;
 	private ticket    : number;
 	private dialogID  : string;
 	private speakerID : string;
 
-	private maxLength = 5;
+	private maxLength = 6;
 
 	constructor
 		( private timer            : Timer
 		, private characterManager : CharacterManager
 		, private dialogManager    : DialogManager
+		, private player           : Player
 		)
 	{
 		timer.AddEvent(this.OnAdvance.bind(this), 40);
@@ -109,7 +109,10 @@ class QueueModel implements IQueueModel, IPersistent
 	{
 		this.speakerID = speaker.id;
 		this.dialogID  = this.characterManager.GetDialogID(speaker.id, DialogType.QueueConversation);
+
 		this.DialogChanged.Call();
+
+		this.player.IntroduceTo(speaker);
 	}
 
 	// IPersistent implementation
@@ -118,7 +121,6 @@ class QueueModel implements IQueueModel, IPersistent
 	{
 		var state = <QueueModelState>JSON.parse(str);
 		this.queue      = state.queue;
-		this.player     = state.player;
 		this.ticket     = state.ticket;
 		this.dialogID   = state.dialogID;
 		this.speakerID  = state.speakerID;
@@ -128,7 +130,6 @@ class QueueModel implements IQueueModel, IPersistent
 	{
 		var state : QueueModelState =
 			{ queue     : this.queue
-			, player    : this.player
 			, ticket    : this.ticket
 			, dialogID  : this.dialogID
 			, speakerID : this.speakerID
