@@ -14,10 +14,12 @@
 	{ "id"    : "Shady"
 	, "name"  : "Тёмная личность"
 	, "color" : "#FBB829"
-	, "queueConversationConversations" :
+	, "queueConversation" :
 		[ { "dialog" : "ShadyDescriptionIntro", "requires" : [ "ShadyIntro" ] }
-		, { "dialog" : "ShadyIntroductionMachinationsQuest", "requires" : [ "MachinationsQuestPending" ] }
+		, { "dialog" : "ShadyMachinationsQuestIntro", "requires" : [ "MachinationsQuestPending" ] }
 		]
+	, "queueEscape" :
+		[ { "dialog" : "ShadyQueueEscapeIntro" } ]
 	},
 	{ "id"    : "Hat"
 	, "name"  : "Шляпа"
@@ -58,7 +60,7 @@
 	{ "id"    : "Villain"
 	, "name"  : "Злодей"
 	, "color" : "#77CCA4"
-	, "queueConversationConversations" :
+	, "queueConversation" :
 		[ { "dialog" : "VillainDescriptionIntro", "requires" : ["VillainIntro"] }
 		, { "dialog" : "VillainIntroductionIntro", "requires" : [ "VillainIntroductionPending" ] }
 		]

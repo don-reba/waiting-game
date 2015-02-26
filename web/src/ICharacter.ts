@@ -10,8 +10,8 @@ interface ICharacter
 	name  : string;
 	color : string;
 
-	queueEscapeConversations?       : IConversation[];
-	queueConversationConversations? : IConversation[];
-	homeArrivalConversations?       : IConversation[];
-	homeConversationConversations?  : IConversation[];
+	queueEscape?       : IConversation[];
+	queueConversation? : IConversation[];
+	homeArrival?       : IConversation[];
+	homeConversation?  : IConversation[];
 }

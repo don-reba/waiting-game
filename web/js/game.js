@@ -75,19 +75,19 @@ var CharacterManager = (function () {
         var character = this.map[characterID];
         switch (dialogType) {
             case 0 /* QueueEscape */:
-                conversations = character.queueEscapeConversations;
+                conversations = character.queueEscape;
                 defaultID = "StdQueueEscape";
                 break;
             case 1 /* QueueConversation */:
-                conversations = character.queueConversationConversations;
+                conversations = character.queueConversation;
                 defaultID = "StdQueueConversation";
                 break;
             case 2 /* HomeArrival */:
-                conversations = character.homeArrivalConversations;
+                conversations = character.homeArrival;
                 defaultID = "StdHomeArrival";
                 break;
             case 3 /* HomeConversation */:
-                conversations = character.homeConversationConversations;
+                conversations = character.homeConversation;
                 defaultID = "StdHomeConversation";
                 break;
         }

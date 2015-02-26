@@ -47,19 +47,19 @@ class CharacterManager
 		switch (dialogType)
 		{
 			case DialogType.QueueEscape:
-				conversations = character.queueEscapeConversations;
+				conversations = character.queueEscape;
 				defaultID     = "StdQueueEscape";
 				break;
 			case DialogType.QueueConversation:
-				conversations = character.queueConversationConversations;
+				conversations = character.queueConversation;
 				defaultID     = "StdQueueConversation";
 				break;
 			case DialogType.HomeArrival:
-				conversations = character.homeArrivalConversations;
+				conversations = character.homeArrival;
 				defaultID     = "StdHomeArrival";
 				break;
 			case DialogType.HomeConversation:
-				conversations = character.homeConversationConversations;
+				conversations = character.homeConversation;
 				defaultID     = "StdHomeConversation";
 				break;
 		}
