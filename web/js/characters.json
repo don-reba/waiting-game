@@ -63,6 +63,7 @@
 	, "queueConversation" :
 		[ { "dialog" : "VillainDescriptionIntro", "requires" : ["VillainIntro"] }
 		, { "dialog" : "VillainIntroductionIntro", "requires" : [ "VillainIntroductionPending" ] }
+		, { "dialog" : "VillainOffendedIntro", "requires" : [ "VillainOffended" ] }
 		]
 	},
 	{ "id"    : "Robochef"
