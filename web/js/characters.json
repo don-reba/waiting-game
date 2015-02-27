@@ -44,6 +44,13 @@
 	{ "id"    : "Anny"
 	, "name"  : "Настенька"
 	, "color" : "#FF9900"
+	, "queueConversation" :
+		[ { "dialog" : "AnnyDescriptionIntro",  "requires" : [ "AnnyIntro" ] }
+		, { "dialog" : "AnnyIntroductionIntro", "requires" : [ "AnnyIntroductionPending" ] }
+		, { "dialog" : "AnnyVillainQuestIntro", "requires" : [ "VillainAnnyQuest" ] }
+		]
+	, "queueEscape" :
+		[ { "dialog" : "AnnyQueueEscapeIntro" } ]
 	},
 	{ "id"    : "Kostik"
 	, "name"  : "Костик"
@@ -67,6 +74,11 @@
 		, { "dialog" : "VillainDoomsdayQuestIntro",        "requires" : [ "VillainQuestPending" ] }
 		, { "dialog" : "VillainDoomsdayQuestFillerIntro",  "requires" : [ "DoomsdayQuest" ] }
 		, { "dialog" : "VillainDoomsdayQuestReceiveIntro", "requires" : [ "DoomsdayQuestReport" ] }
+		, { "dialog" : "VillainRobochefQuestIntro",        "requires" : [ "VillainRobochefQuestPending" ] }
+		, { "dialog" : "VillainRobochefQuestFillerIntro",  "requires" : [ "VillainRobochefQuest" ] }
+		, { "dialog" : "VillainRobochefQuestReceiveIntro", "requires" : [ "VillainRobochefQuestReport" ] }
+		, { "dialog" : "VillainAnnyQuestIntro",            "requires" : [ "VillainAnnyQuestPending" ] }
+		, { "dialog" : "VillainAnnyQuestFillerIntro",      "requires" : [ "VillainAnnyQuest" ] }
 		]
 	, "queueEscape" :
 		[ { "dialog" : "VillainQueueEscape" } ]
