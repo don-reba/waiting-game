@@ -15,7 +15,7 @@
 	, "name"  : "Тёмная личность"
 	, "color" : "#FBB829"
 	, "queueConversation" :
-		[ { "dialog" : "ShadyDescriptionIntro", "requires" : [ "ShadyIntro" ] }
+		[ { "dialog" : "ShadyDescriptionIntro",       "requires" : [ "ShadyIntro" ] }
 		, { "dialog" : "ShadyMachinationsQuestIntro", "requires" : [ "MachinationsQuestPending" ] }
 		]
 	, "queueEscape" :
@@ -61,7 +61,7 @@
 	, "name"  : "Злодей"
 	, "color" : "#77CCA4"
 	, "queueConversation" :
-		[ { "dialog" : "VillainDescriptionIntro",          "requires" : ["VillainIntro"] }
+		[ { "dialog" : "VillainDescriptionIntro",          "requires" : [ "VillainIntro"] }
 		, { "dialog" : "VillainIntroductionIntro",         "requires" : [ "VillainIntroductionPending" ] }
 		, { "dialog" : "VillainOffendedIntro",             "requires" : [ "VillainOffended" ] }
 		, { "dialog" : "VillainDoomsdayQuestIntro",        "requires" : [ "VillainQuestPending" ] }
@@ -86,5 +86,19 @@
 	{ "id"    : "GlassEye"
 	, "name"  : "Стеклянный Глаз"
 	, "color" : "#6CDFEA"
+	, "queueConversation" :
+		[ { "dialog" : "GlassEyeDescriptionIntro",   "requires" : [ "GlassEyeIntro" ] }
+		, { "dialog" : "GlassEyeIntroductionIntro",  "requires" : [ "GlassEyeIntroductionPending" ] }
+		, { "dialog" : "GlassEyeDoomsdayIntro",      "requires" : [ "DoomsdayQuest" ] }
+		, { "dialog" : "GlassEyeDoomsdayAngryIntro", "requires" : [ "DoomsdayQuest", "GlassEyeAngry" ] }
+		, { "dialog" : "GlassEyeFiller1Intro",       "requires" : [ "GlassEyeFiller1Pending" ] }
+		, { "dialog" : "GlassEyeFiller2Intro",       "requires" : [ "GlassEyeFiller2Pending" ] }
+		, { "dialog" : "GlassEyeFiller3Intro",       "requires" : [ "GlassEyeFiller3Pending" ] }
+		, { "dialog" : "GlassEyePostMortemIntro",    "requires" : [ "BeardPostMortemPending" ] }
+		]
+	, "queueEscape" :
+		[ { "dialog" : "GlassEyeEscapeAngry", "requires" : [ "GlassEyeAngry" ] }
+		, { "dialog" : "GlassEyeEscapeStandard" }
+		]
 	}
 ]
