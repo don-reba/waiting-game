@@ -65,6 +65,7 @@
 		, { "dialog" : "VillainIntroductionIntro",         "requires" : [ "VillainIntroductionPending" ] }
 		, { "dialog" : "VillainOffendedIntro",             "requires" : [ "VillainOffended" ] }
 		, { "dialog" : "VillainDoomsdayQuestIntro",        "requires" : [ "VillainQuestPending" ] }
+		, { "dialog" : "VillainDoomsdayQuestFillerIntro",  "requires" : [ "DoomsdayQuest" ] }
 		, { "dialog" : "VillainDoomsdayQuestReceiveIntro", "requires" : [ "DoomsdayQuestReport" ] }
 		]
 	, "queueEscape" :
