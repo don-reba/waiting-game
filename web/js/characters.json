@@ -72,6 +72,12 @@
 		[ { "dialog" : "VillainQueueEscape" } ]
 	},
 	{ "id"    : "Robochef"
+	, "queueConversation" :
+		[ { "dialog" : "RobochefDescriptionIntro",      "requires" : [ "RobochefIntro"] }
+		, { "dialog" : "RobochefIntroductionIntro",     "requires" : [ "RobochefIntroductionPending"] }
+		, { "dialog" : "RobochefInstallMicrochipIntro", "requires" : [ "MicrochipQuest"] }
+		, { "dialog" : "RobochefFiller1Intro",          "requires" : [ "RobochefFiller1Pending"] }
+		]
 	, "name"  : "Робоповар"
 	, "color" : "#2A8FBD"
 	},
