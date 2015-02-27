@@ -62,7 +62,7 @@ function Main(dialogs : IDialog[], characters : ICharacter[])
 	var homePresenter  = new HomePresenter(homeModel,  mainModel,  homeView);
 	var mainPresenter  = new MainPresenter(mainModel,  mainView);
 	var queuePresenter = new QueuePresenter(mainModel, queueModel, queueView);
-	var savePrsenter   = new SavePresenter(saveModel,  saveView);
+	var savePresenter  = new SavePresenter(saveModel,  saveView);
 	var storePresenter = new StorePresenter(mainModel, storeModel, storeView);
 
 	var persistentItems = <[string, IPersistent][]>
@@ -78,6 +78,7 @@ function Main(dialogs : IDialog[], characters : ICharacter[])
 	MapCharacterNameIntroFlags(flags, player, characterManager);
 
 	persistentState.Load();
+	savePresenter.Load();
 
 	mainPresenter.LightsCameraAction();
 	timer.Start(100);

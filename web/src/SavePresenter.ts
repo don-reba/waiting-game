@@ -13,6 +13,11 @@ class SavePresenter
 		this.saveView.Save.Add(this.OnSave.bind(this));
 	}
 
+	Load()
+	{
+		this.saveView.SetSaveData(this.saveModel.GetSaveData());
+	}
+
 	private OnClear()
 	{
 		this.saveModel.ClearSaveData();

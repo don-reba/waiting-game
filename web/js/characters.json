@@ -85,9 +85,12 @@
 	, "name"  : "Прототип"
 	, "color" : "#FF9999"
 	},
-	{ "id"    : "ChtonicMonster"
+	{ "id"    : "Monster"
 	, "name"  : "Хтоническое Чудовище"
 	, "color" : "#025D8C"
+	, "queueConversation" :
+		[ { "dialog" : "MonsterDescriptionIntro",      "requires" : [ "MonsterIntro"] }
+		]
 	},
 	{ "id"    : "GlassEye"
 	, "name"  : "Стеклянный Глаз"

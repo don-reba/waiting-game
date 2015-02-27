@@ -926,7 +926,7 @@ var Timer = (function () {
     Timer.prototype.ToPersistentString = function () {
         return JSON.stringify(new TimerState(this.ticks));
     };
-    // private implementation
+    // event handlers
     Timer.prototype.OnTick = function () {
         for (var i = 0; i != this.events.length; ++i) {
             var e = this.events[i];
@@ -1408,6 +1408,9 @@ var SavePresenter = (function () {
         this.saveView.Load.Add(this.OnLoad.bind(this));
         this.saveView.Save.Add(this.OnSave.bind(this));
     }
+    SavePresenter.prototype.Load = function () {
+        this.saveView.SetSaveData(this.saveModel.GetSaveData());
+    };
     SavePresenter.prototype.OnClear = function () {
         this.saveModel.ClearSaveData();
         this.saveView.SetSaveData(this.saveModel.GetSaveData());
@@ -1635,12 +1638,13 @@ function Main(dialogs, characters) {
     var homePresenter = new HomePresenter(homeModel, mainModel, homeView);
     var mainPresenter = new MainPresenter(mainModel, mainView);
     var queuePresenter = new QueuePresenter(mainModel, queueModel, queueView);
-    var savePrsenter = new SavePresenter(saveModel, saveView);
+    var savePresenter = new SavePresenter(saveModel, saveView);
     var storePresenter = new StorePresenter(mainModel, storeModel, storeView);
     var persistentItems = [["main", mainModel], ["home", homeModel], ["queue", queueModel], ["player", player], ["timer", timer], ["flags", flags]];
     var persistentState = new PersistentState(persistentItems, timer);
     MapCharacterNameIntroFlags(flags, player, characterManager);
     persistentState.Load();
+    savePresenter.Load();
     mainPresenter.LightsCameraAction();
     timer.Start(100);
 }

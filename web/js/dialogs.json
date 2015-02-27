@@ -489,6 +489,12 @@
 		]
 	, "clears" : [ "RobochefFiller1Pending" ]
 	},
+	{ "id"   : "MonsterDescriptionIntro"
+	, "text" : "<aside> Пугающий клубок щупалец, глаз, пастей, клювов и… кажется, это зонт, но вы не уверены. </aside>"
+	, "replies" :
+		[ { "text" : "…", "ref" : null }
+		]
+	},
 	{ "id"   : "GlassEyeDescriptionIntro"
 	, "text" : "<aside>Странного вида тип с мерцающим стеклянным глазом и неухоженной бородой. </aside>"
 	, "replies" :
