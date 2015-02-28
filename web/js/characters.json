@@ -15,8 +15,9 @@
 	, "name"  : "Тёмная личность"
 	, "color" : "#FBB829"
 	, "queueConversation" :
-		[ { "dialog" : "ShadyDescriptionIntro",       "requires" : [ "ShadyIntro" ] }
-		, { "dialog" : "ShadyMachinationsQuestIntro", "requires" : [ "MachinationsQuestPending" ] }
+		[ { "dialog" : "ShadyDescriptionIntro",         "requires" : [ "ShadyIntro" ] }
+		, { "dialog" : "ShadyMachinationsQuestIntro",   "requires" : [ "MachinationsQuestPending" ] }
+		, { "dialog" : "ShadyMachinationsRefusedIntro", "requires" : [ "MachinationsRefused" ] }
 		]
 	, "queueEscape" :
 		[ { "dialog" : "ShadyQueueEscapeIntro" } ]
@@ -83,19 +84,23 @@
 		, { "dialog" : "VillainRobochefQuestReceiveIntro", "requires" : [ "VillainRobochefQuestReport" ] }
 		, { "dialog" : "VillainAnnyQuestIntro",            "requires" : [ "VillainAnnyQuestPending" ] }
 		, { "dialog" : "VillainAnnyQuestFillerIntro",      "requires" : [ "VillainAnnyQuest" ] }
+		, { "dialog" : "VillainAnnyQuestReceiveIntro",     "requires" : [ "VillainAnnyQuestReport" ] }
+		, { "dialog" : "VillainKostikQuestReceiveIntro",   "requires" : [ "VillainKostikQuestPending" ] }
+		, { "dialog" : "VillainEpilogueIntro",             "requires" : [ "VillainPostMortem" ] }
 		]
 	, "queueEscape" :
 		[ { "dialog" : "VillainQueueEscape" } ]
 	},
 	{ "id"    : "Robochef"
+	, "name"  : "Робоповар"
+	, "color" : "#2A8FBD"
 	, "queueConversation" :
 		[ { "dialog" : "RobochefDescriptionIntro",      "requires" : [ "RobochefIntro"] }
 		, { "dialog" : "RobochefIntroductionIntro",     "requires" : [ "RobochefIntroductionPending"] }
 		, { "dialog" : "RobochefInstallMicrochipIntro", "requires" : [ "MicrochipQuest"] }
 		, { "dialog" : "RobochefFiller1Intro",          "requires" : [ "RobochefFiller1Pending"] }
+		, { "dialog" : "RobochefFiller2Intro",          "requires" : [ "RobochefFiller2Pending"] }
 		]
-	, "name"  : "Робоповар"
-	, "color" : "#2A8FBD"
 	},
 	{ "id"    : "Prototype"
 	, "name"  : "Прототип"

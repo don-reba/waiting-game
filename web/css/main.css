@@ -15,6 +15,12 @@ body {
 	text-align  : center;
 	height      : 100%;
 }
+i {
+	font-style : italic;
+}
+b {
+	font-weight : 700;
+}
 .bg-color {
 	background-color : #E6E6E6;
 }
@@ -111,13 +117,6 @@ body {
 	margin      : 0.2em;
 	text-align  : left;
 	white-space : nowrap;
-}
-
-button {
-	cursor      : pointer;
-	font-family : Neucha;
-	white-space : nowrap;
-	padding     : 0.3em;
 }
 .game {
 	margin          : 0em auto;
@@ -249,7 +248,7 @@ button {
 #home-invites {
 	background-color : #D0D0D0;
 	display          : inline-block;
-	font-family      : Neucha;
+	font-family      : inherit;
 	font-size        : 1em;
 	height           : auto;
 	padding          : 0.5em;
