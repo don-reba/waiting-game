@@ -1,14 +1,15 @@
-class Reply
+interface IReply
 {
-	text : string;
-	ref  : string;
+	text      : string;
+	ref       : string;
+	requires? : string[];
 }
 
 interface IDialog
 {
 	id      : string;
 	text    : string;
-	replies : Reply[];
+	replies : IReply[];
 	sets?   : string[];
 	clears? : string[];
 }

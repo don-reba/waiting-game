@@ -16,6 +16,7 @@ class QueueModelState
 	ticket    : number;
 	dialogID  : string;
 	speakerID : string;
+	holdLast  : boolean;
 }
 
 class QueueModel implements IQueueModel, IPersistent
@@ -131,6 +132,7 @@ class QueueModel implements IQueueModel, IPersistent
 		this.ticket     = state.ticket;
 		this.dialogID   = state.dialogID;
 		this.speakerID  = state.speakerID;
+		this.holdLast   = state.holdLast;
 	}
 
 	ToPersistentString() : string
@@ -140,6 +142,7 @@ class QueueModel implements IQueueModel, IPersistent
 			, ticket    : this.ticket
 			, dialogID  : this.dialogID
 			, speakerID : this.speakerID
+			, holdLast  : this.holdLast
 			};
 		return JSON.stringify(state);
 	}

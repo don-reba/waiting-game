@@ -183,11 +183,6 @@ var CompactJson;
         });
     }
 })(CompactJson || (CompactJson = {}));
-var Reply = (function () {
-    function Reply() {
-    }
-    return Reply;
-})();
 /// <reference path="Flags.ts"   />
 /// <reference path="IDialog.ts" />
 var DialogManager = (function () {
@@ -212,9 +207,20 @@ var DialogManager = (function () {
         }
     };
     DialogManager.prototype.GetDialog = function (dialogID) {
-        if (dialogID)
-            return this.map[dialogID];
-        return null;
+        var IsActive = function (reply) {
+            if (reply.requires)
+                return reply.requires.every(this.flags.IsSet.bind(this.flags));
+            return true;
+        };
+        if (!dialogID)
+            return null;
+        var dialog = this.map[dialogID];
+        if (dialog.replies.some(function (r) {
+            return r.requires != null;
+        })) {
+            return { id: dialog.id, text: dialog.text, replies: dialog.replies.filter(IsActive.bind(this)) };
+        }
+        return dialog;
     };
     DialogManager.prototype.GetRefDialogID = function (dialogID, option) {
         if (dialogID)
@@ -1148,9 +1154,10 @@ var QueueModel = (function () {
         this.ticket = state.ticket;
         this.dialogID = state.dialogID;
         this.speakerID = state.speakerID;
+        this.holdLast = state.holdLast;
     };
     QueueModel.prototype.ToPersistentString = function () {
-        var state = { queue: this.queue, ticket: this.ticket, dialogID: this.dialogID, speakerID: this.speakerID };
+        var state = { queue: this.queue, ticket: this.ticket, dialogID: this.dialogID, speakerID: this.speakerID, holdLast: this.holdLast };
         return JSON.stringify(state);
     };
     // event handlers

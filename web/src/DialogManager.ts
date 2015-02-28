@@ -35,15 +35,31 @@ class DialogManager
 
 	GetDialog(dialogID : string) : IDialog
 	{
-		if (dialogID)
-			return this.map[dialogID];
-		return null;
+		var IsActive = function(reply : IReply) : boolean
+		{
+			if (reply.requires)
+				return reply.requires.every(this.flags.IsSet.bind(this.flags));
+			return true;
+		}
+
+		if (!dialogID)
+			return null;
+
+		var dialog = this.map[dialogID]
+		if (dialog.replies.some(r => { return r.requires != null }))
+		{
+			return <IDialog>
+				{ id      : dialog.id
+				, text    : dialog.text
+				, replies : dialog.replies.filter(IsActive.bind(this))
+				};
+		}
+		return dialog;
 	}
 
 	GetRefDialogID(dialogID : string, option : number) : string
 	{
 		if (dialogID)
 			return this.map[dialogID].replies[option].ref;
-		return null;
 	}
 }
