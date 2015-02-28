@@ -1093,6 +1093,8 @@ var QueueModel = (function () {
             this.speakerID = null;
         this.DialogChanged.Call();
         this.dialogManager.ActivateDialog(this.dialogID);
+        if (this.holdLast)
+            this.ReleaseLast();
     };
     QueueModel.prototype.EndDialog = function () {
         this.dialogID = null;
@@ -1148,6 +1150,26 @@ var QueueModel = (function () {
         var state = { queue: this.queue, ticket: this.ticket, dialogID: this.dialogID, speakerID: this.speakerID };
         return JSON.stringify(state);
     };
+    // event handlers
+    QueueModel.prototype.OnAdvance = function () {
+        if (this.queue.length == 0)
+            return;
+        var p = this.queue[0];
+        if (!this.holdLast)
+            --p.remaining;
+        if (p.remaining <= 0) {
+            if (this.speakerID && p.characterID == this.speakerID)
+                this.HoldLast();
+            else
+                this.ReleaseLast();
+        }
+    };
+    QueueModel.prototype.OnKnock = function () {
+        if (this.queue.length < this.maxLength && Math.random() < 0.3) {
+            this.AddStockPosition();
+            this.PeopleChanged.Call();
+        }
+    };
     // private implementation
     QueueModel.prototype.AddStockPosition = function () {
         var character;
@@ -1165,42 +1187,24 @@ var QueueModel = (function () {
         var p = { characterID: null, remaining: remaining, ticket: ticket };
         this.queue.push(p);
     };
+    QueueModel.prototype.HoldLast = function () {
+        this.holdLast = true;
+        this.dialogID = this.characterManager.GetDialogID(this.speakerID, 0 /* QueueEscape */);
+        this.DialogChanged.Call();
+    };
     QueueModel.prototype.InQueue = function (c) {
         return this.queue.some(function (p) {
             return p.characterID && p.characterID === c.id;
         });
     };
-    QueueModel.prototype.ProcessNextCharacter = function () {
-        if (this.queue.length == 0)
-            return;
-        if (this.speakerID && this.queue[0].characterID == this.speakerID) {
-            this.dialogID = this.characterManager.GetDialogID(this.speakerID, 0 /* QueueEscape */);
-            this.DialogChanged.Call();
-        }
-    };
-    // event handlers
-    QueueModel.prototype.OnAdvance = function () {
-        if (this.queue.length == 0)
-            return;
+    QueueModel.prototype.ReleaseLast = function () {
         var p = this.queue[0];
-        --p.remaining;
-        if (p.remaining <= 0) {
-            this.queue.shift();
-            if (p.characterID) {
-                this.ProcessNextCharacter();
-                this.PeopleChanged.Call();
-            }
-            else {
-                this.PlayerTicketChanged.Call();
-            }
-            this.CurrentTicketChanged.Call();
-        }
-    };
-    QueueModel.prototype.OnKnock = function () {
-        if (this.queue.length < this.maxLength && Math.random() < 0.3) {
-            this.AddStockPosition();
-            this.PeopleChanged.Call();
-        }
+        this.holdLast = false;
+        this.queue.shift();
+        this.PeopleChanged.Call();
+        if (!p.characterID)
+            this.PlayerTicketChanged.Call();
+        this.CurrentTicketChanged.Call();
     };
     return QueueModel;
 })();
@@ -1319,8 +1323,6 @@ var QueueView = (function () {
                 button.html("&nbsp;\\o/&nbsp;");
                 button.css("border", "1px solid black");
             }
-            if (i == 0)
-                button.prop("disabled", true);
             people.append(button);
         }
     };

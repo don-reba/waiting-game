@@ -69,9 +69,6 @@ class QueueView implements IQueueView, IClientView
 				button.css("border", "1px solid black");
 			}
 
-			if (i == 0)
-				button.prop("disabled", true);
-
 			people.append(button);
 		}
 	}

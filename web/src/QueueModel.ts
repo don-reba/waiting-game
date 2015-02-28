@@ -25,6 +25,7 @@ class QueueModel implements IQueueModel, IPersistent
 	private ticket    : number;
 	private dialogID  : string;
 	private speakerID : string;
+	private holdLast  : boolean;
 
 	private maxLength = 6;
 
@@ -60,6 +61,9 @@ class QueueModel implements IQueueModel, IPersistent
 		this.DialogChanged.Call();
 
 		this.dialogManager.ActivateDialog(this.dialogID);
+
+		if (this.holdLast)
+			this.ReleaseLast();
 	}
 
 	EndDialog() : void
@@ -140,6 +144,35 @@ class QueueModel implements IQueueModel, IPersistent
 		return JSON.stringify(state);
 	}
 
+	// event handlers
+
+	private OnAdvance() : void
+	{
+		if (this.queue.length == 0)
+			return;
+
+		var p = this.queue[0];
+		if (!this.holdLast)
+			--p.remaining;
+
+		if (p.remaining <= 0)
+		{
+			if (this.speakerID && p.characterID == this.speakerID)
+				this.HoldLast();
+			else
+				this.ReleaseLast();
+		}
+	}
+
+	private OnKnock() : void
+	{
+		if (this.queue.length < this.maxLength && Math.random() < 0.3)
+		{
+			this.AddStockPosition();
+			this.PeopleChanged.Call();
+		}
+	}
+
 	// private implementation
 
 	private AddStockPosition() : void
@@ -174,54 +207,27 @@ class QueueModel implements IQueueModel, IPersistent
 		this.queue.push(p);
 	}
 
+	private HoldLast() : void
+	{
+		this.holdLast = true;
+		this.dialogID = this.characterManager.GetDialogID(this.speakerID, DialogType.QueueEscape);
+		this.DialogChanged.Call();
+	}
+
 	private InQueue(c : ICharacter) : boolean
 	{
 		return this.queue.some(p => { return p.characterID && p.characterID === c.id; });
 	}
 
-	private ProcessNextCharacter() : void
+	private ReleaseLast() : void
 	{
-		if (this.queue.length == 0)
-			return;
-		if (this.speakerID && this.queue[0].characterID == this.speakerID)
-		{
-			this.dialogID = this.characterManager.GetDialogID(this.speakerID, DialogType.QueueEscape);
-			this.DialogChanged.Call();
-		}
-	}
-
-	// event handlers
-
-	private OnAdvance() : void
-	{
-		if (this.queue.length == 0)
-			return;
-
 		var p = this.queue[0];
-		--p.remaining;
 
-		if (p.remaining <= 0)
-		{
-			this.queue.shift();
-			if (p.characterID)
-			{
-				this.ProcessNextCharacter();
-				this.PeopleChanged.Call();
-			}
-			else
-			{
-				this.PlayerTicketChanged.Call();
-			}
-			this.CurrentTicketChanged.Call();
-		}
-	}
-
-	private OnKnock() : void
-	{
-		if (this.queue.length < this.maxLength && Math.random() < 0.3)
-		{
-			this.AddStockPosition();
-			this.PeopleChanged.Call();
-		}
+		this.holdLast = false;
+		this.queue.shift();
+		this.PeopleChanged.Call();
+		if (!p.characterID)
+			this.PlayerTicketChanged.Call();
+		this.CurrentTicketChanged.Call();
 	}
 }
