@@ -251,6 +251,7 @@ button {
 	display          : inline-block;
 	font-family      : Neucha;
 	font-size        : 1em;
+	height           : auto;
 	padding          : 0.5em;
 	position         : absolute;
 	text-align       : left;

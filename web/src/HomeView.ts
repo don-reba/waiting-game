@@ -181,6 +181,8 @@ class HomeView implements IHomeView, IClientView
 
 		this.AlignToBottom($("#toggle-invites"), invites);
 
+		invites.height();
+
 		invites.show();
 	}
 
@@ -208,7 +210,7 @@ class HomeView implements IHomeView, IClientView
 
 	Show(e : JQuery) : void
 	{
-		e.html("<div id='home-invites'></div><div id='home-dialog'></div><div id='home-view'></div>");
+		e.html("<div id='home-dialog'></div><div id='home-view'></div>");
 
 		$("#home-invites").hide();
 		$("#home-dialog").hide();
@@ -227,7 +229,14 @@ class HomeView implements IHomeView, IClientView
 		toggleInvites.text("друзья…");
 		toggleInvites.click(() => { if ($("#home-invites").is(":visible")) this.CloseInvites.Call(); else this.OpenInvites.Call() });
 
-		$("#buttons").append(goQueue).append(goStore).append(toggleInvites);
+		var invites = $("<div id='home-invites'>");
+		invites.hide();
+
+		$("#buttons")
+			.append(goQueue)
+			.append(goStore)
+			.append(toggleInvites)
+			.append(invites);
 
 		this.Shown.Call();
 	}

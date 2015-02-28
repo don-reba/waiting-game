@@ -678,6 +678,7 @@ var HomeView = (function () {
         });
         invites.append(button);
         this.AlignToBottom($("#toggle-invites"), invites);
+        invites.height();
         invites.show();
     };
     HomeView.prototype.ShowFriendsButton = function () {
@@ -695,7 +696,7 @@ var HomeView = (function () {
     };
     HomeView.prototype.Show = function (e) {
         var _this = this;
-        e.html("<div id='home-invites'></div><div id='home-dialog'></div><div id='home-view'></div>");
+        e.html("<div id='home-dialog'></div><div id='home-view'></div>");
         $("#home-invites").hide();
         $("#home-dialog").hide();
         var goQueue = $("<div id='go-queue'>");
@@ -718,7 +719,9 @@ var HomeView = (function () {
             else
                 _this.OpenInvites.Call();
         });
-        $("#buttons").append(goQueue).append(goStore).append(toggleInvites);
+        var invites = $("<div id='home-invites'>");
+        invites.hide();
+        $("#buttons").append(goQueue).append(goStore).append(toggleInvites).append(invites);
         this.Shown.Call();
     };
     // private implementation
