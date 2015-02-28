@@ -55,6 +55,10 @@
 	{ "id"    : "Kostik"
 	, "name"  : "Костик"
 	, "color" : "#F02311"
+	, "queueConversation" :
+		[ { "dialog" : "KostikDescriptionIntro",  "requires" : [ "KostikIntro" ] }
+		, { "dialog" : "KostikIntroductionIntro", "requires" : [ "KostikIntroductionPending" ] }
+		]
 	},
 	{ "id"    : "Cat"
 	, "name"  : "Кот"
