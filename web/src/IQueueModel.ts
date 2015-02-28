@@ -8,7 +8,7 @@ interface IQueueModel
 	PeopleChanged        : Signal;
 	PlayerTicketChanged  : Signal;
 
-	AdvanceDialog(reply : number) : void;
+	AdvanceDialog(ref : string) : void;
 
 	EndDialog() : void;
 

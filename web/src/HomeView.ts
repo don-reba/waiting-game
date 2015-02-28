@@ -6,7 +6,7 @@ class HomeView implements IHomeView, IClientView
 	private selectedFriend       : ICharacter;
 	private selectedFriendStatus : boolean;
 	private selectedGuest        : ICharacter;
-	private selectedReply        : number;
+	private selectedReply        : string;
 
 	// IHomeView implementation
 
@@ -52,7 +52,7 @@ class HomeView implements IHomeView, IClientView
 		return this.selectedGuest;
 	}
 
-	GetSelectedReply() : number
+	GetSelectedReply() : string
 	{
 		return this.selectedReply;
 	}
@@ -107,6 +107,12 @@ class HomeView implements IHomeView, IClientView
 
 	SetDialog(speaker : ICharacter, dialog : IDialog) : void
 	{
+		var OnClick = function(e)
+		{
+			this.selectedReply = e.data;
+			this.ReplyClicked.Call();
+		}
+
 		var div = $("#home-dialog");
 		if (!dialog)
 		{
@@ -123,14 +129,11 @@ class HomeView implements IHomeView, IClientView
 		var ol = $("<ol>");
 		for (var i = 0; i != dialog.replies.length; ++i)
 		{
-			var OnClick = function(e)
-			{
-				this.selectedReply = e.data;
-				this.ReplyClicked.Call();
-			}
+			var reply = dialog.replies[i];
+
 			var li = $("<li class='fg-clickable'>");
-			li.html(dialog.replies[i].text);
-			li.click(i, OnClick.bind(this));
+			li.html(reply.text);
+			li.click(reply.ref, OnClick.bind(this));
 			ol.append(li);
 		}
 		div.append(ol);

@@ -222,11 +222,6 @@ var DialogManager = (function () {
         }
         return dialog;
     };
-    DialogManager.prototype.GetRefDialogID = function (dialogID, option) {
-        if (dialogID)
-            return this.map[dialogID].replies[option].ref;
-        return null;
-    };
     return DialogManager;
 })();
 /// <reference path="ICharacter.ts" />
@@ -300,9 +295,9 @@ var HomeModel = (function () {
         this.guests = [];
         this.items = [1 /* TV */];
     }
-    HomeModel.prototype.AdvanceDialog = function (reply) {
-        this.dialogID = this.dialogManager.GetRefDialogID(this.dialogID, reply);
-        if (this.dialogID == null)
+    HomeModel.prototype.AdvanceDialog = function (ref) {
+        this.dialogID = ref;
+        if (!this.dialogID)
             this.speakerID = null;
         this.DialogChanged.Call();
     };
@@ -626,6 +621,10 @@ var HomeView = (function () {
         }
     };
     HomeView.prototype.SetDialog = function (speaker, dialog) {
+        var OnClick = function (e) {
+            this.selectedReply = e.data;
+            this.ReplyClicked.Call();
+        };
         var div = $("#home-dialog");
         if (!dialog) {
             div.hide();
@@ -637,13 +636,10 @@ var HomeView = (function () {
         div.append($("<p><strong>" + speaker.name + "</strong>: " + dialog.text + "</p>"));
         var ol = $("<ol>");
         for (var i = 0; i != dialog.replies.length; ++i) {
-            var OnClick = function (e) {
-                this.selectedReply = e.data;
-                this.ReplyClicked.Call();
-            };
+            var reply = dialog.replies[i];
             var li = $("<li class='fg-clickable'>");
-            li.html(dialog.replies[i].text);
-            li.click(i, OnClick.bind(this));
+            li.html(reply.text);
+            li.click(reply.ref, OnClick.bind(this));
             ol.append(li);
         }
         div.append(ol);
@@ -1096,9 +1092,9 @@ var QueueModel = (function () {
         for (var i = 0; i != this.maxLength; ++i)
             this.AddStockPosition();
     }
-    QueueModel.prototype.AdvanceDialog = function (reply) {
-        this.dialogID = this.dialogManager.GetRefDialogID(this.dialogID, reply);
-        if (this.dialogID == null)
+    QueueModel.prototype.AdvanceDialog = function (ref) {
+        this.dialogID = ref;
+        if (!this.dialogID)
             this.speakerID = null;
         this.DialogChanged.Call();
         this.dialogManager.ActivateDialog(this.dialogID);
@@ -1310,13 +1306,13 @@ var QueueView = (function () {
         return this.selectedCharacter;
     };
     QueueView.prototype.SetCharacters = function (characters) {
+        var OnClick = function (e) {
+            this.selectedCharacter = e.data;
+            this.PersonClicked.Call();
+        };
         var people = $("#queue-people");
         people.empty();
         for (var i = 0; i != characters.length; ++i) {
-            var OnClick = function (e) {
-                this.selectedCharacter = e.data;
-                this.PersonClicked.Call();
-            };
             // goes up to 1.0 in increments of 0.1
             var scale = (5 + i) / 10;
             var character = characters[i];
@@ -1351,9 +1347,10 @@ var QueueView = (function () {
         div.append($("<p><strong>" + speaker.name + "</strong>: " + dialog.text + "</p>"));
         var ol = $("<ol>");
         for (var i = 0; i != dialog.replies.length; ++i) {
+            var reply = dialog.replies[i];
             var li = $("<li class='fg-clickable'>");
-            li.html(dialog.replies[i].text);
-            li.click(i, OnClick.bind(this));
+            li.html(reply.text);
+            li.click(reply.ref, OnClick.bind(this));
             ol.append(li);
         }
         div.append(ol);

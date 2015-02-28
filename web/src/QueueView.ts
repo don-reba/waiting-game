@@ -4,7 +4,7 @@
 class QueueView implements IQueueView, IClientView
 {
 	private selectedCharacter : ICharacter;
-	private selectedReply     : number;
+	private selectedReply     : string;
 
 	// IQueueView implementation
 
@@ -24,7 +24,7 @@ class QueueView implements IQueueView, IClientView
 		$("#my-ticket").hide();
 	}
 
-	GetSelectedReply() : number
+	GetSelectedReply() : string
 	{
 		return this.selectedReply;
 	}
@@ -36,17 +36,17 @@ class QueueView implements IQueueView, IClientView
 
 	SetCharacters(characters : ICharacter[]) : void
 	{
+		var OnClick = function(e)
+		{
+			this.selectedCharacter = e.data;
+			this.PersonClicked.Call();
+		}
+
 		var people = $("#queue-people");
 		people.empty();
 
 		for (var i = 0; i != characters.length; ++i)
 		{
-			var OnClick = function(e)
-			{
-				this.selectedCharacter = e.data;
-				this.PersonClicked.Call();
-			}
-
 			// goes up to 1.0 in increments of 0.1
 			var scale = (5 + i) / 10;
 
@@ -97,9 +97,11 @@ class QueueView implements IQueueView, IClientView
 		var ol = $("<ol>");
 		for (var i = 0; i != dialog.replies.length; ++i)
 		{
+			var reply = dialog.replies[i];
+
 			var li = $("<li class='fg-clickable'>");
-			li.html(dialog.replies[i].text);
-			li.click(i, OnClick.bind(this));
+			li.html(reply.text);
+			li.click(reply.ref, OnClick.bind(this));
 			ol.append(li);
 		}
 		div.append(ol);

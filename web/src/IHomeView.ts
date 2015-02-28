@@ -24,7 +24,7 @@ interface IHomeView
 
 	GetSelectedGuest() : ICharacter;
 
-	GetSelectedReply() : number;
+	GetSelectedReply() : string;
 
 	HideFriends() : void;
 

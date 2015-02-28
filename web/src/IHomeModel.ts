@@ -8,7 +8,7 @@ interface IHomeModel
 	FriendsArriving : Signal;
 	GuestsChanged   : Signal;
 
-	AdvanceDialog(reply : number) : void;
+	AdvanceDialog(ref : string) : void;
 
 	AreGuestsIn() : boolean;
 

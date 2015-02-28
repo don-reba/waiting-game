@@ -13,7 +13,7 @@ interface IQueueView
 
 	ClearPlayerTicket() : void;
 
-	GetSelectedReply() : number;
+	GetSelectedReply() : string;
 
 	GetSpeaker() : ICharacter;
 

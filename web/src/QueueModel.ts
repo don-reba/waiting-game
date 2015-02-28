@@ -54,10 +54,10 @@ class QueueModel implements IQueueModel, IPersistent
 	PeopleChanged        = new Signal();
 	PlayerTicketChanged  = new Signal();
 
-	AdvanceDialog(reply : number) : void
+	AdvanceDialog(ref : string) : void
 	{
-		this.dialogID = this.dialogManager.GetRefDialogID(this.dialogID, reply);
-		if (this.dialogID == null)
+		this.dialogID = ref;
+		if (!this.dialogID)
 			this.speakerID = null;
 		this.DialogChanged.Call();
 

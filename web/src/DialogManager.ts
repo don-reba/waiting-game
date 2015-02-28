@@ -56,10 +56,4 @@ class DialogManager
 		}
 		return dialog;
 	}
-
-	GetRefDialogID(dialogID : string, option : number) : string
-	{
-		if (dialogID)
-			return this.map[dialogID].replies[option].ref;
-	}
 }
