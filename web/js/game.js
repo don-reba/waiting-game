@@ -1646,7 +1646,7 @@ var StoreView = (function () {
             };
             var info = Item.GetInfo(items[i][0]);
             var enabled = items[i][1];
-            var button = $("<li>" + info.name + "<br/>" + info.description + "<br/>" + info.price.toLocaleString() + " ₽</li>");
+            var button = $("<li>" + info.name + "<br/>" + info.description + "<br/>" + info.price.toLocaleString() + " руб.</li>");
             if (enabled) {
                 button.click(items[i][0], OnClick.bind(this));
                 button.addClass("enabled");
@@ -1710,6 +1710,14 @@ function MapCharacterNameIntroFlags(flags, player, characterManager) {
         flags.SetCheck(f, player.HasNotMet.bind(player, c));
     }
 }
+function MapPlayerStateFlags(flags, player) {
+    flags.SetCheck("MoustacheEquipped", function () {
+        return player.GetMoustache() != 0 /* None */;
+    });
+    flags.SetCheck("MoustacheAbsent", function () {
+        return player.GetMoustache() == 0 /* None */;
+    });
+}
 function Main(dialogs, characters) {
     var flags = new Flags();
     var dialogManager = new DialogManager(dialogs, flags);
@@ -1734,6 +1742,7 @@ function Main(dialogs, characters) {
     var persistentItems = [["main", mainModel], ["home", homeModel], ["queue", queueModel], ["player", player], ["timer", timer], ["flags", flags]];
     var persistentState = new PersistentState(persistentItems, timer);
     MapCharacterNameIntroFlags(flags, player, characterManager);
+    MapPlayerStateFlags(flags, player);
     persistentState.Load();
     savePresenter.Load();
     mainPresenter.LightsCameraAction();

@@ -24,7 +24,7 @@ function MapCharacterNameIntroFlags
 	( flags            : Flags
 	, player           : Player
 	, characterManager : CharacterManager
-	)
+	) : void
 {
 	var characters = characterManager.GetAllCharacters();
 	for (var i = 0; i != characters.length; ++i)
@@ -33,6 +33,12 @@ function MapCharacterNameIntroFlags
 		var f = c.id + "Intro";
 		flags.SetCheck(f, player.HasNotMet.bind(player, c));
 	}
+}
+
+function MapPlayerStateFlags( flags : Flags, player : Player) : void
+{
+	flags.SetCheck("MoustacheEquipped", () => { return player.GetMoustache() != Moustache.None });
+	flags.SetCheck("MoustacheAbsent",   () => { return player.GetMoustache() == Moustache.None });
 }
 
 function Main(dialogs : IDialog[], characters : ICharacter[])
@@ -76,6 +82,7 @@ function Main(dialogs : IDialog[], characters : ICharacter[])
 	var persistentState = new PersistentState(persistentItems, timer);
 
 	MapCharacterNameIntroFlags(flags, player, characterManager);
+	MapPlayerStateFlags(flags, player);
 
 	persistentState.Load();
 	savePresenter.Load();

@@ -2,9 +2,6 @@
 	{ "id"    : "Queueologist"
 	, "name"  : "Учёный-очередолог"
 	},
-	{ "id"    : "Hero"
-	, "name"  : "Герой"
-	},
 	{ "id"    : "QuietFriend"
 	, "name"  : "Молчаливый друг"
 	},
@@ -26,9 +23,12 @@
 	},
 	{ "id"    : "MrMoustache"
 	, "name"  : "Усач"
-	},
-	{ "id"    : "Hipster"
-	, "name"  : "Хипстер"
+	, "queueConversation" :
+		[ { "dialog" : "MrMoustacheDescriptionIntro",  "requires" : [ "MrMoustacheIntro" ] }
+		, { "dialog" : "MrMoustacheNoMoustacheIntro",  "requires" : [ "MrMoustacheIntroductionPending" ] }
+		, { "dialog" : "MrMoustacheIntroductionIntro", "requires" : [ "MrMoustacheIntroductionPending", "MoustacheEquipped" ] }
+		, { "dialog" : "MrMoustacheFiller1Intro",      "requires" : [ "MrMoustacheFiller1Pending" ] }
+		]
 	},
 	{ "id"    : "Poet"
 	, "name"  : "Поэт"
