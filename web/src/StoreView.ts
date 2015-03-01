@@ -29,7 +29,7 @@ class StoreView implements IStoreView, IClientView
 			var info    = Item.GetInfo(items[i][0]);
 			var enabled = items[i][1];
 
-			var button = $("<li>" + info.name + "<br/>" + info.description + "<br/>" +  info.price.toLocaleString() + " ₽</li>");
+			var button = $("<li>" + info.name + "<br/>" + info.description + "<br/>" +  info.price.toLocaleString() + " руб.</li>");
 
 			if (enabled)
 			{
