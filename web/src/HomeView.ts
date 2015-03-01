@@ -88,7 +88,7 @@ class HomeView implements IHomeView, IClientView
 		{
 			var c = canvas.characters[i];
 			var replacement = c
-				? "<span id='character-" + c.id + "' class='character' style='background-color:" + c.color + "'>\\o/</span>"
+				? "<span id='character-" + c.id + "' class='character'>\\o/</span>"
 				: "<span class='player'>\\o/</span>";
 			html = html.replace(" " + i + " ", replacement);
 		}

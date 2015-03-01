@@ -207,13 +207,14 @@ b {
 #home-view {
 	border         : 1px solid black;
 	font-family    : "Courier New",monospace;
-	font-size      : 1em;
 	height         : 100%;
+	letter-spacing : 0em;
 	position       : relative;
 	text-align     : left;
 	vertical-align : top;
-	word-break     : break-all;
 	white-space    : pre;
+	word-break     : break-all;
+	word-spacing   : 0;
 
 	width          : 100%;
 	z-index        : 0;

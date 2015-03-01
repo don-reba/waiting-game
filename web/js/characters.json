@@ -1,19 +1,15 @@
 [
 	{ "id"    : "Queueologist"
 	, "name"  : "Учёный-очередолог"
-	, "color" : "#1693A5"
 	},
 	{ "id"    : "Hero"
 	, "name"  : "Герой"
-	, "color" : "#ADD8C7"
 	},
 	{ "id"    : "QuietFriend"
 	, "name"  : "Молчаливый друг"
-	, "color" : "#FF0066"
 	},
 	{ "id"    : "Shady"
 	, "name"  : "Тёмная личность"
-	, "color" : "#FBB829"
 	, "queueConversation" :
 		[ { "dialog" : "ShadyDescriptionIntro",         "requires" : [ "ShadyIntro" ] }
 		, { "dialog" : "ShadyMachinationsQuestIntro",   "requires" : [ "MachinationsQuestPending" ] }
@@ -24,27 +20,21 @@
 	},
 	{ "id"    : "Hat"
 	, "name"  : "Шляпа"
-	, "color" : "#800F25"
 	},
 	{ "id"    : "Turtle"
 	, "name"  : "Черепашка"
-	, "color" : "#CDD7B6"
 	},
 	{ "id"    : "MrMoustache"
 	, "name"  : "Усач"
-	, "color" : "#C3FF68"
 	},
 	{ "id"    : "Hipster"
 	, "name"  : "Хипстер"
-	, "color" : "#FF0000"
 	},
 	{ "id"    : "Poet"
 	, "name"  : "Поэт"
-	, "color" : "#D31996"
 	},
 	{ "id"    : "Anny"
 	, "name"  : "Настенька"
-	, "color" : "#FF9900"
 	, "queueConversation" :
 		[ { "dialog" : "AnnyDescriptionIntro",  "requires" : [ "AnnyIntro" ] }
 		, { "dialog" : "AnnyIntroductionIntro", "requires" : [ "AnnyIntroductionPending" ] }
@@ -55,7 +45,6 @@
 	},
 	{ "id"    : "Kostik"
 	, "name"  : "Костик"
-	, "color" : "#F02311"
 	, "queueConversation" :
 		[ { "dialog" : "KostikDescriptionIntro",  "requires" : [ "KostikIntro" ] }
 		, { "dialog" : "KostikIntroductionIntro", "requires" : [ "KostikIntroductionPending" ] }
@@ -63,15 +52,12 @@
 	},
 	{ "id"    : "Cat"
 	, "name"  : "Кот"
-	, "color" : "#FE4365"
 	},
 	{ "id"    : "Patient"
 	, "name"  : "Тяжелобольной"
-	, "color" : "#F0F0D8"
 	},
 	{ "id"    : "Villain"
 	, "name"  : "Злодей"
-	, "color" : "#77CCA4"
 	, "queueConversation" :
 		[ { "dialog" : "VillainDescriptionIntro",          "requires" : [ "VillainIntro"] }
 		, { "dialog" : "VillainIntroductionIntro",         "requires" : [ "VillainIntroductionPending" ] }
@@ -93,7 +79,6 @@
 	},
 	{ "id"    : "Robochef"
 	, "name"  : "Робоповар"
-	, "color" : "#2A8FBD"
 	, "queueConversation" :
 		[ { "dialog" : "RobochefDescriptionIntro",      "requires" : [ "RobochefIntro"] }
 		, { "dialog" : "RobochefIntroductionIntro",     "requires" : [ "RobochefIntroductionPending"] }
@@ -104,18 +89,15 @@
 	},
 	{ "id"    : "Prototype"
 	, "name"  : "Прототип"
-	, "color" : "#FF9999"
 	},
 	{ "id"    : "Monster"
 	, "name"  : "Хтоническое Чудовище"
-	, "color" : "#025D8C"
 	, "queueConversation" :
 		[ { "dialog" : "MonsterDescriptionIntro",      "requires" : [ "MonsterIntro"] }
 		]
 	},
 	{ "id"    : "GlassEye"
 	, "name"  : "Стеклянный Глаз"
-	, "color" : "#6CDFEA"
 	, "queueConversation" :
 		[ { "dialog" : "GlassEyeDescriptionIntro",   "requires" : [ "GlassEyeIntro" ] }
 		, { "dialog" : "GlassEyeIntroductionIntro",  "requires" : [ "GlassEyeIntroductionPending" ] }

@@ -627,7 +627,7 @@ var HomeView = (function () {
         var html = canvas.rows.join("<br>");
         for (var i = 0; i != canvas.characters.length; ++i) {
             var c = canvas.characters[i];
-            var replacement = c ? "<span id='character-" + c.id + "' class='character' style='background-color:" + c.color + "'>\\o/</span>" : "<span class='player'>\\o/</span>";
+            var replacement = c ? "<span id='character-" + c.id + "' class='character'>\\o/</span>" : "<span class='player'>\\o/</span>";
             html = html.replace(" " + i + " ", replacement);
         }
         view.html(html);
