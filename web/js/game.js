@@ -1423,6 +1423,8 @@ var QueueView = (function () {
         return 1 /* Queue */;
     };
     QueueView.prototype.Hide = function () {
+        $("#current-ticket").remove();
+        $("#my-ticket").remove();
         this.Hidden.Call();
     };
     QueueView.prototype.Show = function (e) {

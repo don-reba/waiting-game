@@ -121,6 +121,8 @@ class QueueView implements IQueueView, IClientView
 
 	Hide() : void
 	{
+		$("#current-ticket").remove();
+		$("#my-ticket").remove();
 		this.Hidden.Call();
 	}
 
