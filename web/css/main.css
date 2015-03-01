@@ -17,11 +17,18 @@ body {
 	text-align     : center;
 	height         : 100%;
 }
+button {
+	font-family    : Neucha;
+}
 i {
 	font-style : italic;
 }
 b {
 	font-weight : 700;
+}
+aside {
+	color : #151515;
+	display : block;
 }
 .bg-color {
 	background-color : #E6E6E6;
@@ -224,7 +231,7 @@ b {
 	border-radius    : 1em;
 	font-size        : 1.2em;
 	position         : absolute;
-	padding          : 2em;
+	padding          : 0 2em;
 	text-align       : left;
 
 	right            : 8em;
