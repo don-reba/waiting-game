@@ -203,18 +203,18 @@ b {
 	position : relative;
 }
 #home-view {
-	background-color : #F0F0F0;
-	font-family      : "Courier New",monospace;
-	font-size        : 1em;
-	height           : 100%;
-	position         : relative;
-	text-align       : left;
-	vertical-align   : top;
-	word-break       : break-all;
-	white-space      : pre;
+	border         : 1px solid black;
+	font-family    : "Courier New",monospace;
+	font-size      : 1em;
+	height         : 100%;
+	position       : relative;
+	text-align     : left;
+	vertical-align : top;
+	word-break     : break-all;
+	white-space    : pre;
 
-	width            : 100%;
-	z-index          : 0;
+	width          : 100%;
+	z-index        : 0;
 }
 #home-dialog {
 	background-color : #D0D0D0;
@@ -363,18 +363,24 @@ b {
 	overflow : auto;
 }
 #store-items {
-	position : absolute;
+	display         : flex;
+	flex-flow       : row wrap;
+	justify-content : center;
+	list-style      : none;
+	position        : absolute;
+
 	top      : 0;
 	right    : 0;
 	bottom   : 0;
 	left     : 0;
-
-	width    : 100%;
 }
-#store-items td {
-	border  : 1px solid black;
-	padding : 0.5em;
+#store-items li {
+	border      : 1px solid black;
+	display     : inline-block;
+	margin      : 0.5em;
+	padding     : 0.5em;
+	white-space : nowrap;
 }
-#store-items td.disabled {
+#store-items li.disabled {
 	color : #606060;
 }

@@ -773,7 +773,7 @@ var Item;
 (function (Item) {
     var items = [
         { name: "Усы «Карандаш»", description: "Мужественность со скидкой.", price: 1000 },
-        { name: "Шляпа «Цилиндр»", description: "", price: 10000 }
+        { name: "Шляпа «Цилиндр»", description: "Выбор успешного человека.", price: 10000 }
     ];
     function GetInfo(item) {
         return items[item];
@@ -1637,7 +1637,7 @@ var StoreView = (function () {
             };
             var info = Item.GetInfo(items[i][0]);
             var enabled = items[i][1];
-            var button = $("<td>" + info.name + "<br/>" + info.description + "<br/>" + info.price + " ₽</td>");
+            var button = $("<li>" + info.name + "<br/>" + info.description + "<br/>" + info.price + " ₽</li>");
             if (enabled) {
                 button.click(items[i][0], OnClick.bind(this));
                 button.addClass("enabled");
@@ -1661,12 +1661,13 @@ var StoreView = (function () {
     };
     StoreView.prototype.Show = function (e) {
         var _this = this;
-        var header = "<tr><td id='store-header'><button id='goHome'>вернуться домой</button></td></tr>";
-        var body = "<tr><td id='store-body'><div><table id='store-items'></table></div></td></tr>";
-        e.html("<table id='store'>" + header + body + "</table>");
-        $("#store #goHome").click(function () {
+        var goHome = $("<div id='go-home'>");
+        goHome.text("вернуться домой");
+        goHome.click(function () {
             _this.GoToHome.Call();
         });
+        $("#buttons").append(goHome);
+        e.html("<ul id='store-items'>");
         this.Shown.Call();
     };
     return StoreView;

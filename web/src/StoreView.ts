@@ -29,7 +29,7 @@ class StoreView implements IStoreView, IClientView
 			var info    = Item.GetInfo(items[i][0]);
 			var enabled = items[i][1];
 
-			var button = $("<td>" + info.name + "<br/>" + info.description + "<br/>" +  info.price + " ₽</td>");
+			var button = $("<li>" + info.name + "<br/>" + info.description + "<br/>" +  info.price + " ₽</li>");
 
 			if (enabled)
 			{
@@ -65,13 +65,13 @@ class StoreView implements IStoreView, IClientView
 
 	Show(e : JQuery) : void
 	{
-		var header = "<tr><td id='store-header'><button id='goHome'>вернуться домой</button></td></tr>";
+		var goHome = $("<div id='go-home'>");
+		goHome.text("вернуться домой");
+		goHome.click(() => { this.GoToHome.Call(); });
 
-		var body = "<tr><td id='store-body'><div><table id='store-items'></table></div></td></tr>";
+		$("#buttons").append(goHome);
 
-		e.html("<table id='store'>" + header + body + "</table>");
-
-		$("#store #goHome").click(() => { this.GoToHome.Call(); });
+		e.html("<ul id='store-items'>");
 
 		this.Shown.Call();
 	}

@@ -20,7 +20,7 @@ module Item
 		, price       : 1000
 		},
 		{ name        : "Шляпа «Цилиндр»"
-		, description : ""
+		, description : "Выбор успешного человека."
 		, price       : 10000
 		}
 	];
