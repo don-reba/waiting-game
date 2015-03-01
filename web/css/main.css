@@ -10,10 +10,12 @@ html {
 	height : 100%;
 }
 body {
-	font-family : Neucha;
-	font-size   : 100%;
-	text-align  : center;
-	height      : 100%;
+	font-family    : Neucha;
+	font-size      : 100%;
+	letter-spacing : 0.05em;
+	word-spacing   : 0.1em;
+	text-align     : center;
+	height         : 100%;
 }
 i {
 	font-style : italic;
@@ -291,6 +293,7 @@ b {
 	bottom : 0em;
 }
 .queue-people {
+	background : url("../svg/highlight.svg") 0 0 / 100% 100%;
 	display  : inline-block;
 	position : absolute;
 	width    : 20em;
@@ -300,14 +303,19 @@ b {
 	left   : 0;
 }
 .queue-person {
-	display : block;
-	margin : 0em 2em;
-	white-space      : nowrap;
-	height : 2em;
-	line-height : 2em;
-	border-radius : 1em;
+	display     : block;
+	font-size   : 1.3em;
+	height      : 1.1em;
+	line-height : 1.1em;
+}
+.queue-character {
+	cursor : pointer;
+}
+.queue-character:hover {
+	text-decoration : underline;
 }
 .queue-spacer {
+	background : url("../img/crease.png") 0 0 / 100% 100%;
 	display  : inline-block;
 	position : absolute;
 	width    : 0.5em;
@@ -325,23 +333,36 @@ b {
 	bottom   : 0;
 	left     : 20.5em;
 }
-
 .queue-dialog {
-	border        : 1px solid black;
-	border-radius : 1em;
-	margin        : 0 auto;
-	min-height    : 2em;
-	padding       : 1em;
-	position      : relative;
-	text-align : left;
-	width         : 24em;
+	border         : 1px solid black;
+	border-radius  : 1em;
+	color          : #006;
+	line-height    : 1.1em;
+	margin         : 0 auto;
+	min-height     : 2em;
+	padding        : 1em;
+	position       : relative;
+	text-align     : left;
+	width          : 24em;
 
-	top           : 50%;
-	transform     : translateY(-50%);
+	top            : 50%;
+	transform      : translateY(-50%);
 }
-.queue-dialog li {
+.dialog-speaker {
+	position : absolute;
+
+	left     : 1.5em;
+	top      : -1.5em;
+}
+.dialog-text {
+	background-color : #94BF78;
+	margin-bottom    : 1em;
+	padding          : 0.5em;
+}
+.dialog-replies {
 	list-style-type     : decimal;
-	list-style-position : inside;
+	list-style-position : outside;
+	padding : 0.5em 0.5em 0.5em 1.5em;
 }
 
 /* store */

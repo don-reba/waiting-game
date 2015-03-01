@@ -1378,16 +1378,15 @@ var QueueView = (function () {
             var character = characters[i];
             var button = $("<div class='queue-person'>");
             button.css("transform", "scale(" + String(scale) + ")");
-            button.css("margin-top", String(2 * scale) + "em");
+            button.css("margin-top", String(1.5 * scale) + "em");
             if (character) {
-                button.addClass("fg-clickable");
-                button.css("box-shadow", "0 0 0.3em " + character.color);
-                button.text(characters[i].name);
-                button.click(characters[i], OnClick.bind(this));
+                button.text(character.name);
+                var name = $("<p>");
+                button.addClass("queue-character");
+                button.click(character, OnClick.bind(this));
             }
             else {
-                button.html("&nbsp;\\o/&nbsp;");
-                button.css("border", "1px solid black");
+                button.text("\\o/");
             }
             people.append(button);
         }
@@ -1400,20 +1399,28 @@ var QueueView = (function () {
             this.selectedReply = e.data;
             this.ReplyClicked.Call();
         };
-        var div = $("#queue-dialog");
-        div.empty();
-        if (!dialog)
+        var speakerElement = $("#dialog-speaker");
+        var textElement = $("#dialog-text");
+        var repliesElement = $("#dialog-replies");
+        if (!dialog) {
+            speakerElement.hide();
+            textElement.hide();
+            repliesElement.hide();
             return;
-        div.append($("<p><strong>" + speaker.name + "</strong>: " + dialog.text + "</p>"));
-        var ol = $("<ol>");
+        }
+        speakerElement.show();
+        textElement.show();
+        repliesElement.show();
+        speakerElement.text(speaker.name);
+        textElement.html(dialog.text);
+        repliesElement.empty();
         for (var i = 0; i != dialog.replies.length; ++i) {
             var reply = dialog.replies[i];
             var li = $("<li class='fg-clickable'>");
             li.html(reply.text);
             li.click(reply.ref, OnClick.bind(this));
-            ol.append(li);
+            repliesElement.append(li);
         }
-        div.append(ol);
     };
     QueueView.prototype.SetPlayerTicket = function (ticket) {
         $("#my-ticket .number").text(ticket);
@@ -1430,8 +1437,8 @@ var QueueView = (function () {
     QueueView.prototype.Show = function (e) {
         var _this = this;
         e.append("<div id='queue-people' class='queue-people'>");
-        e.append("<div class='queue-spacer bg-color'>");
-        e.append("<div id='queue-body' class='queue-body'><div id='queue-dialog' class='queue-dialog' /></div>");
+        e.append("<div class='queue-spacer'>");
+        e.append("<div id='queue-body' class='queue-body'><div class='queue-dialog'><div id='dialog-speaker' class='dialog-speaker'></div><p id='dialog-text' class='dialog-text'></p><ol id='dialog-replies' class='dialog-replies'></ol></div>");
         var goHome = $("<div id='go-home'>");
         goHome.text("вернуться домой");
         goHome.click(function () {
