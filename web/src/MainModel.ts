@@ -35,7 +35,7 @@ class MainModel implements IMainModel, IPersistent
 	{
 		var money = Math.floor(this.player.GetMoney());
 		var rate  = Math.round(this.player.GetRate() * 10) / 10;
-		return String(money) + " руб. (" + String(rate) + " руб./с)";
+		return money.toLocaleString() + " руб. (" + rate.toLocaleString() + " руб./с)";
 	}
 
 	GetMoustache() : Moustache

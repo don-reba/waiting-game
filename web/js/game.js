@@ -808,7 +808,7 @@ var MainModel = (function () {
     MainModel.prototype.GetMoney = function () {
         var money = Math.floor(this.player.GetMoney());
         var rate = Math.round(this.player.GetRate() * 10) / 10;
-        return String(money) + " руб. (" + String(rate) + " руб./с)";
+        return money.toLocaleString() + " руб. (" + rate.toLocaleString() + " руб./с)";
     };
     MainModel.prototype.GetMoustache = function () {
         return this.player.GetMoustache();
@@ -1646,7 +1646,7 @@ var StoreView = (function () {
             };
             var info = Item.GetInfo(items[i][0]);
             var enabled = items[i][1];
-            var button = $("<li>" + info.name + "<br/>" + info.description + "<br/>" + info.price + " ₽</li>");
+            var button = $("<li>" + info.name + "<br/>" + info.description + "<br/>" + info.price.toLocaleString() + " ₽</li>");
             if (enabled) {
                 button.click(items[i][0], OnClick.bind(this));
                 button.addClass("enabled");
