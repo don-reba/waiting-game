@@ -22,9 +22,19 @@ class StoreModel implements IStoreModel
 		var items = [];
 
 		var moustache = this.player.GetMoustache();
-		if (moustache < Moustache.Pencil)
+		if (!moustache)
 		{
 			var item    = Item.PencilMoustache;
+			var price   = Item.GetInfo(item).price;
+			var enabled = price <= money;
+
+			items.push([item, enabled]);
+		}
+
+		var hat = this.player.GetHat();
+		if (!hat)
+		{
+			var item    = Item.Tophat;
 			var price   = Item.GetInfo(item).price;
 			var enabled = price <= money;
 
@@ -57,6 +67,10 @@ class StoreModel implements IStoreModel
 		{
 			case Item.PencilMoustache:
 				this.player.SetMoustache(Moustache.Pencil);
+				break;
+			case Item.Tophat:
+				this.player.SetHat(Hat.Tophat);
+				break;
 		}
 	}
 

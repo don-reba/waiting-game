@@ -5,6 +5,7 @@
 
 class PlayerState
 {
+	hat       : Hat;
 	moustache : Moustache;
 	money     : number;
 	rate      : number;
@@ -13,11 +14,13 @@ class PlayerState
 
 class Player implements IPersistent
 {
+	private hat       : Hat       = Hat.None;
 	private moustache : Moustache = Moustache.None;
 	private money     : number    = 0;
 	private rate      : number    = 0.5;
 	private hasMet    : string[]  = [];
 
+	HatChanged       = new Signal();
 	MoustacheChanged = new Signal();
 	MoneyChanged     = new Signal();
 	RateChanged      = new Signal();
@@ -35,6 +38,11 @@ class Player implements IPersistent
 	GetRate() : number
 	{
 		return this.rate;
+	}
+
+	GetHat() : Hat
+	{
+		return this.hat;
 	}
 
 	GetMoustache() : Moustache
@@ -55,13 +63,19 @@ class Player implements IPersistent
 			this.hasMet.push(character.id);
 	}
 
-	SetMoney(money : number)
+	SetHat(hat : Hat) : void
+	{
+		this.hat = hat;
+		this.HatChanged.Call();
+	}
+
+	SetMoney(money : number) : void
 	{
 		this.money = money;
 		this.MoneyChanged.Call();
 	}
 
-	SetMoustache(moustache : Moustache)
+	SetMoustache(moustache : Moustache) : void
 	{
 		this.moustache = moustache;
 		this.MoustacheChanged.Call();
@@ -72,6 +86,7 @@ class Player implements IPersistent
 	FromPersistentString(str : string) : void
 	{
 		var state = <PlayerState>JSON.parse(str);
+		this.hat       = state.hat;
 		this.moustache = state.moustache;
 		this.money     = state.money;
 		this.rate      = state.rate;
@@ -81,7 +96,8 @@ class Player implements IPersistent
 	ToPersistentString() : string
 	{
 		var state : PlayerState =
-			{ moustache : this.moustache
+			{ hat       : this.hat
+			, moustache : this.moustache
 			, money     : this.money
 			, rate      : this.rate
 			, hasMet    : this.hasMet

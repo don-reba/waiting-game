@@ -35,6 +35,7 @@ class StoreView implements IStoreView, IClientView
 			{
 				button.click(items[i][0], OnClick.bind(this));
 				button.addClass("enabled");
+				button.addClass("fg-clickable");
 			}
 			else
 			{

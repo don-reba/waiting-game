@@ -63,11 +63,17 @@ b {
 	white-space    : nowrap;
 	width          : 100%;
 }
+.hat {
+	margin-bottom : 0.5em;
+	width         : 5em;
+}
+.player-items {
+	left     : 0.5em;
+	position : absolute;
+}
 .moustache {
 	font-family : Mustache;
-	position    : absolute;
 	font-size   : 2em;
-	left : 0.5em;
 }
 .buttons {
 	position   : absolute;
@@ -86,7 +92,7 @@ b {
 	display          : inline-block;
 	height           : 1.6em;
 	line-height      : 1.0em;
-	text-size        : 1em;
+	font-size        : 1em;
 	padding          : 0.2em 1em;
 	margin           : 0.7em 0.5em;
 }
@@ -367,12 +373,8 @@ b {
 }
 #store-items td {
 	border  : 1px solid black;
-	cursor  : pointer;
 	padding : 0.5em;
 }
 #store-items td.disabled {
 	color : #606060;
-}
-#store-items td.enabled:hover {
-	background-color : #E0E0E0;
 }

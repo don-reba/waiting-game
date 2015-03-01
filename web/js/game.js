@@ -224,6 +224,11 @@ var DialogManager = (function () {
     };
     return DialogManager;
 })();
+var Hat;
+(function (Hat) {
+    Hat[Hat["None"] = 0] = "None";
+    Hat[Hat["Tophat"] = 1] = "Tophat";
+})(Hat || (Hat = {}));
 /// <reference path="ICharacter.ts" />
 var HomeCanvas = (function () {
     function HomeCanvas() {
@@ -457,7 +462,16 @@ var HomeModel = (function () {
 /// <reference path="HomeCanvas.ts" />
 /// <reference path="ICharacter.ts" />
 /// <reference path="Signal.ts"     />
-/// <reference path="Signal.ts" />
+var Moustache;
+(function (Moustache) {
+    Moustache[Moustache["None"] = 0] = "None";
+    Moustache[Moustache["Pencil"] = 1] = "Pencil";
+    Moustache[Moustache["French"] = 2] = "French";
+    Moustache[Moustache["Handlebar"] = 3] = "Handlebar";
+})(Moustache || (Moustache = {}));
+/// <reference path="Hat.ts"       />
+/// <reference path="Moustache.ts" />
+/// <reference path="Signal.ts"    />
 /// <reference path="ICharacter.ts" />
 /// <reference path="IDialog.ts"    />
 /// <reference path="IHomeModel.ts"  />
@@ -739,6 +753,8 @@ var HomeView = (function () {
     };
     return HomeView;
 })();
+/// <reference path="Hat.ts"         />
+/// <reference path="Moustache.ts"   />
 /// <reference path="IClientView.ts" />
 /// <reference path="ICharacter.ts" />
 /// <reference path="IDialog.ts"    />
@@ -751,11 +767,13 @@ var ItemInfo = (function () {
 var Item;
 (function (Item) {
     Item[Item["PencilMoustache"] = 0] = "PencilMoustache";
+    Item[Item["Tophat"] = 1] = "Tophat";
 })(Item || (Item = {}));
 var Item;
 (function (Item) {
     var items = [
-        { name: "Усы «Карандаш»", description: "Мужественность со скидкой.", price: 1000 }
+        { name: "Усы «Карандаш»", description: "Мужественность со скидкой.", price: 1000 },
+        { name: "Шляпа «Цилиндр»", description: "", price: 10000 }
     ];
     function GetInfo(item) {
         return items[item];
@@ -776,14 +794,16 @@ var MainModel = (function () {
         this.player = player;
         this.view = 0 /* Home */;
         // IMainModel implementation
+        this.HatChanged = new Signal();
         this.MoneyChanged = new Signal();
         this.MoustacheChanged = new Signal();
         this.ViewChanged = new Signal();
+        player.HatChanged.Add(this.OnHatChanged.bind(this));
         player.MoneyChanged.Add(this.OnMoneyChanged.bind(this));
         player.MoustacheChanged.Add(this.OnMoustacheChanged.bind(this));
     }
-    MainModel.prototype.GetView = function () {
-        return this.view;
+    MainModel.prototype.GetHat = function () {
+        return this.player.GetHat();
     };
     MainModel.prototype.GetMoney = function () {
         var money = Math.floor(this.player.GetMoney());
@@ -792,6 +812,9 @@ var MainModel = (function () {
     };
     MainModel.prototype.GetMoustache = function () {
         return this.player.GetMoustache();
+    };
+    MainModel.prototype.GetView = function () {
+        return this.view;
     };
     MainModel.prototype.Reset = function () {
         localStorage.clear();
@@ -810,6 +833,9 @@ var MainModel = (function () {
         return JSON.stringify({ view: this.view });
     };
     // private implementation
+    MainModel.prototype.OnHatChanged = function () {
+        this.HatChanged.Call();
+    };
     MainModel.prototype.OnMoneyChanged = function () {
         this.MoneyChanged.Call();
     };
@@ -824,15 +850,20 @@ var MainPresenter = (function () {
     function MainPresenter(mainModel, mainView) {
         this.mainModel = mainModel;
         this.mainView = mainView;
+        mainModel.HatChanged.Add(this.OnHatChanged.bind(this));
         mainModel.MoneyChanged.Add(this.OnMoneyChanged.bind(this));
         mainModel.MoustacheChanged.Add(this.OnMoustacheChanged.bind(this));
         mainModel.ViewChanged.Add(this.OnViewChanged.bind(this));
         mainView.ResetRequested.Add(this.OnResetRequested.bind(this));
     }
     MainPresenter.prototype.LightsCameraAction = function () {
+        this.mainView.SetHat(this.mainModel.GetHat());
         this.mainView.SetMoney(this.mainModel.GetMoney());
         this.mainView.SetMoustache(this.mainModel.GetMoustache());
         this.mainView.SetClientView(this.mainModel.GetView());
+    };
+    MainPresenter.prototype.OnHatChanged = function () {
+        this.mainView.SetHat(this.mainModel.GetHat());
     };
     MainPresenter.prototype.OnMoneyChanged = function () {
         this.mainView.SetMoney(this.mainModel.GetMoney());
@@ -882,8 +913,24 @@ var MainView = (function () {
     MainView.prototype.SetMoney = function (money) {
         $("#money-total").text(money);
     };
+    MainView.prototype.SetHat = function (hat) {
+        var src;
+        switch (hat) {
+            case 1 /* Tophat */:
+                src = "svg/tophat.svg";
+                break;
+        }
+        var e = $("#hat");
+        if (src) {
+            e.attr("src", src);
+            e.show();
+        }
+        else {
+            e.hide();
+        }
+    };
     MainView.prototype.SetMoustache = function (moustache) {
-        var text = "";
+        var text;
         switch (moustache) {
             case 1 /* Pencil */:
                 text = "u";
@@ -895,7 +942,14 @@ var MainView = (function () {
                 text = "a";
                 break;
         }
-        $("#moustache").text(text);
+        var e = $("#moustache");
+        if (text) {
+            e.text(text);
+            e.show();
+        }
+        else {
+            e.hide();
+        }
     };
     return MainView;
 })();
@@ -951,7 +1005,7 @@ var Timer = (function () {
 var PersistentState = (function () {
     function PersistentState(items, timer) {
         this.items = items;
-        this.version = "8";
+        this.version = "9";
         timer.AddEvent(this.Save.bind(this), 20);
     }
     // get the state string from each item and store it in local storage
@@ -990,13 +1044,6 @@ var PersistentState = (function () {
     };
     return PersistentState;
 })();
-var Moustache;
-(function (Moustache) {
-    Moustache[Moustache["None"] = 0] = "None";
-    Moustache[Moustache["Pencil"] = 1] = "Pencil";
-    Moustache[Moustache["French"] = 2] = "French";
-    Moustache[Moustache["Handlebar"] = 3] = "Handlebar";
-})(Moustache || (Moustache = {}));
 /// <reference path="ICharacter.ts"  />
 /// <reference path="IPersistent.ts" />
 /// <reference path="Moustache.ts"   />
@@ -1008,10 +1055,12 @@ var PlayerState = (function () {
 })();
 var Player = (function () {
     function Player(timer) {
+        this.hat = 0 /* None */;
         this.moustache = 0 /* None */;
         this.money = 0;
         this.rate = 0.5;
         this.hasMet = [];
+        this.HatChanged = new Signal();
         this.MoustacheChanged = new Signal();
         this.MoneyChanged = new Signal();
         this.RateChanged = new Signal();
@@ -1022,6 +1071,9 @@ var Player = (function () {
     };
     Player.prototype.GetRate = function () {
         return this.rate;
+    };
+    Player.prototype.GetHat = function () {
+        return this.hat;
     };
     Player.prototype.GetMoustache = function () {
         return this.moustache;
@@ -1035,6 +1087,10 @@ var Player = (function () {
         if (this.hasMet.indexOf(character.id) < 0)
             this.hasMet.push(character.id);
     };
+    Player.prototype.SetHat = function (hat) {
+        this.hat = hat;
+        this.HatChanged.Call();
+    };
     Player.prototype.SetMoney = function (money) {
         this.money = money;
         this.MoneyChanged.Call();
@@ -1046,13 +1102,14 @@ var Player = (function () {
     // IPersistent implementation
     Player.prototype.FromPersistentString = function (str) {
         var state = JSON.parse(str);
+        this.hat = state.hat;
         this.moustache = state.moustache;
         this.money = state.money;
         this.rate = state.rate;
         this.hasMet = state.hasMet;
     };
     Player.prototype.ToPersistentString = function () {
-        var state = { moustache: this.moustache, money: this.money, rate: this.rate, hasMet: this.hasMet };
+        var state = { hat: this.hat, moustache: this.moustache, money: this.money, rate: this.rate, hasMet: this.hasMet };
         return JSON.stringify(state);
     };
     // private implementation
@@ -1490,8 +1547,15 @@ var StoreModel = (function () {
         var money = this.player.GetMoney();
         var items = [];
         var moustache = this.player.GetMoustache();
-        if (moustache < 1 /* Pencil */) {
+        if (!moustache) {
             var item = 0 /* PencilMoustache */;
+            var price = Item.GetInfo(item).price;
+            var enabled = price <= money;
+            items.push([item, enabled]);
+        }
+        var hat = this.player.GetHat();
+        if (!hat) {
+            var item = 1 /* Tophat */;
             var price = Item.GetInfo(item).price;
             var enabled = price <= money;
             items.push([item, enabled]);
@@ -1514,6 +1578,10 @@ var StoreModel = (function () {
         switch (item) {
             case 0 /* PencilMoustache */:
                 this.player.SetMoustache(1 /* Pencil */);
+                break;
+            case 1 /* Tophat */:
+                this.player.SetHat(1 /* Tophat */);
+                break;
         }
     };
     StoreModel.prototype.OnMoneyChanged = function () {
@@ -1573,6 +1641,7 @@ var StoreView = (function () {
             if (enabled) {
                 button.click(items[i][0], OnClick.bind(this));
                 button.addClass("enabled");
+                button.addClass("fg-clickable");
             }
             else {
                 button.addClass("disabled");

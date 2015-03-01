@@ -14,19 +14,21 @@ class MainModel implements IMainModel, IPersistent
 		( private player : Player
 		)
 	{
+		player.HatChanged.Add(this.OnHatChanged.bind(this));
 		player.MoneyChanged.Add(this.OnMoneyChanged.bind(this));
 		player.MoustacheChanged.Add(this.OnMoustacheChanged.bind(this));
 	}
 
 	// IMainModel implementation
 
+	HatChanged       = new Signal();
 	MoneyChanged     = new Signal();
 	MoustacheChanged = new Signal();
 	ViewChanged      = new Signal();
 
-	GetView() : ClientViewType
+	GetHat() : Hat
 	{
-		return this.view;
+		return this.player.GetHat();
 	}
 
 	GetMoney() : string
@@ -39,6 +41,11 @@ class MainModel implements IMainModel, IPersistent
 	GetMoustache() : Moustache
 	{
 		return this.player.GetMoustache();
+	}
+
+	GetView() : ClientViewType
+	{
+		return this.view;
 	}
 
 	Reset() : void
@@ -67,6 +74,11 @@ class MainModel implements IMainModel, IPersistent
 	}
 
 	// private implementation
+
+	private OnHatChanged() : void
+	{
+		this.HatChanged.Call();
+	}
 
 	private OnMoneyChanged() : void
 	{

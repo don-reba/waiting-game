@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Creator: CorelDRAW X7 -->
+<svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="8.5in" height="7in" version="1.1" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
+viewBox="0 0 8500 7000"
+ xmlns:xlink="http://www.w3.org/1999/xlink"
+ xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+ xmlns:cc="http://creativecommons.org/ns#"
+ xmlns:dc="http://purl.org/dc/elements/1.1/"
+ xmlns:svg="http://www.w3.org/2000/svg">
+ <defs>
+  <style type="text/css">
+   <![CDATA[
+    .fil0 {fill:black}
+    .fil2 {fill:#1A1A1A}
+    .fil3 {fill:#333333}
+    .fil1 {fill:url(#id0)}
+   ]]>
+  </style>
+  <linearGradient id="id0" gradientUnits="userSpaceOnUse" x1="1833.01" y1="3069.37" x2="6031.22" y2="2091.71">
+   <stop offset="0" style="stop-opacity:1; stop-color:black"/>
+   <stop offset="0.5" style="stop-opacity:1; stop-color:#333333"/>
+   <stop offset="1" style="stop-opacity:1; stop-color:black"/>
+  </linearGradient>
+ </defs>
+ <g id="layer1">
+  <path id="shape" class="fil0" d="M7054 4039c-356,-1176 -402,-2639 -425,-3997 -1921,-149 -4026,152 -5914,810 498,1371 881,2717 845,3966l0 0c-2252,-42 -1654,2620 821,2100 931,-185 1828,-758 2591,-1318 1122,-824 1960,-1385 2082,-1561z"/>
+  <path id="underside" class="fil0" d="M5175 5872c2376,60 3337,-558 3210,-1593 -858,-630 -2451,964 -3210,1593z"/>
+  <path id="top" class="fil1" d="M2754 5121c343,100 1517,-133 3186,-564 -293,-1521 663,-520 -879,-4540 -1169,46 -2292,249 -3166,477l859 4627z"/>
+  <path id="ribbon" class="fil2" d="M1543 5193c-14,348 -28,732 -71,945 1260,170 2380,-198 3538,-422l1678 -1326c-1684,304 -3194,821 -5146,803l1 0z"/>
+  <path id="highlight" class="fil3" d="M2775 6816c703,-224 1553,-752 2435,-1379 623,-443 1220,-995 1863,-1436 584,-400 1260,-143 1312,278 -391,-172 -752,-121 -1080,81 -1410,822 -1761,1745 -4530,2456l0 0z"/>
+ </g>
+</svg>

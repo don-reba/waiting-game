@@ -8,6 +8,7 @@ class MainPresenter
 		, private mainView  : IMainView
 		)
 	{
+		mainModel.HatChanged.Add(this.OnHatChanged.bind(this));
 		mainModel.MoneyChanged.Add(this.OnMoneyChanged.bind(this));
 		mainModel.MoustacheChanged.Add(this.OnMoustacheChanged.bind(this));
 		mainModel.ViewChanged.Add(this.OnViewChanged.bind(this));
@@ -17,9 +18,15 @@ class MainPresenter
 
 	LightsCameraAction()
 	{
+		this.mainView.SetHat(this.mainModel.GetHat());
 		this.mainView.SetMoney(this.mainModel.GetMoney());
 		this.mainView.SetMoustache(this.mainModel.GetMoustache());
 		this.mainView.SetClientView(this.mainModel.GetView());
+	}
+
+	private OnHatChanged() : void
+	{
+		this.mainView.SetHat(this.mainModel.GetHat());
 	}
 
 	private OnMoneyChanged() : void

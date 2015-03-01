@@ -7,7 +7,8 @@ class ItemInfo
 
 enum Item
 {
-	PencilMoustache = 0
+	PencilMoustache = 0,
+	Tophat          = 1
 }
 
 module Item
@@ -17,6 +18,10 @@ module Item
 		{ name        : "Усы «Карандаш»"
 		, description : "Мужественность со скидкой."
 		, price       : 1000
+		},
+		{ name        : "Шляпа «Цилиндр»"
+		, description : ""
+		, price       : 10000
 		}
 	];
 

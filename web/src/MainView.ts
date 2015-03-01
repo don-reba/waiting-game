@@ -43,15 +43,43 @@ class MainView implements IMainView
 		$("#money-total").text(money);
 	}
 
+	SetHat(hat : Hat) : void
+	{
+		var src;
+		switch (hat)
+		{
+			case Hat.Tophat: src = "svg/tophat.svg"; break;
+		}
+		var e = $("#hat");
+		if (src)
+		{
+			e.attr("src", src);
+			e.show();
+		}
+		else
+		{
+			e.hide();
+		}
+	}
+
 	SetMoustache(moustache : Moustache) : void
 	{
-		var text = "";
+		var text;
 		switch (moustache)
 		{
-			case Moustache.Pencil:    text = "u";  break;
-			case Moustache.French:    text = "r";  break;
+			case Moustache.Pencil:    text = "u"; break;
+			case Moustache.French:    text = "r"; break;
 			case Moustache.Handlebar: text = "a"; break;
 		}
-		$("#moustache").text(text);
+		var e = $("#moustache");
+		if (text)
+		{
+			e.text(text);
+			e.show();
+		}
+		else
+		{
+			e.hide();
+		}
 	}
 }
