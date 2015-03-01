@@ -78,18 +78,18 @@ class QueuePresenter
 	private UpdateCurrentTicket()
 	{
 		var ticket = this.queueModel.GetCurrentTicket();
-		if (ticket == null)
-			this.queueView.ClearCurrentTicket();
-		else
+		if (ticket)
 			this.queueView.SetCurrentTicket(ticket);
+		else
+			this.queueView.ClearCurrentTicket();
 	}
 
 	private UpdatePlayerTicket()
 	{
 		var ticket = this.queueModel.GetPlayerTicket();
-		if (ticket == null)
-			this.queueView.ClearPlayerTicket();
-		else
+		if (ticket)
 			this.queueView.SetPlayerTicket(ticket);
+		else
+			this.queueView.ClearPlayerTicket();
 	}
 }
