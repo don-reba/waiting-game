@@ -458,13 +458,17 @@ var HomeModel = (function () {
 /// <reference path="ICharacter.ts" />
 /// <reference path="Signal.ts"     />
 /// <reference path="Signal.ts" />
-/// <reference path="IHomeModel.ts" />
-/// <reference path="IHomeView.ts"  />
-/// <reference path="IMainModel.ts" />
+/// <reference path="ICharacter.ts" />
+/// <reference path="IDialog.ts"    />
+/// <reference path="IHomeModel.ts"  />
+/// <reference path="IHomeView.ts"   />
+/// <reference path="IMainModel.ts"  />
+/// <reference path="IQueueModel.ts" />
 var HomePresenter = (function () {
-    function HomePresenter(homeModel, mainModel, homeView) {
+    function HomePresenter(homeModel, mainModel, queueModel, homeView) {
         this.homeModel = homeModel;
         this.mainModel = mainModel;
+        this.queueModel = queueModel;
         this.homeView = homeView;
         homeModel.DialogChanged.Add(this.OnDialogChanged.bind(this));
         homeModel.FriendsArriving.Add(this.OnFriendsArriving.bind(this));
@@ -505,6 +509,7 @@ var HomePresenter = (function () {
         this.homeModel.StartDialog(this.homeView.GetSelectedGuest());
     };
     HomePresenter.prototype.OnGoToQueue = function () {
+        this.queueModel.EnterQueue();
         this.mainModel.SetView(1 /* Queue */);
     };
     HomePresenter.prototype.OnGoToStore = function () {
@@ -735,8 +740,6 @@ var HomeView = (function () {
     return HomeView;
 })();
 /// <reference path="IClientView.ts" />
-/// <reference path="ICharacter.ts" />
-/// <reference path="IDialog.ts"    />
 /// <reference path="ICharacter.ts" />
 /// <reference path="IDialog.ts"    />
 /// <reference path="Signal.ts" />
@@ -1256,7 +1259,6 @@ var QueuePresenter = (function () {
         this.UpdatePlayerTicket();
     };
     QueuePresenter.prototype.OnQueueShown = function () {
-        this.queueModel.EnterQueue();
         this.UpdatePlayerTicket();
         this.UpdateCurrentTicket();
         this.queueView.SetCharacters(this.queueModel.GetCharacters());
@@ -1644,7 +1646,7 @@ function Main(dialogs, characters) {
     var saveView = new SaveView();
     var storeView = new StoreView();
     var mainView = new MainView([homeView, queueView, storeView]);
-    var homePresenter = new HomePresenter(homeModel, mainModel, homeView);
+    var homePresenter = new HomePresenter(homeModel, mainModel, queueModel, homeView);
     var mainPresenter = new MainPresenter(mainModel, mainView);
     var queuePresenter = new QueuePresenter(mainModel, queueModel, queueView);
     var savePresenter = new SavePresenter(saveModel, saveView);

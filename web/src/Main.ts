@@ -59,7 +59,7 @@ function Main(dialogs : IDialog[], characters : ICharacter[])
 
 	var mainView = new MainView([ homeView, queueView, storeView ]);
 
-	var homePresenter  = new HomePresenter(homeModel,  mainModel,  homeView);
+	var homePresenter  = new HomePresenter(homeModel,  mainModel, queueModel,  homeView);
 	var mainPresenter  = new MainPresenter(mainModel,  mainView);
 	var queuePresenter = new QueuePresenter(mainModel, queueModel, queueView);
 	var savePresenter  = new SavePresenter(saveModel,  saveView);

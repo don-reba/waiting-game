@@ -62,8 +62,6 @@ class QueuePresenter
 
 	private OnQueueShown() : void
 	{
-		this.queueModel.EnterQueue();
-
 		this.UpdatePlayerTicket();
 		this.UpdateCurrentTicket();
 		this.queueView.SetCharacters(this.queueModel.GetCharacters());

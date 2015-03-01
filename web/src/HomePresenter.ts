@@ -1,13 +1,15 @@
-/// <reference path="IHomeModel.ts" />
-/// <reference path="IHomeView.ts"  />
-/// <reference path="IMainModel.ts" />
+/// <reference path="IHomeModel.ts"  />
+/// <reference path="IHomeView.ts"   />
+/// <reference path="IMainModel.ts"  />
+/// <reference path="IQueueModel.ts" />
 
 class HomePresenter
 {
 	constructor
-		( private homeModel : IHomeModel
-		, private mainModel : IMainModel
-		, private homeView  : IHomeView
+		( private homeModel  : IHomeModel
+		, private mainModel  : IMainModel
+		, private queueModel : IQueueModel
+		, private homeView   : IHomeView
 		)
 	{
 		homeModel.DialogChanged.Add(this.OnDialogChanged.bind(this));
@@ -64,6 +66,7 @@ class HomePresenter
 
 	private OnGoToQueue() : void
 	{
+		this.queueModel.EnterQueue();
 		this.mainModel.SetView(ClientViewType.Queue);
 	}
 
