@@ -1122,9 +1122,8 @@ var QueueModel = (function () {
         });
     };
     QueueModel.prototype.GetCurrentTicket = function () {
-        if (this.queue.length > 0)
-            return this.queue[0].ticket;
-        return null;
+        if (this.queueHead)
+            return this.queueHead.ticket;
     };
     QueueModel.prototype.GetDialog = function () {
         return this.dialogManager.GetDialog(this.dialogID);
@@ -1150,13 +1149,14 @@ var QueueModel = (function () {
     QueueModel.prototype.FromPersistentString = function (str) {
         var state = JSON.parse(str);
         this.queue = state.queue;
+        this.queueHead = state.queueHead;
         this.ticket = state.ticket;
         this.dialogID = state.dialogID;
         this.speakerID = state.speakerID;
         this.holdLast = state.holdLast;
     };
     QueueModel.prototype.ToPersistentString = function () {
-        var state = { queue: this.queue, ticket: this.ticket, dialogID: this.dialogID, speakerID: this.speakerID, holdLast: this.holdLast };
+        var state = { queue: this.queue, queueHead: this.queueHead, ticket: this.ticket, dialogID: this.dialogID, speakerID: this.speakerID, holdLast: this.holdLast };
         return JSON.stringify(state);
     };
     // event handlers
@@ -1209,6 +1209,7 @@ var QueueModel = (function () {
     QueueModel.prototype.ReleaseLast = function () {
         var p = this.queue[0];
         this.holdLast = false;
+        this.queueHead = this.queue[0];
         this.queue.shift();
         this.PeopleChanged.Call();
         if (!p.characterID)

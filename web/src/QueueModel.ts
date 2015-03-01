@@ -13,6 +13,7 @@ class QueuePosition
 class QueueModelState
 {
 	queue     : QueuePosition[];
+	queueHead : QueuePosition;
 	ticket    : number;
 	dialogID  : string;
 	speakerID : string;
@@ -22,7 +23,7 @@ class QueueModelState
 class QueueModel implements IQueueModel, IPersistent
 {
 	private queue     : QueuePosition[];
-	private playerPos : QueuePosition;
+	private queueHead : QueuePosition;
 	private ticket    : number;
 	private dialogID  : string;
 	private speakerID : string;
@@ -87,9 +88,8 @@ class QueueModel implements IQueueModel, IPersistent
 
 	GetCurrentTicket() : string
 	{
-		if (this.queue.length > 0)
-			return this.queue[0].ticket;
-		return null;
+		if (this.queueHead)
+			return this.queueHead.ticket;
 	}
 
 	GetDialog() : IDialog
@@ -129,6 +129,7 @@ class QueueModel implements IQueueModel, IPersistent
 	{
 		var state = <QueueModelState>JSON.parse(str);
 		this.queue      = state.queue;
+		this.queueHead  = state.queueHead;
 		this.ticket     = state.ticket;
 		this.dialogID   = state.dialogID;
 		this.speakerID  = state.speakerID;
@@ -139,6 +140,7 @@ class QueueModel implements IQueueModel, IPersistent
 	{
 		var state : QueueModelState =
 			{ queue     : this.queue
+			, queueHead : this.queueHead
 			, ticket    : this.ticket
 			, dialogID  : this.dialogID
 			, speakerID : this.speakerID
@@ -226,7 +228,8 @@ class QueueModel implements IQueueModel, IPersistent
 	{
 		var p = this.queue[0];
 
-		this.holdLast = false;
+		this.holdLast  = false;
+		this.queueHead = this.queue[0];
 		this.queue.shift();
 		this.PeopleChanged.Call();
 		if (!p.characterID)
