@@ -66,6 +66,7 @@ class QueueView implements IQueueView, IClientView
 			else
 			{
 				button.text("\\o/");
+				button.addClass("queue-player");
 			}
 
 			people.append(button);

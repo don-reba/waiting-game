@@ -322,6 +322,9 @@ aside {
 .queue-character:hover {
 	text-decoration : underline;
 }
+.queue-player {
+	color : #006;
+}
 .queue-spacer {
 	background : url("../img/crease.png") 0 0 / 100% 100%;
 	display  : inline-block;
@@ -362,7 +365,7 @@ aside {
 	left     : 1.5em;
 	top      : -1.5em;
 }
-.dialog-text {
+.queue-text {
 	background-color : #94BF78;
 	margin-bottom    : 1em;
 	padding          : 0.5em;

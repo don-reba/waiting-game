@@ -1173,10 +1173,17 @@ var QueueModel = (function () {
             this.AddPlayerPosition();
     };
     QueueModel.prototype.GetCharacters = function () {
-        var _this = this;
-        return this.queue.map(function (p) {
-            return _this.characterManager.GetCharacter(p.characterID);
-        });
+        var characters = [];
+        for (var i = 0; i != this.queue.length; ++i) {
+            var c = this.characterManager.GetCharacter(this.queue[i].characterID);
+            if (c && this.player.HasNotMet(c))
+                characters.push({ id: c.id, name: "\\o/" });
+            else if (!c)
+                characters.push(null);
+            else
+                characters.push(c);
+        }
+        return characters;
     };
     QueueModel.prototype.GetCurrentTicket = function () {
         if (this.queueHead)
@@ -1199,8 +1206,11 @@ var QueueModel = (function () {
         this.speakerID = speaker.id;
         this.dialogID = this.characterManager.GetDialogID(speaker.id, 1 /* QueueConversation */);
         this.DialogChanged.Call();
+        var hasNotMet = this.player.HasNotMet(speaker);
         this.player.IntroduceTo(speaker);
         this.dialogManager.ActivateDialog(this.dialogID);
+        if (hasNotMet)
+            this.PeopleChanged.Call();
     };
     // IPersistent implementation
     QueueModel.prototype.FromPersistentString = function (str) {
@@ -1387,6 +1397,7 @@ var QueueView = (function () {
             }
             else {
                 button.text("\\o/");
+                button.addClass("queue-player");
             }
             people.append(button);
         }

@@ -83,7 +83,18 @@ class QueueModel implements IQueueModel, IPersistent
 
 	GetCharacters() : ICharacter[]
 	{
-		return this.queue.map(p => { return this.characterManager.GetCharacter(p.characterID); });
+		var characters : ICharacter[] = [];
+		for (var i = 0; i != this.queue.length; ++i)
+		{
+			var c = this.characterManager.GetCharacter(this.queue[i].characterID);
+			if (c && this.player.HasNotMet(c))
+				characters.push({ id : c.id, name : "\\o/" });
+			else if (!c)
+				characters.push(null);
+			else
+				characters.push(c);
+		}
+		return characters;
 	}
 
 	GetCurrentTicket() : string
@@ -119,8 +130,13 @@ class QueueModel implements IQueueModel, IPersistent
 
 		this.DialogChanged.Call();
 
+		var hasNotMet = this.player.HasNotMet(speaker);
+
 		this.player.IntroduceTo(speaker);
 		this.dialogManager.ActivateDialog(this.dialogID);
+
+		if (hasNotMet)
+			this.PeopleChanged.Call();
 	}
 
 	// IPersistent implementation
