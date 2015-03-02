@@ -1386,13 +1386,12 @@ var QueueView = (function () {
         }
     };
     QueueView.prototype.SetCurrentTicket = function (ticket) {
-        var e = $("#current-ticket .number");
         if (ticket) {
-            e.text(ticket);
-            e.show();
+            $("#current-ticket .number").text(ticket);
+            $("#current-ticket").show();
         }
         else {
-            e.hide();
+            $("#current-ticket").hide();
         }
     };
     QueueView.prototype.SetDialog = function (speaker, dialog) {
@@ -1424,13 +1423,12 @@ var QueueView = (function () {
         }
     };
     QueueView.prototype.SetPlayerTicket = function (ticket) {
-        var e = $("#my-ticket .number");
         if (ticket) {
-            e.text(ticket);
-            e.show();
+            $("#my-ticket .number").text(ticket);
+            $("#my-ticket").show();
         }
         else {
-            e.hide();
+            $("#my-ticket").hide();
         }
     };
     // IClientView implementation
