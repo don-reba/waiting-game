@@ -143,7 +143,7 @@ class QueueView implements IQueueView, IClientView
 		e.append("<div class='queue-spacer'>");
 		e.append("<div id='queue-body' class='queue-body'><div class='queue-dialog'><div id='dialog-speaker' class='dialog-speaker'></div><p id='dialog-text' class='dialog-text'></p><ol id='dialog-replies' class='dialog-replies'></ol></div>");
 
-		var goHome = $("<div id='go-home'>");
+		var goHome = $("<button id='go-home'>");
 		goHome.text("вернуться домой");
 		goHome.click(() => { this.GoToHome.Call() });
 

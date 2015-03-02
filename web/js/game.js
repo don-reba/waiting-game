@@ -41,6 +41,14 @@ var Util;
             return a[Math.floor(Math.random() * a.length)];
     }
     Util.Sample = Sample;
+    function AlignToBottom(anchor, element) {
+        var p = anchor.position();
+        var h = anchor.outerHeight(false);
+        var x = p.left;
+        var y = p.top + h;
+        element.css({ left: x + "px", top: y + "px" });
+    }
+    Util.AlignToBottom = AlignToBottom;
 })(Util || (Util = {}));
 /// <reference path="ICharacter.ts" />
 /// <reference path="Flags.ts"      />
@@ -569,8 +577,9 @@ var ClientViewType;
     ClientViewType[ClientViewType["Queue"] = 1] = "Queue";
     ClientViewType[ClientViewType["Store"] = 2] = "Store";
 })(ClientViewType || (ClientViewType = {}));
-/// <reference path="IHomeView.ts" />
+/// <reference path="IHomeView.ts"   />
 /// <reference path="IClientView.ts" />
+/// <reference path="Util.ts"        />
 var HomeView = (function () {
     function HomeView() {
         // IHomeView implementation
@@ -698,7 +707,7 @@ var HomeView = (function () {
             _this.InviteFriends.Call();
         });
         invites.append(button);
-        this.AlignToBottom($("#toggle-invites"), invites);
+        Util.AlignToBottom($("#toggle-invites"), invites);
         invites.height();
         invites.show();
     };
@@ -720,19 +729,19 @@ var HomeView = (function () {
         e.html("<div id='home-dialog'></div><div id='home-view'></div>");
         $("#home-invites").hide();
         $("#home-dialog").hide();
-        var goQueue = $("<div id='go-queue'>");
+        var goQueue = $("<button id='go-queue'>");
         goQueue.text("в очередь");
         goQueue.hide();
         goQueue.click(function () {
             _this.GoToQueue.Call();
         });
-        var goStore = $("<div id='go-store'>");
+        var goStore = $("<button id='go-store'>");
         goStore.text("в магазин");
         goStore.hide();
         goStore.click(function () {
             _this.GoToStore.Call();
         });
-        var toggleInvites = $("<div id='toggle-invites'>");
+        var toggleInvites = $("<button id='toggle-invites'>");
         toggleInvites.text("друзья…");
         toggleInvites.click(function () {
             if ($("#home-invites").is(":visible"))
@@ -740,16 +749,10 @@ var HomeView = (function () {
             else
                 _this.OpenInvites.Call();
         });
-        var invites = $("<div id='home-invites'>");
+        var invites = $("<div id='home-invites' class='menu fg-color'>");
         invites.hide();
         $("#buttons").append(goQueue).append(goStore).append(toggleInvites).append(invites);
         this.Shown.Call();
-    };
-    // private implementation
-    HomeView.prototype.AlignToBottom = function (anchor, element) {
-        var p = anchor.position();
-        var h = anchor.outerHeight(false);
-        element.css({ left: p.left + "px", top: (p.top + h) + "px" });
     };
     return HomeView;
 })();
@@ -1450,7 +1453,7 @@ var QueueView = (function () {
         e.append("<div id='queue-people' class='queue-people'>");
         e.append("<div class='queue-spacer'>");
         e.append("<div id='queue-body' class='queue-body'><div class='queue-dialog'><div id='dialog-speaker' class='dialog-speaker'></div><p id='dialog-text' class='dialog-text'></p><ol id='dialog-replies' class='dialog-replies'></ol></div>");
-        var goHome = $("<div id='go-home'>");
+        var goHome = $("<button id='go-home'>");
         goHome.text("вернуться домой");
         goHome.click(function () {
             _this.GoToHome.Call();
@@ -1681,7 +1684,7 @@ var StoreView = (function () {
     };
     StoreView.prototype.Show = function (e) {
         var _this = this;
-        var goHome = $("<div id='go-home'>");
+        var goHome = $("<button id='go-home'>");
         goHome.text("вернуться домой");
         goHome.click(function () {
             _this.GoToHome.Call();

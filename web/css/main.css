@@ -85,8 +85,11 @@ aside {
 	font-size   : 2em;
 }
 .buttons {
-	position   : absolute;
-	text-align : left;
+	align-items  : center;
+	display      : flex;
+	flex-flow    : row nowrap;
+	padding-left : 0.5em;
+	position     : absolute;
 
 	top      : 0;
 	right    : 0;
@@ -94,7 +97,8 @@ aside {
 
 	height   : 3em;
 }
-.buttons > div {
+.buttons > button {
+	margin-right : 0.5em;
 	background-color : #83B572;
 	border           : 1px solid black;
 	cursor           : pointer;
@@ -103,10 +107,54 @@ aside {
 	line-height      : 1.0em;
 	font-size        : 1em;
 	padding          : 0.2em 1em;
-	margin           : 0.7em 0.5em;
 }
-.buttons > div:hover {
+.buttons > button:hover {
 	background-color : #B2D184;
+}
+.menu {
+	border      : 1px solid black;
+	display     : inline-block;
+	font-family : inherit;
+	font-size   : 1em;
+	height      : auto;
+	padding     : 0.5em;
+	position    : absolute;
+	text-align  : left;
+	white-space : nowrap;
+	z-index     : 1;
+}
+.menu > button {
+	border           : 1px solid black;
+	background-color : #83B572;
+	font-size : 1em;
+	display : block;
+	width : 100%;
+	margin-top: 0.5em;
+}
+.menu > button:hover {
+	background-color : #B2D184;
+}
+.menu > button[disabled]:hover {
+	background-color : #83B572;
+}
+.game {
+	margin          : 0em auto;
+	border-collapse : separate;
+	border-spacing  : 0.5em;
+	margin-top      : 4em;
+	position        : relative;
+
+	width           : 49em;
+	height          : 30em;
+}
+.location {
+	overflow : hidden;
+	position : absolute;
+
+	top    : 3em;
+	right  : 0;
+	bottom : 0;
+	left   : 0;
 }
 
 /* about menu */
@@ -132,25 +180,6 @@ aside {
 	margin      : 0.2em;
 	text-align  : left;
 	white-space : nowrap;
-}
-.game {
-	margin          : 0em auto;
-	border-collapse : separate;
-	border-spacing  : 0.5em;
-	margin-top      : 4em;
-	position        : relative;
-
-	width           : 49em;
-	height          : 30em;
-}
-.location {
-	overflow : hidden;
-	position : absolute;
-
-	top    : 3em;
-	right  : 0;
-	bottom : 0;
-	left   : 0;
 }
 
 /* save view */
@@ -260,22 +289,6 @@ aside {
 	padding          : 0;
 	margin           : 0;
 	font-family      : inherit;
-}
-#home-invites {
-	background-color : #D0D0D0;
-	display          : inline-block;
-	font-family      : inherit;
-	font-size        : 1em;
-	height           : auto;
-	padding          : 0.5em;
-	position         : absolute;
-	text-align       : left;
-	white-space      : nowrap;
-	z-index          : 1;
-}
-
-#home-invites>label:hover {
-	background-color : #E0E0E0;
 }
 
 /* queue */

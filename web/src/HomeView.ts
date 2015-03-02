@@ -1,5 +1,6 @@
-/// <reference path="IHomeView.ts" />
+/// <reference path="IHomeView.ts"   />
 /// <reference path="IClientView.ts" />
+/// <reference path="Util.ts"        />
 
 class HomeView implements IHomeView, IClientView
 {
@@ -182,7 +183,7 @@ class HomeView implements IHomeView, IClientView
 		button.click(() => { this.InviteFriends.Call() });
 		invites.append(button);
 
-		this.AlignToBottom($("#toggle-invites"), invites);
+		Util.AlignToBottom($("#toggle-invites"), invites);
 
 		invites.height();
 
@@ -218,21 +219,21 @@ class HomeView implements IHomeView, IClientView
 		$("#home-invites").hide();
 		$("#home-dialog").hide();
 
-		var goQueue = $("<div id='go-queue'>");
+		var goQueue = $("<button id='go-queue'>");
 		goQueue.text("в очередь");
 		goQueue.hide();
 		goQueue.click(() => { this.GoToQueue.Call() });
 
-		var goStore = $("<div id='go-store'>");
+		var goStore = $("<button id='go-store'>");
 		goStore.text("в магазин");
 		goStore.hide();
 		goStore.click(() => { this.GoToStore.Call() });
 
-		var toggleInvites = $("<div id='toggle-invites'>");
+		var toggleInvites = $("<button id='toggle-invites'>");
 		toggleInvites.text("друзья…");
 		toggleInvites.click(() => { if ($("#home-invites").is(":visible")) this.CloseInvites.Call(); else this.OpenInvites.Call() });
 
-		var invites = $("<div id='home-invites'>");
+		var invites = $("<div id='home-invites' class='menu fg-color'>");
 		invites.hide();
 
 		$("#buttons")
@@ -242,14 +243,5 @@ class HomeView implements IHomeView, IClientView
 			.append(invites);
 
 		this.Shown.Call();
-	}
-
-	// private implementation
-
-	private AlignToBottom(anchor : JQuery, element : JQuery) : void
-	{
-		var p = anchor.position();
-		var h = anchor.outerHeight(false);
-		element.css({ left : p.left + "px", top : (p.top + h) + "px" });
 	}
 }
