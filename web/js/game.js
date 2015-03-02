@@ -1150,19 +1150,22 @@ var QueueModel = (function () {
         this.PlayerTicketChanged = new Signal();
         timer.AddEvent(this.OnAdvance.bind(this), 40);
         timer.AddEvent(this.OnKnock.bind(this), 37);
-        this.ticket = 0;
+        this.ticket = 1;
         this.queue = [];
+        this.head = this.MakeStockPosition();
         for (var i = 0; i != this.maxLength; ++i)
-            this.AddStockPosition();
+            this.queue.push(this.MakeStockPosition());
     }
     QueueModel.prototype.AdvanceDialog = function (ref) {
+        var finishedLastMansDialog = !ref && this.queue[0].characterID == this.speakerID;
+        var waitingToAdvance = !this.head || this.head.remaining <= 0;
+        if (finishedLastMansDialog && waitingToAdvance)
+            this.AdvanceQueue();
         this.dialogID = ref;
         if (!this.dialogID)
             this.speakerID = null;
         this.DialogChanged.Call();
         this.dialogManager.ActivateDialog(this.dialogID);
-        if (this.holdLast)
-            this.ReleaseLast();
     };
     QueueModel.prototype.EndDialog = function () {
         this.dialogID = null;
@@ -1173,7 +1176,7 @@ var QueueModel = (function () {
         if (this.queue.every(function (p) {
             return p.characterID != null;
         }))
-            this.AddPlayerPosition();
+            this.queue.push(this.MakePlayerPosition());
     };
     QueueModel.prototype.GetCharacters = function () {
         var characters = [];
@@ -1189,8 +1192,8 @@ var QueueModel = (function () {
         return characters;
     };
     QueueModel.prototype.GetCurrentTicket = function () {
-        if (this.queueHead)
-            return this.queueHead.ticket;
+        if (this.head)
+            return this.head.ticket;
     };
     QueueModel.prototype.GetDialog = function () {
         return this.dialogManager.GetDialog(this.dialogID);
@@ -1219,55 +1222,49 @@ var QueueModel = (function () {
     QueueModel.prototype.FromPersistentString = function (str) {
         var state = JSON.parse(str);
         this.queue = state.queue;
-        this.queueHead = state.queueHead;
+        this.head = state.head;
         this.ticket = state.ticket;
         this.dialogID = state.dialogID;
         this.speakerID = state.speakerID;
-        this.holdLast = state.holdLast;
     };
     QueueModel.prototype.ToPersistentString = function () {
-        var state = { queue: this.queue, queueHead: this.queueHead, ticket: this.ticket, dialogID: this.dialogID, speakerID: this.speakerID, holdLast: this.holdLast };
+        var state = { queue: this.queue, head: this.head, ticket: this.ticket, dialogID: this.dialogID, speakerID: this.speakerID };
         return JSON.stringify(state);
     };
     // event handlers
     QueueModel.prototype.OnAdvance = function () {
-        if (this.queue.length == 0)
-            return;
-        var p = this.queue[0];
-        if (!this.holdLast)
-            --p.remaining;
-        if (p.remaining <= 0) {
-            if (this.speakerID && p.characterID == this.speakerID)
+        var head = this.head;
+        if (head && head.remaining > 0)
+            --head.remaining;
+        if (!head || head.remaining <= 0) {
+            if (this.speakerID && this.queue.length > 0 && this.queue[0].characterID == this.speakerID)
                 this.HoldLast();
             else
-                this.ReleaseLast();
+                this.AdvanceQueue();
         }
     };
     QueueModel.prototype.OnKnock = function () {
         if (this.queue.length < this.maxLength && Math.random() < 0.3) {
-            this.AddStockPosition();
+            this.queue.push(this.MakeStockPosition());
             this.PeopleChanged.Call();
         }
     };
     // private implementation
-    QueueModel.prototype.AddStockPosition = function () {
+    QueueModel.prototype.MakeStockPosition = function () {
         var character;
         do {
             character = this.characterManager.GetRandomCharacter();
         } while (this.InQueue(character));
         var remaining = Math.floor(2 + Math.random() * 8);
         var ticket = String(this.ticket++);
-        var p = { characterID: character.id, remaining: remaining, ticket: ticket };
-        this.queue.push(p);
+        return { characterID: character.id, remaining: remaining, ticket: ticket };
     };
-    QueueModel.prototype.AddPlayerPosition = function () {
+    QueueModel.prototype.MakePlayerPosition = function () {
         var remaining = Math.floor(2 + Math.random() * 8);
         var ticket = String(this.ticket++);
-        var p = { characterID: null, remaining: remaining, ticket: ticket };
-        this.queue.push(p);
+        return { characterID: null, remaining: remaining, ticket: ticket };
     };
     QueueModel.prototype.HoldLast = function () {
-        this.holdLast = true;
         this.dialogID = this.characterManager.GetDialogID(this.speakerID, 0 /* QueueEscape */);
         this.DialogChanged.Call();
     };
@@ -1276,14 +1273,18 @@ var QueueModel = (function () {
             return p.characterID && p.characterID === c.id;
         });
     };
-    QueueModel.prototype.ReleaseLast = function () {
-        var p = this.queue[0];
-        this.holdLast = false;
-        this.queueHead = this.queue[0];
-        this.queue.shift();
-        this.PeopleChanged.Call();
-        if (!p.characterID)
-            this.PlayerTicketChanged.Call();
+    QueueModel.prototype.AdvanceQueue = function () {
+        if (this.queue.length > 0) {
+            this.head = this.queue[0];
+            this.queue.shift();
+            this.CurrentTicketChanged.Call();
+            this.PeopleChanged.Call();
+            if (!this.head.characterID)
+                this.PlayerTicketChanged.Call();
+        }
+        else {
+            this.head = null;
+        }
         this.CurrentTicketChanged.Call();
     };
     return QueueModel;
@@ -1305,11 +1306,11 @@ var QueuePresenter = (function () {
         queueView.Hidden.Add(this.OnHidden.bind(this));
         queueView.PersonClicked.Add(this.OnPersonClicked.bind(this));
         queueView.ReplyClicked.Add(this.OnReplyClicked.bind(this));
-        queueView.Shown.Add(this.OnQueueShown.bind(this));
+        queueView.Shown.Add(this.OnShown.bind(this));
     }
     // event handlers
     QueuePresenter.prototype.OnCurrentTicketChanged = function () {
-        this.UpdateCurrentTicket();
+        this.queueView.SetCurrentTicket(this.queueModel.GetCurrentTicket());
     };
     QueuePresenter.prototype.OnDialogChanged = function () {
         this.queueView.SetDialog(this.queueModel.GetSpeaker(), this.queueModel.GetDialog());
@@ -1327,31 +1328,16 @@ var QueuePresenter = (function () {
         this.queueModel.StartDialog(this.queueView.GetSpeaker());
     };
     QueuePresenter.prototype.OnPlayerTicketChanged = function () {
-        this.UpdatePlayerTicket();
+        this.queueView.SetPlayerTicket(this.queueModel.GetPlayerTicket());
     };
-    QueuePresenter.prototype.OnQueueShown = function () {
-        this.UpdatePlayerTicket();
-        this.UpdateCurrentTicket();
+    QueuePresenter.prototype.OnShown = function () {
+        this.queueView.SetPlayerTicket(this.queueModel.GetPlayerTicket());
+        this.queueView.SetCurrentTicket(this.queueModel.GetCurrentTicket());
         this.queueView.SetCharacters(this.queueModel.GetCharacters());
         this.queueView.SetDialog(this.queueModel.GetSpeaker(), this.queueModel.GetDialog());
     };
     QueuePresenter.prototype.OnReplyClicked = function () {
         this.queueModel.AdvanceDialog(this.queueView.GetSelectedReply());
-    };
-    // private implementation
-    QueuePresenter.prototype.UpdateCurrentTicket = function () {
-        var ticket = this.queueModel.GetCurrentTicket();
-        if (ticket)
-            this.queueView.SetCurrentTicket(ticket);
-        else
-            this.queueView.ClearCurrentTicket();
-    };
-    QueuePresenter.prototype.UpdatePlayerTicket = function () {
-        var ticket = this.queueModel.GetPlayerTicket();
-        if (ticket)
-            this.queueView.SetPlayerTicket(ticket);
-        else
-            this.queueView.ClearPlayerTicket();
     };
     return QueuePresenter;
 })();
@@ -1366,12 +1352,6 @@ var QueueView = (function () {
         this.Hidden = new Signal();
         this.Shown = new Signal();
     }
-    QueueView.prototype.ClearCurrentTicket = function () {
-        $("#current-ticket").hide();
-    };
-    QueueView.prototype.ClearPlayerTicket = function () {
-        $("#my-ticket").hide();
-    };
     QueueView.prototype.GetSelectedReply = function () {
         return this.selectedReply;
     };
@@ -1406,7 +1386,14 @@ var QueueView = (function () {
         }
     };
     QueueView.prototype.SetCurrentTicket = function (ticket) {
-        $("#current-ticket .number").text(ticket);
+        var e = $("#current-ticket .number");
+        if (ticket) {
+            e.text(ticket);
+            e.show();
+        }
+        else {
+            e.hide();
+        }
     };
     QueueView.prototype.SetDialog = function (speaker, dialog) {
         var OnClick = function (e) {
@@ -1437,7 +1424,14 @@ var QueueView = (function () {
         }
     };
     QueueView.prototype.SetPlayerTicket = function (ticket) {
-        $("#my-ticket .number").text(ticket);
+        var e = $("#my-ticket .number");
+        if (ticket) {
+            e.text(ticket);
+            e.show();
+        }
+        else {
+            e.hide();
+        }
     };
     // IClientView implementation
     QueueView.prototype.GetType = function () {
@@ -1473,6 +1467,7 @@ var SaveModel = (function () {
     // ISaveModel implementation
     SaveModel.prototype.ClearSaveData = function () {
         localStorage.clear();
+        location.reload();
     };
     SaveModel.prototype.GetSaveData = function () {
         var data = [];

@@ -14,16 +14,6 @@ class QueueView implements IQueueView, IClientView
 	Hidden        = new Signal();
 	Shown         = new Signal();
 
-	ClearCurrentTicket() : void
-	{
-		$("#current-ticket").hide();
-	}
-
-	ClearPlayerTicket() : void
-	{
-		$("#my-ticket").hide();
-	}
-
 	GetSelectedReply() : string
 	{
 		return this.selectedReply;
@@ -75,7 +65,16 @@ class QueueView implements IQueueView, IClientView
 
 	SetCurrentTicket(ticket : string) : void
 	{
-		$("#current-ticket .number").text(ticket);
+		var e = $("#current-ticket .number");
+		if (ticket)
+		{
+			e.text(ticket);
+			e.show();
+		}
+		else
+		{
+			e.hide();
+		}
 	}
 
 	SetDialog(speaker : ICharacter, dialog : IDialog) : void
@@ -120,7 +119,16 @@ class QueueView implements IQueueView, IClientView
 
 	SetPlayerTicket(ticket : string) : void
 	{
-		$("#my-ticket .number").text(ticket);
+		var e = $("#my-ticket .number")
+		if (ticket)
+		{
+			e.text(ticket);
+			e.show();
+		}
+		else
+		{
+			e.hide();
+		}
 	}
 
 	// IClientView implementation

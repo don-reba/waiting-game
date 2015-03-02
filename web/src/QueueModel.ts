@@ -13,21 +13,19 @@ class QueuePosition
 class QueueModelState
 {
 	queue     : QueuePosition[];
-	queueHead : QueuePosition;
+	head      : QueuePosition;
 	ticket    : number;
 	dialogID  : string;
 	speakerID : string;
-	holdLast  : boolean;
 }
 
 class QueueModel implements IQueueModel, IPersistent
 {
 	private queue     : QueuePosition[];
-	private queueHead : QueuePosition;
+	private head      : QueuePosition;
 	private ticket    : number;
 	private dialogID  : string;
 	private speakerID : string;
-	private holdLast  : boolean;
 
 	private maxLength = 6;
 
@@ -41,11 +39,14 @@ class QueueModel implements IQueueModel, IPersistent
 		timer.AddEvent(this.OnAdvance.bind(this), 40);
 		timer.AddEvent(this.OnKnock.bind(this),   37);
 
-		this.ticket = 0;
+		this.ticket = 1;
 
 		this.queue = [];
+
+		this.head = this.MakeStockPosition();
+
 		for (var i = 0; i != this.maxLength; ++i)
-			this.AddStockPosition();
+			this.queue.push(this.MakeStockPosition());
 	}
 
 	// IQueueModel implementation
@@ -57,15 +58,17 @@ class QueueModel implements IQueueModel, IPersistent
 
 	AdvanceDialog(ref : string) : void
 	{
+		var finishedLastMansDialog = !ref && this.queue[0].characterID == this.speakerID
+		var waitingToAdvance = !this.head || this.head.remaining <= 0;
+		if (finishedLastMansDialog && waitingToAdvance)
+			this.AdvanceQueue();
+
 		this.dialogID = ref;
 		if (!this.dialogID)
 			this.speakerID = null;
 		this.DialogChanged.Call();
 
 		this.dialogManager.ActivateDialog(this.dialogID);
-
-		if (this.holdLast)
-			this.ReleaseLast();
 	}
 
 	EndDialog() : void
@@ -78,7 +81,7 @@ class QueueModel implements IQueueModel, IPersistent
 	EnterQueue() : void
 	{
 		if (this.queue.every(p => { return p.characterID != null; }))
-			this.AddPlayerPosition();
+			this.queue.push(this.MakePlayerPosition());
 	}
 
 	GetCharacters() : ICharacter[]
@@ -99,8 +102,8 @@ class QueueModel implements IQueueModel, IPersistent
 
 	GetCurrentTicket() : string
 	{
-		if (this.queueHead)
-			return this.queueHead.ticket;
+		if (this.head)
+			return this.head.ticket;
 	}
 
 	GetDialog() : IDialog
@@ -145,22 +148,20 @@ class QueueModel implements IQueueModel, IPersistent
 	{
 		var state = <QueueModelState>JSON.parse(str);
 		this.queue      = state.queue;
-		this.queueHead  = state.queueHead;
+		this.head  = state.head;
 		this.ticket     = state.ticket;
 		this.dialogID   = state.dialogID;
 		this.speakerID  = state.speakerID;
-		this.holdLast   = state.holdLast;
 	}
 
 	ToPersistentString() : string
 	{
 		var state : QueueModelState =
 			{ queue     : this.queue
-			, queueHead : this.queueHead
+			, head : this.head
 			, ticket    : this.ticket
 			, dialogID  : this.dialogID
 			, speakerID : this.speakerID
-			, holdLast  : this.holdLast
 			};
 		return JSON.stringify(state);
 	}
@@ -169,19 +170,17 @@ class QueueModel implements IQueueModel, IPersistent
 
 	private OnAdvance() : void
 	{
-		if (this.queue.length == 0)
-			return;
+		var head = this.head;
 
-		var p = this.queue[0];
-		if (!this.holdLast)
-			--p.remaining;
+		if (head && head.remaining > 0)
+			--head.remaining;
 
-		if (p.remaining <= 0)
+		if (!head || head.remaining <= 0)
 		{
-			if (this.speakerID && p.characterID == this.speakerID)
+			if (this.speakerID && this.queue.length > 0 && this.queue[0].characterID == this.speakerID)
 				this.HoldLast();
 			else
-				this.ReleaseLast();
+				this.AdvanceQueue();
 		}
 	}
 
@@ -189,14 +188,14 @@ class QueueModel implements IQueueModel, IPersistent
 	{
 		if (this.queue.length < this.maxLength && Math.random() < 0.3)
 		{
-			this.AddStockPosition();
+			this.queue.push(this.MakeStockPosition());
 			this.PeopleChanged.Call();
 		}
 	}
 
 	// private implementation
 
-	private AddStockPosition() : void
+	private MakeStockPosition() : QueuePosition
 	{
 		var character;
 		do
@@ -206,31 +205,26 @@ class QueueModel implements IQueueModel, IPersistent
 
 		var remaining = Math.floor(2 + Math.random() * 8);
 		var ticket    = String(this.ticket++);
-		var p         =
+		return <QueuePosition>
 			{ characterID : character.id
 			, remaining   : remaining
 			, ticket      : ticket
 			};
-
-		this.queue.push(p);
 	}
 
-	private AddPlayerPosition() : void
+	private MakePlayerPosition() : QueuePosition
 	{
 		var remaining = Math.floor(2 + Math.random() * 8);
 		var ticket    = String(this.ticket++);
-		var p         =
+		return <QueuePosition>
 			{ characterID : null
 			, remaining   : remaining
 			, ticket      : ticket
 			};
-
-		this.queue.push(p);
 	}
 
 	private HoldLast() : void
 	{
-		this.holdLast = true;
 		this.dialogID = this.characterManager.GetDialogID(this.speakerID, DialogType.QueueEscape);
 		this.DialogChanged.Call();
 	}
@@ -240,16 +234,21 @@ class QueueModel implements IQueueModel, IPersistent
 		return this.queue.some(p => { return p.characterID && p.characterID === c.id; });
 	}
 
-	private ReleaseLast() : void
+	private AdvanceQueue() : void
 	{
-		var p = this.queue[0];
-
-		this.holdLast  = false;
-		this.queueHead = this.queue[0];
-		this.queue.shift();
-		this.PeopleChanged.Call();
-		if (!p.characterID)
-			this.PlayerTicketChanged.Call();
+		if (this.queue.length > 0)
+		{
+			this.head = this.queue[0];
+			this.queue.shift();
+			this.CurrentTicketChanged.Call();
+			this.PeopleChanged.Call();
+			if (!this.head.characterID)
+				this.PlayerTicketChanged.Call();
+		}
+		else
+		{
+			this.head = null;
+		}
 		this.CurrentTicketChanged.Call();
 	}
 }

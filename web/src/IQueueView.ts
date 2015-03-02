@@ -9,10 +9,6 @@ interface IQueueView
 	ReplyClicked  : Signal;
 	Shown         : Signal;
 
-	ClearCurrentTicket() : void;
-
-	ClearPlayerTicket() : void;
-
 	GetSelectedReply() : string;
 
 	GetSpeaker() : ICharacter;

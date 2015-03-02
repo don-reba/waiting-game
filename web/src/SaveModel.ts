@@ -7,6 +7,7 @@ class SaveModel implements ISaveModel
 	ClearSaveData()
 	{
 		localStorage.clear();
+		location.reload();
 	}
 
 	GetSaveData() : [string, string][]
