@@ -124,18 +124,20 @@ aside {
 	z-index     : 1;
 }
 .menu > button {
-	border           : 1px solid black;
 	background-color : #83B572;
-	font-size : 1em;
-	display : block;
-	width : 100%;
-	margin-top: 0.5em;
+	border           : 1px solid black;
+	cursor           : pointer;
+	display          : block;
+	font-size        : 1em;
+	margin-top       : 0.5em;
+	width            : 100%;
 }
 .menu > button:hover {
 	background-color : #B2D184;
 }
 .menu > button[disabled]:hover {
 	background-color : #83B572;
+	cursor           : default;
 }
 .game {
 	margin          : 0em auto;
@@ -239,6 +241,15 @@ aside {
 }
 #home-body {
 	position : relative;
+}
+#home-invites label {
+	display : block;
+}
+#home-invites label.checked {
+	background-color : #B2D184;
+}
+#home-invites label.disabled {
+	color : #444;
 }
 #home-view {
 	border         : 1px solid black;

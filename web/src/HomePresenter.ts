@@ -1,35 +1,40 @@
-/// <reference path="IHomeModel.ts"  />
-/// <reference path="IHomeView.ts"   />
-/// <reference path="IMainModel.ts"  />
-/// <reference path="IQueueModel.ts" />
+/// <reference path="IFriendsMenuModel.ts" />
+/// <reference path="IHomeModel.ts"        />
+/// <reference path="IHomeView.ts"         />
+/// <reference path="IMainModel.ts"        />
+/// <reference path="IQueueModel.ts"       />
 
 class HomePresenter
 {
 	constructor
-		( private homeModel  : IHomeModel
-		, private mainModel  : IMainModel
-		, private queueModel : IQueueModel
-		, private homeView   : IHomeView
+		( private homeModel        : IHomeModel
+		, private friendsMenuModel : IFriendsMenuModel
+		, private mainModel        : IMainModel
+		, private queueModel       : IQueueModel
+		, private homeView         : IHomeView
 		)
 	{
 		homeModel.DialogChanged.Add(this.OnDialogChanged.bind(this));
 		homeModel.FriendsArriving.Add(this.OnFriendsArriving.bind(this));
 		homeModel.GuestsChanged.Add(this.OnGuestsChanged.bind(this));
 
-		homeView.FriendSelected.Add(this.OnFriendSelected.bind(this));
-		homeView.CloseInvites.Add(this.OnCloseInvites.bind(this));
+		friendsMenuModel.Cleared.Add(this.OnFriendsMenuCleared.bind(this));
+		friendsMenuModel.Disabled.Add(this.OnFriendsMenuDisabled.bind(this));
+		friendsMenuModel.Emptied.Add(this.OnFriendsMenuEmptied.bind(this));
+		friendsMenuModel.Enabled.Add(this.OnFriendsMenuEnabled.bind(this));
+		friendsMenuModel.Filled.Add(this.OnFriendsMenuFilled.bind(this));
+		friendsMenuModel.Hidden.Add(this.OnFriendsMenuHidden.bind(this));
+		friendsMenuModel.Selected.Add(this.OnFriendsMenuSelected.bind(this));
+		friendsMenuModel.Shown.Add(this.OnFriendsMenuShown.bind(this));
+
+		homeView.FriendClicked.Add(this.OnFriendClicked.bind(this));
 		homeView.GoToQueue.Add(this.OnGoToQueue.bind(this));
 		homeView.GoToStore.Add(this.OnGoToStore.bind(this));
 		homeView.GuestClicked.Add(this.OnGuestClicked.bind(this));
-		homeView.InviteFriends.Add(this.OnInviteFriends.bind(this));
-		homeView.OpenInvites.Add(this.OnOpenInvites.bind(this));
+		homeView.InviteFriendsClicked.Add(this.OnInviteFriendsClicked.bind(this));
+		homeView.InvitesClicked.Add(this.OnInvitesClicked.bind(this));
 		homeView.ReplyClicked.Add(this.OnReplyClicked.bind(this));
 		homeView.Shown.Add(this.OnShown.bind(this));
-	}
-
-	private OnCloseInvites() : void
-	{
-		this.homeView.HideFriends();
 	}
 
 	private OnDialogChanged() : void
@@ -41,16 +46,59 @@ class HomePresenter
 			this.homeModel.LetTheGuestIn();
 	}
 
-	private OnFriendSelected() : void
+	private OnInvitesClicked() : void
 	{
-		this.homeModel.SetFriendStatus(this.homeView.GetSelectedFriend(), this.homeView.GetSelectedFriendStatus());
+		this.friendsMenuModel.ToggleVisibility();
+	}
 
-		if (this.homeModel.IsFriendLimitReached())
-			this.homeView.DisableUnselectedFriends();
-		else
-			this.homeView.EnableAllFriends();
+	private OnFriendClicked() : void
+	{
+		this.friendsMenuModel.ToggleSelection(this.homeView.GetMenuSelection());
+	}
 
-		this.homeView.SetInviteStatus(this.homeModel.IsInviteEnabled());
+	private OnFriendsMenuCleared() : void
+	{
+		this.homeView.SetMenuFriendState(this.friendsMenuModel.GetSelection(), false);
+	}
+
+	private OnFriendsMenuDisabled() : void
+	{
+		this.homeView.DisableUnselectedFriends();
+	}
+
+	private OnFriendsMenuEmptied() : void
+	{
+		this.homeView.SetInviteStatus(false);
+	}
+
+	private OnFriendsMenuEnabled() : void
+	{
+		this.homeView.EnableAllFriends();
+	}
+
+	private OnFriendsMenuFilled() : void
+	{
+		this.homeView.SetInviteStatus(true);
+	}
+
+	private OnFriendsMenuSelected() : void
+	{
+		this.homeView.SetMenuFriendState(this.friendsMenuModel.GetSelection(), true);
+	}
+
+	private OnFriendsMenuShown() : void
+	{
+		this.ShowFriendsMenu();
+	}
+
+	private OnFriendsMenuChanged() : void
+	{
+		this.homeView.ShowFriends(this.friendsMenuModel.GetFriends());
+	}
+
+	private OnFriendsMenuHidden() : void
+	{
+		this.homeView.HideFriends();
 	}
 
 	private OnFriendsArriving() : void
@@ -80,17 +128,10 @@ class HomePresenter
 		this.homeView.SetCanvas(this.homeModel.GetCanvas());
 	}
 
-	private OnInviteFriends() : void
+	private OnInviteFriendsClicked() : void
 	{
 		this.homeView.HideFriends();
-		this.homeModel.InviteFriends();
-	}
-
-	private OnOpenInvites() : void
-	{
-		this.homeModel.ClearFriendSelection();
-		this.homeView.ShowFriends(this.homeModel.GetFriends());
-		this.homeView.SetInviteStatus(this.homeModel.IsInviteEnabled());
+		this.homeModel.InviteFriends(this.friendsMenuModel.GetSelectedFriends());
 	}
 
 	private OnReplyClicked() : void
@@ -100,10 +141,31 @@ class HomePresenter
 
 	private OnShown() : void
 	{
-		this.homeModel.ClearFriendSelection();
-		this.UpdateButtonStates();
 		this.homeView.SetCanvas(this.homeModel.GetCanvas());
 		this.homeView.SetDialog(this.homeModel.GetSpeaker(), this.homeModel.GetDialog());
+		this.UpdateButtonStates();
+		this.ShowFriendsMenu();
+	}
+
+	// private implementation
+
+	private ShowFriendsMenu() : void
+	{
+		if (!this.friendsMenuModel.IsVisible())
+			return;
+
+		this.homeView.ShowFriends(this.friendsMenuModel.GetFriends());
+
+		this.homeView.SetInviteStatus(!this.friendsMenuModel.IsEmpty());
+
+		var selected = this.friendsMenuModel.GetSelectedFriends();
+		for (var i = 0; i != selected.length; ++i)
+			this.homeView.SetMenuFriendState(selected[i], true);
+
+		if (this.friendsMenuModel.IsEnabled())
+			this.homeView.EnableAllFriends();
+		else
+			this.homeView.DisableUnselectedFriends();
 	}
 
 	private UpdateButtonStates() : void

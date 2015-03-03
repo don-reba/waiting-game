@@ -12,27 +12,17 @@ interface IHomeModel
 
 	AreGuestsIn() : boolean;
 
-	ClearFriendSelection() : void;
-
 	GetCanvas() : HomeCanvas;
 
 	GetDialog() : IDialog;
 
-	GetFriends() : ICharacter[];
-
 	GetSpeaker() : ICharacter;
 
-	InviteFriends() : void;
-
-	IsFriendLimitReached() : boolean
+	InviteFriends(friends : ICharacter[]) : void;
 
 	IsGuestAtTheDoor() : boolean;
 
-	IsInviteEnabled() : boolean;
-
 	LetTheGuestIn() : void;
-
-	SetFriendStatus(character : ICharacter, enabled : boolean) : void;
 
 	StartDialog(speaker : ICharacter) : void;
 }

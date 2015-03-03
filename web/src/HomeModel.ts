@@ -4,28 +4,28 @@
 
 class HomeModelState
 {
-	waitingGuests : string[];
-	guests        : string[];
-	atEntrance    : boolean;
-	activity      : HomeItem;
-	dialogID      : string;
-	speakerID     : string;
+	waitingGuests   : string[];
+	guests          : string[];
+	atEntrance      : boolean;
+	activity        : HomeItem;
+	dialogID        : string;
+	speakerID       : string;
+	invitesVisible  : boolean;
 }
 
 class HomeModel implements IHomeModel, IPersistent
 {
 	private canvas          : string[][];
-	private selectedFriends : string[];
 	private waitingGuests   : string[];
 	private guests          : string[];
 	private atEntrance      : boolean;
 	private items           : HomeItem[];
 	private activity        : HomeItem;
+	private invitesVisible  : boolean;
 
 	private dialogID  : string;
 	private speakerID : string;
 
-	private maxFriends = 3;  // has to be single-digit
 	private nx         = 78;
 	private ny         = 23;
 
@@ -47,8 +47,8 @@ class HomeModel implements IHomeModel, IPersistent
 		for (var y = 0; y != this.ny; ++y)
 			this.canvas.push(new Array<string>(this.nx));
 
-		this.waitingGuests = [];
-		this.guests        = [];
+		this.waitingGuests   = [];
+		this.guests          = [];
 
 		this.items = [ HomeItem.TV ];
 	}
@@ -64,11 +64,6 @@ class HomeModel implements IHomeModel, IPersistent
 	AreGuestsIn() : boolean
 	{
 		return this.waitingGuests.length + this.guests.length > 0;
-	}
-
-	ClearFriendSelection() : void
-	{
-		this.selectedFriends = [];
 	}
 
 	GetCanvas() : HomeCanvas
@@ -103,32 +98,18 @@ class HomeModel implements IHomeModel, IPersistent
 		return this.dialogManager.GetDialog(this.dialogID);
 	}
 
-	GetFriends() : ICharacter[]
-	{
-		return this.characterManager.GetAllCharacters();
-	}
-
 	GetSpeaker() : ICharacter
 	{
 		return this.characterManager.GetCharacter(this.speakerID);
 	}
 
-	InviteFriends() : void
+	InviteFriends(friends : ICharacter[]) : void
 	{
-		if (this.selectedFriends.length == 0)
-			return;
-
-		for (var i = 0; i != this.selectedFriends.length; ++i)
-			this.waitingGuests.push(this.selectedFriends[i]);
-		this.selectedFriends = [];
+		for (var i = 0; i != friends.length; ++i)
+			this.waitingGuests.push(friends[i].id);
 		this.guests          = [];
 		this.activity        = HomeItem.TV;
 		this.FriendsArriving.Call();
-	}
-
-	IsFriendLimitReached() : boolean
-	{
-		return this.selectedFriends.length >= this.maxFriends;
 	}
 
 	IsGuestAtTheDoor() : boolean
@@ -136,31 +117,10 @@ class HomeModel implements IHomeModel, IPersistent
 		return this.atEntrance;
 	}
 
-	IsInviteEnabled() : boolean
-	{
-		return this.selectedFriends.length > 0;
-	}
-
 	LetTheGuestIn() : void
 	{
 		this.atEntrance = false;
 		this.GuestsChanged.Call();
-	}
-
-	SetFriendStatus(character : ICharacter, enabled : boolean) : void
-	{
-		var f = this.selectedFriends;
-		var i = f.indexOf(character.id);
-		if (enabled)
-		{
-			if (i < 0)
-				f.push(character.id);
-		}
-		else
-		{
-			if (i >= 0)
-				f.splice(i, 1);
-		}
 	}
 
 	StartDialog(speaker : ICharacter) : void
@@ -201,23 +161,25 @@ class HomeModel implements IHomeModel, IPersistent
 	FromPersistentString(str : string) : void
 	{
 		var state = <HomeModelState>JSON.parse(str);
-		this.waitingGuests = state.waitingGuests;
-		this.guests        = state.guests;
-		this.atEntrance    = state.atEntrance;
-		this.activity      = state.activity;
-		this.dialogID      = state.dialogID;
-		this.speakerID     = state.speakerID;
+		this.waitingGuests   = state.waitingGuests;
+		this.guests          = state.guests;
+		this.atEntrance      = state.atEntrance;
+		this.activity        = state.activity;
+		this.dialogID        = state.dialogID;
+		this.speakerID       = state.speakerID;
+		this.invitesVisible  = state.invitesVisible;
 	}
 
 	ToPersistentString() : string
 	{
 		var state : HomeModelState =
-			{ waitingGuests : this.waitingGuests
-			, guests        : this.guests
-			, atEntrance    : this.atEntrance
-			, activity      : this.activity
-			, dialogID      : this.dialogID
-			, speakerID     : this.speakerID
+			{ waitingGuests   : this.waitingGuests
+			, guests          : this.guests
+			, atEntrance      : this.atEntrance
+			, activity        : this.activity
+			, dialogID        : this.dialogID
+			, speakerID       : this.speakerID
+			, invitesVisible  : this.invitesVisible
 			};
 		return JSON.stringify(state);
 	}

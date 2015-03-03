@@ -4,23 +4,22 @@
 
 interface IHomeView
 {
-	CloseInvites   : Signal;
-	FriendSelected : Signal;
-	GoToQueue      : Signal;
-	GoToStore      : Signal;
-	GuestClicked   : Signal;
-	InviteFriends  : Signal;
-	OpenInvites    : Signal;
-	ReplyClicked   : Signal;
-	Shown          : Signal;
+	FriendClicked        : Signal;
+	GoToQueue            : Signal;
+	GoToStore            : Signal;
+	GuestClicked         : Signal;
+	InviteFriendsClicked : Signal;
+	InvitesClicked       : Signal;
+	ReplyClicked         : Signal;
+	Shown                : Signal;
 
 	DisableUnselectedFriends() : void;
 
 	EnableAllFriends() : void;
 
-	GetSelectedFriend() : ICharacter;
+	GetInvitesVisibility() : boolean;
 
-	GetSelectedFriendStatus() : boolean;
+	GetMenuSelection() : ICharacter;
 
 	GetSelectedGuest() : ICharacter;
 
@@ -37,6 +36,8 @@ interface IHomeView
 	SetDialog(speaker : ICharacter, dialog : IDialog) : void;
 
 	SetInviteStatus(status : boolean) : void;
+
+	SetMenuFriendState(character : ICharacter, checked : boolean) : void;
 
 	ShowFriends(characters : ICharacter[]) : void;
 

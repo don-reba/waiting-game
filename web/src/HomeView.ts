@@ -4,48 +4,55 @@
 
 class HomeView implements IHomeView, IClientView
 {
-	private selectedFriend       : ICharacter;
-	private selectedFriendStatus : boolean;
-	private selectedGuest        : ICharacter;
-	private selectedReply        : string;
+	private menuSelection : ICharacter;
+	private selectedGuest : ICharacter;
+	private selectedReply : string;
 
 	// IHomeView implementation
 
-	CloseInvites   = new Signal();
-	FriendSelected = new Signal();
-	GoToQueue      = new Signal();
-	GoToStore      = new Signal();
-	GuestClicked   = new Signal();
-	InviteFriends  = new Signal();
-	OpenInvites    = new Signal();
-	ReplyClicked   = new Signal();
-	Shown          = new Signal();
+	FriendClicked        = new Signal();
+	FriendsClicked       = new Signal();
+	GoToQueue            = new Signal();
+	GoToStore            = new Signal();
+	GuestClicked         = new Signal();
+	InviteFriendsClicked = new Signal();
+	InvitesClicked       = new Signal();
+	ReplyClicked         = new Signal();
+	Shown                = new Signal();
 
 	DisableUnselectedFriends() : void
 	{
-		var checkboxes = $("#home-invites input[type='checkbox']");
-		for (var i = 0; i != checkboxes.length; ++i)
+		var labels = $("#home-invites label");
+		for (var i = 0; i != labels.length; ++i)
 		{
-			var check : JQuery = $(checkboxes[i]);
-			check.prop("disabled", !check.prop("checked"));
+			var label : JQuery = $(labels[i]);
+			if (!label.hasClass("checked"))
+			{
+				label.addClass("disabled");
+				label.removeClass("fg-clickable");
+			}
 		}
 	}
 
 	EnableAllFriends() : void
 	{
-		var checkboxes = $("#home-invites input[type='checkbox']");
-		for (var i = 0; i != checkboxes.length; ++i)
-			$(checkboxes[i]).prop("disabled", false);
+		var labels = $("#home-invites label");
+		for (var i = 0; i != labels.length; ++i)
+		{
+			var label = $(labels[i]);
+			label.removeClass("disabled");
+			label.addClass("fg-clickable");
+		}
 	}
 
-	GetSelectedFriend() : ICharacter
+	GetInvitesVisibility() : boolean
 	{
-		return this.selectedFriend;
+		return $("#home-invites").is(":visible");
 	}
 
-	GetSelectedFriendStatus() : boolean
+	GetMenuSelection() : ICharacter
 	{
-		return this.selectedFriendStatus;
+		return this.menuSelection;
 	}
 
 	GetSelectedGuest() : ICharacter
@@ -141,51 +148,49 @@ class HomeView implements IHomeView, IClientView
 		div.show();
 	}
 
-	SetInviteStatus(status : boolean) : void
+	SetInviteStatus(enabled : boolean) : void
 	{
-		$("#invite-friends").prop("disabled", !status);
+		$("#invite-friends").prop("disabled", !enabled);
+	}
+
+	SetMenuFriendState(character : ICharacter, checked : boolean) : void
+	{
+		var label = $("#home-invites ." + character.id);
+		if (checked)
+			label.addClass("checked");
+		else
+			label.removeClass("checked");
 	}
 
 	ShowFriends(characters : ICharacter[]) : void
 	{
-		var OnLabelClick = function(e)
+		var OnClick = function(e)
 		{
-			var check : JQuery = e.data;
-			if (check.prop("disabled"))
-				return;
-			check.prop("checked", !check.prop("checked"));
-			check.change();
-		}
-		var OnCheckboxChange = function(e)
-		{
-			var check : JQuery = e.data;
-			this.selectedFriend       = check.data("character");
-			this.selectedFriendStatus = check.prop("checked");
-			this.FriendSelected.Call();
+			this.menuSelection = e.data;
+			this.FriendClicked.Call();
 		}
 
-		var invites = $("#home-invites")
+		var invites = $("#home-invites");
 		invites.empty();
 
 		for (var i = 0; i != characters.length; ++i)
 		{
 			var c = characters[i];
 
-			var checkbox = $("<input type='checkbox'>");
-			var label    = $("<label>" + c.name + "</label>");
-			label.click(checkbox, OnLabelClick);
-			checkbox.data("character", c);
-			checkbox.change(checkbox, OnCheckboxChange.bind(this));
-			invites.append(checkbox).append(label).append("<br>");
+			var label = $("<label>");
+			label.text(c.name);
+			label.addClass("fg-clickable");
+			label.addClass(c.id);
+			label.click(c, OnClick.bind(this));
+
+			invites.append(label);
 		}
 
 		var button = $("<button id='invite-friends'>пригласить в гости</button>");
-		button.click(() => { this.InviteFriends.Call() });
+		button.click(() => { this.InviteFriendsClicked.Call() });
 		invites.append(button);
 
-		Util.AlignToBottom($("#toggle-invites"), invites);
-
-		invites.height();
+		Util.AlignUnderneath($("#toggle-invites"), invites);
 
 		invites.show();
 	}
@@ -216,7 +221,6 @@ class HomeView implements IHomeView, IClientView
 	{
 		e.html("<div id='home-dialog'></div><div id='home-view'></div>");
 
-		$("#home-invites").hide();
 		$("#home-dialog").hide();
 
 		var goQueue = $("<button id='go-queue'>");
@@ -231,7 +235,7 @@ class HomeView implements IHomeView, IClientView
 
 		var toggleInvites = $("<button id='toggle-invites'>");
 		toggleInvites.text("друзья…");
-		toggleInvites.click(() => { if ($("#home-invites").is(":visible")) this.CloseInvites.Call(); else this.OpenInvites.Call() });
+		toggleInvites.click(() => { this.InvitesClicked.Call() });
 
 		var invites = $("<div id='home-invites' class='menu fg-color'>");
 		invites.hide();

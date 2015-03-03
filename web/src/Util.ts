@@ -6,7 +6,7 @@ module Util
 			return a[Math.floor(Math.random() * a.length)];
 	}
 
-	export function AlignToBottom(anchor : JQuery, element : JQuery) : void
+	export function AlignUnderneath(anchor : JQuery, element : JQuery) : void
 	{
 		var p = anchor.position();
 		var h = anchor.outerHeight(false);
