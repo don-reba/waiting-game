@@ -8,9 +8,13 @@
 	{ "id"    : "Shady"
 	, "name"  : "Тёмная личность"
 	, "queueConversation" :
-		[ { "dialog" : "ShadyDescriptionIntro",         "requires" : [ "ShadyIntro" ] }
-		, { "dialog" : "ShadyMachinationsQuestIntro",   "requires" : [ "MachinationsQuestPending" ] }
-		, { "dialog" : "ShadyMachinationsRefusedIntro", "requires" : [ "MachinationsRefused" ] }
+		[ { "dialog" : "ShadyDescriptionIntro",               "requires" : [ "ShadyIntro" ] }
+		, { "dialog" : "ShadyIntroductionIntro",              "requires" : [ "ShadyIntroductionPending" ] }
+		, { "dialog" : "ShadyMachinationsRefusedIntro",       "requires" : [ "MachinationsRefused" ] }
+		, { "dialog" : "ShadyMachinationsQuest1Intro",        "requires" : [ "MachinationsQuest1Pending" ] }
+		, { "dialog" : "ShadyMachinationsFiller1Intro",       "requires" : [ "MachinationsQuest1" ] }
+		, { "dialog" : "ShadyMachinationsQuest1ReceiveIntro", "requires" : [ "MachinationsQuest1Done" ] }
+		, { "dialog" : "ShadyPurchaseMoustacheIntro",         "requires" : [ "MoustacheAbsent" ] }
 		]
 	, "queueEscape" :
 		[ { "dialog" : "ShadyQueueEscapeIntro" } ]
@@ -24,10 +28,12 @@
 	{ "id"    : "MrMoustache"
 	, "name"  : "Усач"
 	, "queueConversation" :
-		[ { "dialog" : "MrMoustacheDescriptionIntro",  "requires" : [ "MrMoustacheIntro" ] }
-		, { "dialog" : "MrMoustacheNoMoustacheIntro",  "requires" : [ "MrMoustacheIntroductionPending" ] }
-		, { "dialog" : "MrMoustacheIntroductionIntro", "requires" : [ "MrMoustacheIntroductionPending", "MoustacheEquipped" ] }
-		, { "dialog" : "MrMoustacheFiller1Intro",      "requires" : [ "MrMoustacheFiller1Pending" ] }
+		[ { "dialog" : "MrMoustacheDescriptionIntro",           "requires" : [ "MrMoustacheIntro" ] }
+		, { "dialog" : "MrMoustacheNoMoustacheIntro",           "requires" : [ "MrMoustacheIntroductionPending" ] }
+		, { "dialog" : "MrMoustacheIntroductionIntro",          "requires" : [ "MrMoustacheIntroductionPending", "MoustacheEquipped" ] }
+		, { "dialog" : "MrMoustacheFiller1Intro",               "requires" : [ "MrMoustacheFiller1Pending" ] }
+		, { "dialog" : "MrMoustacheFiller2Intro",               "requires" : [ "MrMoustacheFiller2Pending" ] }
+		, { "dialog" : "MrMoustacheMoustacheMachinationsIntro", "requires" : [ "MoustacheMachinations" ] }
 		]
 	},
 	{ "id"    : "Poet"
@@ -55,6 +61,10 @@
 	},
 	{ "id"    : "Patient"
 	, "name"  : "Тяжелобольной"
+	, "queueConversation" :
+		[ { "dialog" : "PatientDescriptionIntro",  "requires" : [ "PatientIntro" ] }
+		, { "dialog" : "PatientIntroductionIntro", "requires" : [ "PatientIntroductionPending" ] }
+		]
 	},
 	{ "id"    : "Villain"
 	, "name"  : "Злодей"
@@ -85,6 +95,13 @@
 		, { "dialog" : "RobochefInstallMicrochipIntro", "requires" : [ "MicrochipQuest"] }
 		, { "dialog" : "RobochefFiller1Intro",          "requires" : [ "RobochefFiller1Pending"] }
 		, { "dialog" : "RobochefFiller2Intro",          "requires" : [ "RobochefFiller2Pending"] }
+		, { "dialog" : "RobochefFiller3Intro",          "requires" : [ "RobochefFiller3Pending"] }
+		, { "dialog" : "RobochefStandardIntro" }
+		]
+	, "queueEscape" :
+		[ { "dialog" : "RobochefEscape1" }
+		, { "dialog" : "RobochefEscape2", "requires" : [ "RobochefEscape2Pending" ] }
+		, { "dialog" : "RobochefEscape3", "requires" : [ "RobochefEscape3Pending" ] }
 		]
 	},
 	{ "id"    : "Prototype"
