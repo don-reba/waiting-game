@@ -168,6 +168,41 @@ aside {
 	left   : 0;
 }
 
+/* dialog */
+
+.dialog {
+	border         : 1px solid black;
+	border-radius  : 1em;
+	color          : #006;
+	line-height    : 1.1em;
+	margin         : 0 auto;
+	min-height     : 2em;
+	padding        : 1em;
+	position       : absolute;
+	text-align     : left;
+	width          : 30em;
+
+	left           : 50%;
+	top            : 50%;
+	transform      : translateX(-50%) translateY(-50%);
+}
+.dialog-speaker {
+	position : absolute;
+
+	left     : 1.5em;
+	top      : -1.5em;
+}
+.queue-text {
+	background-color : #94BF78;
+	margin-bottom    : 1em;
+	padding          : 0.5em;
+}
+.dialog-replies {
+	list-style-type     : decimal;
+	list-style-position : outside;
+	padding : 0.5em 0.5em 0.5em 1.5em;
+}
+
 /* about menu */
 
 .about {
@@ -267,23 +302,7 @@ aside {
 	z-index        : 0;
 }
 #home-dialog {
-	background-color : #D0D0D0;
-	border-radius    : 1em;
-	font-size        : 1.2em;
-	position         : absolute;
-	padding          : 0 2em;
-	text-align       : left;
-
-	right            : 8em;
-	bottom           : 4em;
-	left             : 8em;
-	top              : 4em;
-
 	z-index          : 1;
-}
-#home-dialog li {
-	list-style-type     : decimal;
-	list-style-position : inside;
 }
 #home-view span.character {
 	box-sizing       : border-box;
@@ -367,37 +386,6 @@ aside {
 	right    : 0;
 	bottom   : 0;
 	left     : 16.5em;
-}
-.queue-dialog {
-	border         : 1px solid black;
-	border-radius  : 1em;
-	color          : #006;
-	line-height    : 1.1em;
-	margin         : 0 auto;
-	min-height     : 2em;
-	padding        : 1em;
-	position       : relative;
-	text-align     : left;
-	width          : 30em;
-
-	top            : 50%;
-	transform      : translateY(-50%);
-}
-.dialog-speaker {
-	position : absolute;
-
-	left     : 1.5em;
-	top      : -1.5em;
-}
-.queue-text {
-	background-color : #94BF78;
-	margin-bottom    : 1em;
-	padding          : 0.5em;
-}
-.dialog-replies {
-	list-style-type     : decimal;
-	list-style-position : outside;
-	padding : 0.5em 0.5em 0.5em 1.5em;
 }
 
 /* store */

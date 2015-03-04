@@ -115,26 +115,28 @@ class HomeView implements IHomeView, IClientView
 
 	SetDialog(speaker : ICharacter, dialog : IDialog) : void
 	{
+
 		var OnClick = function(e)
 		{
 			this.selectedReply = e.data;
 			this.ReplyClicked.Call();
 		}
 
-		var div = $("#home-dialog");
+		var speakerElement = $("#home-dialog .dialog-speaker");
+		var textElement    = $("#home-dialog .dialog-text");
+		var repliesElement = $("#home-dialog .dialog-replies");
+
 		if (!dialog)
 		{
-			div.hide();
+			$("#home-dialog").hide();
 			return;
 		}
-		div.empty();
 
-		if (!dialog)
-			return;
+		speakerElement.text(speaker.name);
 
-		div.append($("<p><strong>" + speaker.name + "</strong>: " + dialog.text + "</p>"));
+		textElement.html(dialog.text);
 
-		var ol = $("<ol>");
+		repliesElement.empty();
 		for (var i = 0; i != dialog.replies.length; ++i)
 		{
 			var reply = dialog.replies[i];
@@ -142,10 +144,10 @@ class HomeView implements IHomeView, IClientView
 			var li = $("<li class='fg-clickable'>");
 			li.html(reply.text);
 			li.click(reply.ref, OnClick.bind(this));
-			ol.append(li);
+			repliesElement.append(li);
 		}
-		div.append(ol);
-		div.show();
+
+		$("#home-dialog").show();
 	}
 
 	SetInviteStatus(enabled : boolean) : void
@@ -219,7 +221,7 @@ class HomeView implements IHomeView, IClientView
 
 	Show(e : JQuery) : void
 	{
-		e.html("<div id='home-dialog'></div><div id='home-view'></div>");
+		e.html("<div id='home-dialog' class='dialog fg-color'><div class='dialog-speaker'></div><p class='dialog-text'></p><ol class='dialog-replies'></ol></div><div id='home-view'></div>");
 
 		$("#home-dialog").hide();
 

@@ -84,9 +84,9 @@ class QueueView implements IQueueView, IClientView
 			this.ReplyClicked.Call();
 		}
 
-		var speakerElement = $("#dialog-speaker");
-		var textElement    = $("#dialog-text");
-		var repliesElement = $("#dialog-replies");
+		var speakerElement = $("#queue-dialog .dialog-speaker");
+		var textElement    = $("#queue-dialog .dialog-text");
+		var repliesElement = $("#queue-dialog .dialog-replies");
 
 		if (!dialog)
 		{
@@ -147,7 +147,7 @@ class QueueView implements IQueueView, IClientView
 	{
 		e.append("<div id='queue-people' class='queue-people'>");
 		e.append("<div class='queue-spacer'>");
-		e.append("<div id='queue-body' class='queue-body'><div class='queue-dialog'><div id='dialog-speaker' class='dialog-speaker'></div><p id='dialog-text' class='dialog-text'></p><ol id='dialog-replies' class='dialog-replies'></ol></div>");
+		e.append("<div id='queue-body' class='queue-body'><div id='queue-dialog' class='dialog'><div class='dialog-speaker'></div><p class='dialog-text'></p><ol class='dialog-replies'></ol></div></div>");
 
 		var goHome = $("<button id='go-home'>");
 		goHome.text("вернуться домой");

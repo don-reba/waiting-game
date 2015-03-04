@@ -627,6 +627,7 @@ var HomePresenter = (function () {
         this.homeView.SetCanvas(this.homeModel.GetCanvas());
     };
     HomePresenter.prototype.OnInviteFriendsClicked = function () {
+        this.invitesModel.ToggleVisibility();
         this.homeView.HideFriends();
         this.homeModel.InviteFriends(this.invitesModel.GetSelectedFriends());
     };
@@ -754,25 +755,24 @@ var HomeView = (function () {
             this.selectedReply = e.data;
             this.ReplyClicked.Call();
         };
-        var div = $("#home-dialog");
+        var speakerElement = $("#home-dialog .dialog-speaker");
+        var textElement = $("#home-dialog .dialog-text");
+        var repliesElement = $("#home-dialog .dialog-replies");
         if (!dialog) {
-            div.hide();
+            $("#home-dialog").hide();
             return;
         }
-        div.empty();
-        if (!dialog)
-            return;
-        div.append($("<p><strong>" + speaker.name + "</strong>: " + dialog.text + "</p>"));
-        var ol = $("<ol>");
+        speakerElement.text(speaker.name);
+        textElement.html(dialog.text);
+        repliesElement.empty();
         for (var i = 0; i != dialog.replies.length; ++i) {
             var reply = dialog.replies[i];
             var li = $("<li class='fg-clickable'>");
             li.html(reply.text);
             li.click(reply.ref, OnClick.bind(this));
-            ol.append(li);
+            repliesElement.append(li);
         }
-        div.append(ol);
-        div.show();
+        $("#home-dialog").show();
     };
     HomeView.prototype.SetInviteStatus = function (enabled) {
         $("#invite").prop("disabled", !enabled);
@@ -824,7 +824,7 @@ var HomeView = (function () {
     };
     HomeView.prototype.Show = function (e) {
         var _this = this;
-        e.html("<div id='home-dialog'></div><div id='home-view'></div>");
+        e.html("<div id='home-dialog' class='dialog fg-color'><div class='dialog-speaker'></div><p class='dialog-text'></p><ol class='dialog-replies'></ol></div><div id='home-view'></div>");
         $("#home-dialog").hide();
         var goQueue = $("<button id='go-queue'>");
         goQueue.text("в очередь");
@@ -1496,9 +1496,9 @@ var QueueView = (function () {
             this.selectedReply = e.data;
             this.ReplyClicked.Call();
         };
-        var speakerElement = $("#dialog-speaker");
-        var textElement = $("#dialog-text");
-        var repliesElement = $("#dialog-replies");
+        var speakerElement = $("#queue-dialog .dialog-speaker");
+        var textElement = $("#queue-dialog .dialog-text");
+        var repliesElement = $("#queue-dialog .dialog-replies");
         if (!dialog) {
             speakerElement.hide();
             textElement.hide();
@@ -1541,7 +1541,7 @@ var QueueView = (function () {
         var _this = this;
         e.append("<div id='queue-people' class='queue-people'>");
         e.append("<div class='queue-spacer'>");
-        e.append("<div id='queue-body' class='queue-body'><div class='queue-dialog'><div id='dialog-speaker' class='dialog-speaker'></div><p id='dialog-text' class='dialog-text'></p><ol id='dialog-replies' class='dialog-replies'></ol></div>");
+        e.append("<div id='queue-body' class='queue-body'><div id='queue-dialog' class='dialog'><div class='dialog-speaker'></div><p class='dialog-text'></p><ol class='dialog-replies'></ol></div></div>");
         var goHome = $("<button id='go-home'>");
         goHome.text("вернуться домой");
         goHome.click(function () {

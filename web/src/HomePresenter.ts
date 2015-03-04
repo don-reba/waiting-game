@@ -130,6 +130,7 @@ class HomePresenter
 
 	private OnInviteFriendsClicked() : void
 	{
+		this.invitesModel.ToggleVisibility();
 		this.homeView.HideFriends();
 		this.homeModel.InviteFriends(this.invitesModel.GetSelectedFriends());
 	}
