@@ -139,6 +139,15 @@ aside {
 	background-color : #83B572;
 	cursor           : default;
 }
+.menu label {
+	display : block;
+}
+.menu label.checked {
+	background-color : #B2D184;
+}
+.menu label.disabled {
+	color : #444;
+}
 .game {
 	margin          : 0em auto;
 	border-collapse : separate;
@@ -241,15 +250,6 @@ aside {
 }
 #home-body {
 	position : relative;
-}
-#home-invites label {
-	display : block;
-}
-#home-invites label.checked {
-	background-color : #B2D184;
-}
-#home-invites label.disabled {
-	color : #444;
 }
 #home-view {
 	border         : 1px solid black;

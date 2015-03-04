@@ -10,7 +10,6 @@ class HomeModelState
 	activity        : HomeItem;
 	dialogID        : string;
 	speakerID       : string;
-	invitesVisible  : boolean;
 }
 
 class HomeModel implements IHomeModel, IPersistent
@@ -21,7 +20,6 @@ class HomeModel implements IHomeModel, IPersistent
 	private atEntrance      : boolean;
 	private items           : HomeItem[];
 	private activity        : HomeItem;
-	private invitesVisible  : boolean;
 
 	private dialogID  : string;
 	private speakerID : string;
@@ -161,25 +159,23 @@ class HomeModel implements IHomeModel, IPersistent
 	FromPersistentString(str : string) : void
 	{
 		var state = <HomeModelState>JSON.parse(str);
-		this.waitingGuests   = state.waitingGuests;
-		this.guests          = state.guests;
-		this.atEntrance      = state.atEntrance;
-		this.activity        = state.activity;
-		this.dialogID        = state.dialogID;
-		this.speakerID       = state.speakerID;
-		this.invitesVisible  = state.invitesVisible;
+		this.waitingGuests = state.waitingGuests;
+		this.guests        = state.guests;
+		this.atEntrance    = state.atEntrance;
+		this.activity      = state.activity;
+		this.dialogID      = state.dialogID;
+		this.speakerID     = state.speakerID;
 	}
 
 	ToPersistentString() : string
 	{
 		var state : HomeModelState =
-			{ waitingGuests   : this.waitingGuests
-			, guests          : this.guests
-			, atEntrance      : this.atEntrance
-			, activity        : this.activity
-			, dialogID        : this.dialogID
-			, speakerID       : this.speakerID
-			, invitesVisible  : this.invitesVisible
+			{ waitingGuests : this.waitingGuests
+			, guests        : this.guests
+			, atEntrance    : this.atEntrance
+			, activity      : this.activity
+			, dialogID      : this.dialogID
+			, speakerID     : this.speakerID
 			};
 		return JSON.stringify(state);
 	}

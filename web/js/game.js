@@ -468,10 +468,9 @@ var HomeModel = (function () {
         this.activity = state.activity;
         this.dialogID = state.dialogID;
         this.speakerID = state.speakerID;
-        this.invitesVisible = state.invitesVisible;
     };
     HomeModel.prototype.ToPersistentString = function () {
-        var state = { waitingGuests: this.waitingGuests, guests: this.guests, atEntrance: this.atEntrance, activity: this.activity, dialogID: this.dialogID, speakerID: this.speakerID, invitesVisible: this.invitesVisible };
+        var state = { waitingGuests: this.waitingGuests, guests: this.guests, atEntrance: this.atEntrance, activity: this.activity, dialogID: this.dialogID, speakerID: this.speakerID };
         return JSON.stringify(state);
     };
     // private implementation
@@ -544,23 +543,23 @@ var Moustache;
 /// <reference path="IMainModel.ts"        />
 /// <reference path="IQueueModel.ts"       />
 var HomePresenter = (function () {
-    function HomePresenter(homeModel, friendsMenuModel, mainModel, queueModel, homeView) {
+    function HomePresenter(homeModel, invitesModel, mainModel, queueModel, homeView) {
         this.homeModel = homeModel;
-        this.friendsMenuModel = friendsMenuModel;
+        this.invitesModel = invitesModel;
         this.mainModel = mainModel;
         this.queueModel = queueModel;
         this.homeView = homeView;
         homeModel.DialogChanged.Add(this.OnDialogChanged.bind(this));
         homeModel.FriendsArriving.Add(this.OnFriendsArriving.bind(this));
         homeModel.GuestsChanged.Add(this.OnGuestsChanged.bind(this));
-        friendsMenuModel.Cleared.Add(this.OnFriendsMenuCleared.bind(this));
-        friendsMenuModel.Disabled.Add(this.OnFriendsMenuDisabled.bind(this));
-        friendsMenuModel.Emptied.Add(this.OnFriendsMenuEmptied.bind(this));
-        friendsMenuModel.Enabled.Add(this.OnFriendsMenuEnabled.bind(this));
-        friendsMenuModel.Filled.Add(this.OnFriendsMenuFilled.bind(this));
-        friendsMenuModel.Hidden.Add(this.OnFriendsMenuHidden.bind(this));
-        friendsMenuModel.Selected.Add(this.OnFriendsMenuSelected.bind(this));
-        friendsMenuModel.Shown.Add(this.OnFriendsMenuShown.bind(this));
+        invitesModel.Cleared.Add(this.OnFriendsMenuCleared.bind(this));
+        invitesModel.Disabled.Add(this.OnFriendsMenuDisabled.bind(this));
+        invitesModel.Emptied.Add(this.OnFriendsMenuEmptied.bind(this));
+        invitesModel.Enabled.Add(this.OnFriendsMenuEnabled.bind(this));
+        invitesModel.Filled.Add(this.OnFriendsMenuFilled.bind(this));
+        invitesModel.Hidden.Add(this.OnFriendsMenuHidden.bind(this));
+        invitesModel.Selected.Add(this.OnFriendsMenuSelected.bind(this));
+        invitesModel.Shown.Add(this.OnFriendsMenuShown.bind(this));
         homeView.FriendClicked.Add(this.OnFriendClicked.bind(this));
         homeView.GoToQueue.Add(this.OnGoToQueue.bind(this));
         homeView.GoToStore.Add(this.OnGoToStore.bind(this));
@@ -578,13 +577,13 @@ var HomePresenter = (function () {
             this.homeModel.LetTheGuestIn();
     };
     HomePresenter.prototype.OnInvitesClicked = function () {
-        this.friendsMenuModel.ToggleVisibility();
+        this.invitesModel.ToggleVisibility();
     };
     HomePresenter.prototype.OnFriendClicked = function () {
-        this.friendsMenuModel.ToggleSelection(this.homeView.GetMenuSelection());
+        this.invitesModel.ToggleSelection(this.homeView.GetMenuSelection());
     };
     HomePresenter.prototype.OnFriendsMenuCleared = function () {
-        this.homeView.SetMenuFriendState(this.friendsMenuModel.GetSelection(), false);
+        this.homeView.SetMenuFriendState(this.invitesModel.GetSelection(), false);
     };
     HomePresenter.prototype.OnFriendsMenuDisabled = function () {
         this.homeView.DisableUnselectedFriends();
@@ -599,13 +598,13 @@ var HomePresenter = (function () {
         this.homeView.SetInviteStatus(true);
     };
     HomePresenter.prototype.OnFriendsMenuSelected = function () {
-        this.homeView.SetMenuFriendState(this.friendsMenuModel.GetSelection(), true);
+        this.homeView.SetMenuFriendState(this.invitesModel.GetSelection(), true);
     };
     HomePresenter.prototype.OnFriendsMenuShown = function () {
         this.ShowFriendsMenu();
     };
     HomePresenter.prototype.OnFriendsMenuChanged = function () {
-        this.homeView.ShowFriends(this.friendsMenuModel.GetFriends());
+        this.homeView.ShowFriends(this.invitesModel.GetFriends());
     };
     HomePresenter.prototype.OnFriendsMenuHidden = function () {
         this.homeView.HideFriends();
@@ -629,7 +628,7 @@ var HomePresenter = (function () {
     };
     HomePresenter.prototype.OnInviteFriendsClicked = function () {
         this.homeView.HideFriends();
-        this.homeModel.InviteFriends(this.friendsMenuModel.GetSelectedFriends());
+        this.homeModel.InviteFriends(this.invitesModel.GetSelectedFriends());
     };
     HomePresenter.prototype.OnReplyClicked = function () {
         this.homeModel.AdvanceDialog(this.homeView.GetSelectedReply());
@@ -642,14 +641,14 @@ var HomePresenter = (function () {
     };
     // private implementation
     HomePresenter.prototype.ShowFriendsMenu = function () {
-        if (!this.friendsMenuModel.IsVisible())
+        if (!this.invitesModel.IsVisible())
             return;
-        this.homeView.ShowFriends(this.friendsMenuModel.GetFriends());
-        this.homeView.SetInviteStatus(!this.friendsMenuModel.IsEmpty());
-        var selected = this.friendsMenuModel.GetSelectedFriends();
+        this.homeView.ShowFriends(this.invitesModel.GetFriends());
+        this.homeView.SetInviteStatus(!this.invitesModel.IsEmpty());
+        var selected = this.invitesModel.GetSelectedFriends();
         for (var i = 0; i != selected.length; ++i)
             this.homeView.SetMenuFriendState(selected[i], true);
-        if (this.friendsMenuModel.IsEnabled())
+        if (this.invitesModel.IsEnabled())
             this.homeView.EnableAllFriends();
         else
             this.homeView.DisableUnselectedFriends();
@@ -776,7 +775,7 @@ var HomeView = (function () {
         div.show();
     };
     HomeView.prototype.SetInviteStatus = function (enabled) {
-        $("#invite-friends").prop("disabled", !enabled);
+        $("#invite").prop("disabled", !enabled);
     };
     HomeView.prototype.SetMenuFriendState = function (character, checked) {
         var label = $("#home-invites ." + character.id);
@@ -802,7 +801,7 @@ var HomeView = (function () {
             label.click(c, OnClick.bind(this));
             invites.append(label);
         }
-        var button = $("<button id='invite-friends'>пригласить в гости</button>");
+        var button = $("<button id='invite'>пригласить в гости</button>");
         button.click(function () {
             _this.InviteFriendsClicked.Call();
         });
@@ -1827,7 +1826,7 @@ function Main(dialogs, characters) {
     var characterManager = new CharacterManager(characters, flags);
     var timer = new Timer();
     var player = new Player(timer);
-    var homeMenuModel = new FriendsMenuModel(characterManager);
+    var invitesModel = new FriendsMenuModel(characterManager);
     var homeModel = new HomeModel(timer, characterManager, dialogManager);
     var mainModel = new MainModel(player);
     var queueModel = new QueueModel(timer, characterManager, dialogManager, player);
@@ -1838,12 +1837,12 @@ function Main(dialogs, characters) {
     var saveView = new SaveView();
     var storeView = new StoreView();
     var mainView = new MainView([homeView, queueView, storeView]);
-    var homePresenter = new HomePresenter(homeModel, homeMenuModel, mainModel, queueModel, homeView);
+    var homePresenter = new HomePresenter(homeModel, invitesModel, mainModel, queueModel, homeView);
     var mainPresenter = new MainPresenter(mainModel, mainView);
     var queuePresenter = new QueuePresenter(mainModel, queueModel, queueView);
     var savePresenter = new SavePresenter(saveModel, saveView);
     var storePresenter = new StorePresenter(mainModel, storeModel, storeView);
-    var persistentItems = [["homeMenu", homeMenuModel], ["main", mainModel], ["home", homeModel], ["queue", queueModel], ["player", player], ["timer", timer], ["flags", flags]];
+    var persistentItems = [["homeInvites", invitesModel], ["main", mainModel], ["home", homeModel], ["queue", queueModel], ["player", player], ["timer", timer], ["flags", flags]];
     var persistentState = new PersistentState(persistentItems, timer);
     MapCharacterNameIntroFlags(flags, player, characterManager);
     MapPlayerStateFlags(flags, player);

@@ -150,7 +150,7 @@ class HomeView implements IHomeView, IClientView
 
 	SetInviteStatus(enabled : boolean) : void
 	{
-		$("#invite-friends").prop("disabled", !enabled);
+		$("#invite").prop("disabled", !enabled);
 	}
 
 	SetMenuFriendState(character : ICharacter, checked : boolean) : void
@@ -186,7 +186,7 @@ class HomeView implements IHomeView, IClientView
 			invites.append(label);
 		}
 
-		var button = $("<button id='invite-friends'>пригласить в гости</button>");
+		var button = $("<button id='invite'>пригласить в гости</button>");
 		button.click(() => { this.InviteFriendsClicked.Call() });
 		invites.append(button);
 

@@ -53,12 +53,12 @@ function Main(dialogs : IDialog[], characters : ICharacter[])
 
 	var player = new Player(timer);
 
-	var homeMenuModel = new FriendsMenuModel(characterManager);
-	var homeModel     = new HomeModel(timer, characterManager, dialogManager);
-	var mainModel     = new MainModel(player);
-	var queueModel    = new QueueModel(timer, characterManager, dialogManager, player);
-	var saveModel     = new SaveModel();
-	var storeModel    = new StoreModel(player);
+	var invitesModel = new FriendsMenuModel(characterManager);
+	var homeModel    = new HomeModel(timer, characterManager, dialogManager);
+	var mainModel    = new MainModel(player);
+	var queueModel   = new QueueModel(timer, characterManager, dialogManager, player);
+	var saveModel    = new SaveModel();
+	var storeModel   = new StoreModel(player);
 
 	var homeView  = new HomeView();
 	var queueView = new QueueView();
@@ -67,20 +67,20 @@ function Main(dialogs : IDialog[], characters : ICharacter[])
 
 	var mainView = new MainView([ homeView, queueView, storeView ]);
 
-	var homePresenter  = new HomePresenter(homeModel, homeMenuModel, mainModel, queueModel,  homeView);
+	var homePresenter  = new HomePresenter(homeModel, invitesModel, mainModel, queueModel,  homeView);
 	var mainPresenter  = new MainPresenter(mainModel,  mainView);
 	var queuePresenter = new QueuePresenter(mainModel, queueModel, queueView);
 	var savePresenter  = new SavePresenter(saveModel,  saveView);
 	var storePresenter = new StorePresenter(mainModel, storeModel, storeView);
 
 	var persistentItems = <[string, IPersistent][]>
-		[ [ "homeMenu", homeMenuModel ]
-		, [ "main",     mainModel     ]
-		, [ "home",     homeModel     ]
-		, [ "queue",    queueModel    ]
-		, [ "player",   player        ]
-		, [ "timer",    timer         ]
-		, [ "flags",    flags         ]
+		[ [ "homeInvites", invitesModel ]
+		, [ "main",        mainModel    ]
+		, [ "home",        homeModel    ]
+		, [ "queue",       queueModel   ]
+		, [ "player",      player       ]
+		, [ "timer",       timer        ]
+		, [ "flags",       flags        ]
 		];
 	var persistentState = new PersistentState(persistentItems, timer);
 
