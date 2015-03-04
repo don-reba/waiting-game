@@ -40,6 +40,7 @@ function MapPlayerStateFlags( flags : Flags, player : Player) : void
 {
 	flags.SetCheck("MoustacheEquipped", () => { return player.GetMoustache() != Moustache.None });
 	flags.SetCheck("MoustacheAbsent",   () => { return player.GetMoustache() == Moustache.None });
+	flags.SetCheck("HatEquipped",       () => { return player.GetHat() != Hat.None });
 }
 
 function Main(dialogs : IDialog[], characters : ICharacter[])

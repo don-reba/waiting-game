@@ -225,8 +225,12 @@ class QueueModel implements IQueueModel, IPersistent
 
 	private HoldLast() : void
 	{
-		this.dialogID = this.characterManager.GetDialogID(this.speakerID, DialogType.QueueEscape);
-		this.DialogChanged.Call();
+		var holdDialogID = this.characterManager.GetDialogID(this.speakerID, DialogType.QueueEscape);
+		if (this.dialogID != holdDialogID)
+		{
+			this.dialogID = holdDialogID;
+			this.DialogChanged.Call();
+		}
 	}
 
 	private InQueue(c : ICharacter) : boolean

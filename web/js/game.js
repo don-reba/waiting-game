@@ -1359,8 +1359,11 @@ var QueueModel = (function () {
         return { characterID: null, remaining: remaining, ticket: ticket };
     };
     QueueModel.prototype.HoldLast = function () {
-        this.dialogID = this.characterManager.GetDialogID(this.speakerID, 0 /* QueueEscape */);
-        this.DialogChanged.Call();
+        var holdDialogID = this.characterManager.GetDialogID(this.speakerID, 0 /* QueueEscape */);
+        if (this.dialogID != holdDialogID) {
+            this.dialogID = holdDialogID;
+            this.DialogChanged.Call();
+        }
     };
     QueueModel.prototype.InQueue = function (c) {
         return this.queue.some(function (p) {
@@ -1818,6 +1821,9 @@ function MapPlayerStateFlags(flags, player) {
     });
     flags.SetCheck("MoustacheAbsent", function () {
         return player.GetMoustache() == 0 /* None */;
+    });
+    flags.SetCheck("HatEquipped", function () {
+        return player.GetHat() != 0 /* None */;
     });
 }
 function Main(dialogs, characters) {

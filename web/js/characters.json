@@ -15,6 +15,8 @@
 		, { "dialog" : "ShadyMachinationsFiller1Intro",       "requires" : [ "MachinationsQuest1" ] }
 		, { "dialog" : "ShadyMachinationsQuest1ReceiveIntro", "requires" : [ "MachinationsQuest1Done" ] }
 		, { "dialog" : "ShadyPurchaseMoustacheIntro",         "requires" : [ "MoustacheAbsent" ] }
+		, { "dialog" : "ShadyFakeMoustacheWarrantyIntro",     "requires" : [ "MoustacheAbsent", "ReceiveFakeMoustache" ] }
+		, { "dialog" : "ShadyPurchaseMoustacheIntro",         "requires" : [ "MachinationsQuest2Pending" ] }
 		]
 	, "queueEscape" :
 		[ { "dialog" : "ShadyQueueEscapeIntro" } ]
@@ -45,9 +47,10 @@
 		[ { "dialog" : "AnnyDescriptionIntro",  "requires" : [ "AnnyIntro" ] }
 		, { "dialog" : "AnnyIntroductionIntro", "requires" : [ "AnnyIntroductionPending" ] }
 		, { "dialog" : "AnnyVillainQuestIntro", "requires" : [ "VillainAnnyQuest" ] }
+		, { "dialog" : "AnnyMakingUpIntro",     "requires" : [ "MakeUpWithAnny" ] }
 		]
 	, "queueEscape" :
-		[ { "dialog" : "AnnyQueueEscapeIntro" } ]
+		[ { "dialog" : "AnnyQueueEscape" } ]
 	},
 	{ "id"    : "Kostik"
 	, "name"  : "Костик"
@@ -55,6 +58,8 @@
 		[ { "dialog" : "KostikDescriptionIntro",  "requires" : [ "KostikIntro" ] }
 		, { "dialog" : "KostikIntroductionIntro", "requires" : [ "KostikIntroductionPending" ] }
 		]
+	, "queueEscape" :
+		[ { "dialog" : "KostikQueueEscape" } ]
 	},
 	{ "id"    : "Cat"
 	, "name"  : "Кот"
@@ -62,9 +67,16 @@
 	{ "id"    : "Patient"
 	, "name"  : "Тяжелобольной"
 	, "queueConversation" :
-		[ { "dialog" : "PatientDescriptionIntro",  "requires" : [ "PatientIntro" ] }
-		, { "dialog" : "PatientIntroductionIntro", "requires" : [ "PatientIntroductionPending" ] }
+		[ { "dialog" : "PatientDescriptionIntro",        "requires" : [ "PatientIntro" ] }
+		, { "dialog" : "PatientIntroductionIntro",       "requires" : [ "PatientIntroductionPending" ] }
+		, { "dialog" : "PatientPanaceaIntro",            "requires" : [ "PanaceaMachinations" ] }
+		, { "dialog" : "PatientPanaceaConsequenceIntro", "requires" : [ "PanaceaSold" ] }
+		, { "dialog" : "PatientFiller1Intro",            "requires" : [ "PatientFiller1Pending" ] }
+		, { "dialog" : "PatientFillerMoustacheIntro",    "requires" : [ "PatientMoustacheFillerPending", "MoustacheEquipped" ] }
+		, { "dialog" : "PatientFillerHatIntro",          "requires" : [ "PatientHatFillerPending", "HatEquipped" ] }
 		]
+	, "queueEscape" :
+		[ { "dialog" : "PatientQueueEscape" } ]
 	},
 	{ "id"    : "Villain"
 	, "name"  : "Злодей"
