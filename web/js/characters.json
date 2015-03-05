@@ -64,6 +64,7 @@
 	, "queueConversation" :
 		[ { "dialog" : "KostikDescriptionIntro",  "requires" : [ "KostikIntro" ] }
 		, { "dialog" : "KostikIntroductionIntro", "requires" : [ "KostikIntroductionPending" ] }
+		, { "dialog" : "KostikFiller1Intro",      "requires" : [ "KostikFiller1Pending" ] }
 		]
 	, "queueEscape" :
 		[ { "dialog" : "KostikQueueEscape" } ]
