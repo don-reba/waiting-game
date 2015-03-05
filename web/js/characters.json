@@ -17,6 +17,7 @@
 		, { "dialog" : "ShadyPurchaseMoustacheIntro",         "requires" : [ "MoustacheAbsent" ] }
 		, { "dialog" : "ShadyFakeMoustacheWarrantyIntro",     "requires" : [ "MoustacheAbsent", "ReceiveFakeMoustache" ] }
 		, { "dialog" : "ShadyPurchaseMoustacheIntro",         "requires" : [ "MachinationsQuest2Pending" ] }
+		, { "dialog" : "ShadyPanaceaMachinationReceiveIntro", "requires" : [ "PanaceaMachinationsDone" ] }
 		]
 	, "queueEscape" :
 		[ { "dialog" : "ShadyQueueEscapeIntro" } ]
@@ -36,7 +37,13 @@
 		, { "dialog" : "MrMoustacheFiller1Intro",               "requires" : [ "MrMoustacheFiller1Pending" ] }
 		, { "dialog" : "MrMoustacheFiller2Intro",               "requires" : [ "MrMoustacheFiller2Pending" ] }
 		, { "dialog" : "MrMoustacheMoustacheMachinationsIntro", "requires" : [ "MoustacheMachinations" ] }
+		, { "dialog" : "MrMoustacheFiller3Intro",               "requires" : [ "MrMoustacheFiller3Pending" ] }
+		, { "dialog" : "MrMoustacheFiller4Intro",               "requires" : [ "MrMoustacheFiller4Pending" ] }
+		, { "dialog" : "MrMoustacheUpgradeIntro",               "requires" : [ "MrMoustacheUpgradePending" ] }
+		, { "dialog" : "MrMoustacheMoustacheFillerIntro",       "requires" : [ "MoustacheUpgradeObtained" ] }
 		]
+	, "queueEscape" :
+		[ { "dialog" : "MrMoustacheQueueEscape" } ]
 	},
 	{ "id"    : "Poet"
 	, "name"  : "Поэт"
