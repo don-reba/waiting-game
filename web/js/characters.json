@@ -47,6 +47,11 @@
 	},
 	{ "id"    : "Poet"
 	, "name"  : "Поэт"
+	, "queueConversation" :
+		[ { "dialog" : "PoetDescriptionIntro",  "requires" : [ "PoetIntro" ] }
+		, { "dialog" : "PoetIntroductionIntro", "requires" : [ "PoetIntroductionPending" ] }
+		, { "dialog" : "PoetDuelIntro",         "requires" : [ "DuelOfPoets" ] }
+		]
 	},
 	{ "id"    : "Anny"
 	, "name"  : "Настенька"
