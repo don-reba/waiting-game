@@ -8,16 +8,19 @@
 	{ "id"    : "Shady"
 	, "name"  : "Тёмная личность"
 	, "queueConversation" :
-		[ { "dialog" : "ShadyDescriptionIntro",                  "requires" : [ "ShadyIntro" ] }
-		, { "dialog" : "ShadyIntroductionIntro",                 "requires" : [ "ShadyIntroductionPending" ] }
-		, { "dialog" : "ShadyMachinationsRefusedIntro",          "requires" : [ "MachinationsRefused" ] }
-		, { "dialog" : "ShadyMoustacheMachinationsIntro",        "requires" : [ "MoustacheMachinationsPending" ] }
-		, { "dialog" : "ShadyFiller1Intro",                      "requires" : [ "MoustacheMachinations" ] }
-		, { "dialog" : "ShadyMoustacheMachinationsReceiveIntro", "requires" : [ "MoustacheMachinationsDone" ] }
-		, { "dialog" : "ShadyPurchaseMoustacheIntro",            "requires" : [ "MoustacheAbsent" ] }
-		, { "dialog" : "ShadyFakeMoustacheWarrantyIntro",        "requires" : [ "MoustacheAbsent", "ReceiveFakeMoustache" ] }
-		, { "dialog" : "ShadyFiller2Intro",                      "requires" : [ "PanaceaMachinations" ] }
-		, { "dialog" : "ShadyPanaceaMachinationReceiveIntro",    "requires" : [ "PanaceaMachinationsDone" ] }
+		[ { "dialog" : "ShadyDescriptionIntro",                    "requires" : [ "ShadyIntro" ] }
+		, { "dialog" : "ShadyIntroductionIntro",                   "requires" : [ "ShadyIntroductionPending" ] }
+		, { "dialog" : "ShadyMachinationsRefusedIntro",            "requires" : [ "MachinationsRefused" ] }
+		, { "dialog" : "ShadyMoustacheMachinationsIntro",          "requires" : [ "MoustacheMachinationsPending" ] }
+		, { "dialog" : "ShadyFiller1Intro",                        "requires" : [ "MoustacheMachinations" ] }
+		, { "dialog" : "ShadyMoustacheMachinationsReceiveIntro",   "requires" : [ "MoustacheMachinationsDone" ] }
+		, { "dialog" : "ShadyPurchaseMoustacheIntro",              "requires" : [ "MoustacheAbsent" ] }
+		, { "dialog" : "ShadyFakeMoustacheWarrantyIntro",          "requires" : [ "MoustacheAbsent", "ReceiveFakeMoustache" ] }
+		, { "dialog" : "ShadyFiller2Intro",                        "requires" : [ "PanaceaMachinations" ] }
+		, { "dialog" : "ShadyPanaceaMachinationReceiveIntro",      "requires" : [ "PanaceaMachinationsDone" ] }
+		, { "dialog" : "ShadyFiller3Intro",                        "requires" : [ "InspirationMachinations" ] }
+		, { "dialog" : "ShadyInspriationMachinationsReceiveIntro", "requires" : [ "InspirationMachinationsDone" ] }
+		, { "dialog" : "ShadyFiller4Intro",                        "requires" : [ "CatMachinations" ] }
 		]
 	, "queueEscape" :
 		[ { "dialog" : "ShadyQueueEscapeIntro" } ]
@@ -48,10 +51,13 @@
 	{ "id"    : "Poet"
 	, "name"  : "Поэт"
 	, "queueConversation" :
-		[ { "dialog" : "PoetDescriptionIntro",  "requires" : [ "PoetIntro" ] }
-		, { "dialog" : "PoetIntroductionIntro", "requires" : [ "PoetIntroductionPending" ] }
-		, { "dialog" : "PoetDuelIntro",         "requires" : [ "DuelOfPoets" ] }
+		[ { "dialog" : "PoetDescriptionIntro",             "requires" : [ "PoetIntro" ] }
+		, { "dialog" : "PoetIntroductionIntro",            "requires" : [ "PoetIntroductionPending" ] }
+		, { "dialog" : "PoetDuelIntro",                    "requires" : [ "DuelOfPoets" ] }
+		, { "dialog" : "PoetInspirationMachinationsIntro", "requires" : [ "InspirationMachinations" ] }
 		]
+	, "queueEscape" :
+		[ { "dialog" : "PoetQueueEscape" } ]
 	},
 	{ "id"    : "Anny"
 	, "name"  : "Настенька"
@@ -59,6 +65,7 @@
 		[ { "dialog" : "AnnyDescriptionIntro",  "requires" : [ "AnnyIntro" ] }
 		, { "dialog" : "AnnyIntroductionIntro", "requires" : [ "AnnyIntroductionPending" ] }
 		, { "dialog" : "AnnyVillainQuestIntro", "requires" : [ "VillainAnnyQuest" ] }
+		, { "dialog" : "AnnyFiller1Intro",      "requires" : [ "AnnyFiller1Pending" ] }
 		, { "dialog" : "AnnyMakingUpIntro",     "requires" : [ "MakeUpWithAnny" ] }
 		]
 	, "queueEscape" :
