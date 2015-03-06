@@ -8,16 +8,16 @@
 	{ "id"    : "Shady"
 	, "name"  : "Тёмная личность"
 	, "queueConversation" :
-		[ { "dialog" : "ShadyDescriptionIntro",               "requires" : [ "ShadyIntro" ] }
-		, { "dialog" : "ShadyIntroductionIntro",              "requires" : [ "ShadyIntroductionPending" ] }
-		, { "dialog" : "ShadyMachinationsRefusedIntro",       "requires" : [ "MachinationsRefused" ] }
-		, { "dialog" : "ShadyMachinationsQuest1Intro",        "requires" : [ "MachinationsQuest1Pending" ] }
-		, { "dialog" : "ShadyMachinationsFiller1Intro",       "requires" : [ "MachinationsQuest1" ] }
-		, { "dialog" : "ShadyMachinationsQuest1ReceiveIntro", "requires" : [ "MachinationsQuest1Done" ] }
-		, { "dialog" : "ShadyPurchaseMoustacheIntro",         "requires" : [ "MoustacheAbsent" ] }
-		, { "dialog" : "ShadyFakeMoustacheWarrantyIntro",     "requires" : [ "MoustacheAbsent", "ReceiveFakeMoustache" ] }
-		, { "dialog" : "ShadyPurchaseMoustacheIntro",         "requires" : [ "MachinationsQuest2Pending" ] }
-		, { "dialog" : "ShadyPanaceaMachinationReceiveIntro", "requires" : [ "PanaceaMachinationsDone" ] }
+		[ { "dialog" : "ShadyDescriptionIntro",                  "requires" : [ "ShadyIntro" ] }
+		, { "dialog" : "ShadyIntroductionIntro",                 "requires" : [ "ShadyIntroductionPending" ] }
+		, { "dialog" : "ShadyMachinationsRefusedIntro",          "requires" : [ "MachinationsRefused" ] }
+		, { "dialog" : "ShadyMoustacheMachinationsIntro",        "requires" : [ "MoustacheMachinationsPending" ] }
+		, { "dialog" : "ShadyFiller1Intro",                      "requires" : [ "MoustacheMachinations" ] }
+		, { "dialog" : "ShadyMoustacheMachinationsReceiveIntro", "requires" : [ "MoustacheMachinationsDone" ] }
+		, { "dialog" : "ShadyPurchaseMoustacheIntro",            "requires" : [ "MoustacheAbsent" ] }
+		, { "dialog" : "ShadyFakeMoustacheWarrantyIntro",        "requires" : [ "MoustacheAbsent", "ReceiveFakeMoustache" ] }
+		, { "dialog" : "ShadyFiller2Intro",                      "requires" : [ "PanaceaMachinations" ] }
+		, { "dialog" : "ShadyPanaceaMachinationReceiveIntro",    "requires" : [ "PanaceaMachinationsDone" ] }
 		]
 	, "queueEscape" :
 		[ { "dialog" : "ShadyQueueEscapeIntro" } ]
