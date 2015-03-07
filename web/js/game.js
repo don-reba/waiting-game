@@ -28,12 +28,14 @@ var Signal = (function () {
 /// <reference path="Activity.ts" />
 /// <reference path="Signal.ts"   />
 /// <reference path="IActivitiesMenuModel.ts" />
+/// <reference path="IPersistent.ts"          />
 var ActivitiesMenuModel = (function () {
     function ActivitiesMenuModel() {
         this.isVisible = false;
         this.Hidden = new Signal();
         this.Shown = new Signal();
     }
+    // IActivitiesMenuModel implementation
     ActivitiesMenuModel.prototype.GetActivities = function () {
         return [1 /* Stop */];
     };
@@ -46,6 +48,15 @@ var ActivitiesMenuModel = (function () {
             this.Shown.Call();
         else
             this.Hidden.Call();
+    };
+    // IPersistent implementation
+    ActivitiesMenuModel.prototype.FromPersistentString = function (str) {
+        var state = JSON.parse(str);
+        this.isVisible = state.isVisible;
+    };
+    ActivitiesMenuModel.prototype.ToPersistentString = function () {
+        var state = { isVisible: this.isVisible };
+        return JSON.stringify(state);
     };
     return ActivitiesMenuModel;
 })();
@@ -710,6 +721,7 @@ var HomePresenter = (function () {
         this.homeView.SetCanvas(this.homeModel.GetCanvas());
         this.homeView.SetDialog(this.homeModel.GetSpeaker(), this.homeModel.GetDialog());
         this.UpdateButtonStates();
+        this.ShowActivitiesMenu();
         this.ShowInvitesMenu();
     };
     HomePresenter.prototype.OnStateChanged = function () {
@@ -1960,7 +1972,7 @@ function Main(dialogs, characters) {
     var characterManager = new CharacterManager(characters, flags);
     var timer = new Timer();
     var player = new Player(timer);
-    var activititesModel = new ActivitiesMenuModel();
+    var activitiesModel = new ActivitiesMenuModel();
     var invitesModel = new FriendsMenuModel(characterManager);
     var homeModel = new HomeModel(timer, characterManager, dialogManager);
     var mainModel = new MainModel(player);
@@ -1972,12 +1984,12 @@ function Main(dialogs, characters) {
     var saveView = new SaveView();
     var storeView = new StoreView();
     var mainView = new MainView([homeView, queueView, storeView]);
-    var homePresenter = new HomePresenter(homeModel, activititesModel, invitesModel, mainModel, queueModel, homeView);
+    var homePresenter = new HomePresenter(homeModel, activitiesModel, invitesModel, mainModel, queueModel, homeView);
     var mainPresenter = new MainPresenter(mainModel, mainView);
     var queuePresenter = new QueuePresenter(mainModel, queueModel, queueView);
     var savePresenter = new SavePresenter(saveModel, saveView);
     var storePresenter = new StorePresenter(mainModel, storeModel, storeView);
-    var persistentItems = [["homeInvites", invitesModel], ["main", mainModel], ["home", homeModel], ["queue", queueModel], ["player", player], ["timer", timer], ["flags", flags]];
+    var persistentItems = [["activitiesMenu", activitiesModel], ["invitesMenu", invitesModel], ["main", mainModel], ["home", homeModel], ["queue", queueModel], ["player", player], ["timer", timer], ["flags", flags]];
     var persistentState = new PersistentState(persistentItems, timer);
     MapCharacterNameIntroFlags(flags, player, characterManager);
     MapPlayerStateFlags(flags, player);

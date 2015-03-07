@@ -1,11 +1,19 @@
 /// <reference path="IActivitiesMenuModel.ts" />
+/// <reference path="IPersistent.ts"          />
 
-class ActivitiesMenuModel implements IActivitiesMenuModel
+interface ActivitiesMenuModelState
+{
+	isVisible : boolean;
+}
+
+class ActivitiesMenuModel implements IActivitiesMenuModel, IPersistent
 {
 	private isVisible : boolean  = false;
 
 	Hidden = new Signal();
 	Shown  = new Signal();
+
+	// IActivitiesMenuModel implementation
 
 	GetActivities() : Activity[]
 	{
@@ -24,5 +32,21 @@ class ActivitiesMenuModel implements IActivitiesMenuModel
 			this.Shown.Call();
 		else
 			this.Hidden.Call();
+	}
+
+	// IPersistent implementation
+
+	FromPersistentString(str : string) : void
+	{
+		var state = <ActivitiesMenuModelState>JSON.parse(str);
+		this.isVisible = state.isVisible;
+	}
+
+	ToPersistentString() : string
+	{
+		var state : ActivitiesMenuModelState =
+			{ isVisible : this.isVisible
+			};
+		return JSON.stringify(state);
 	}
 }

@@ -168,6 +168,7 @@ class HomePresenter
 		this.homeView.SetCanvas(this.homeModel.GetCanvas());
 		this.homeView.SetDialog(this.homeModel.GetSpeaker(), this.homeModel.GetDialog());
 		this.UpdateButtonStates();
+		this.ShowActivitiesMenu();
 		this.ShowInvitesMenu();
 	}
 
