@@ -1,25 +1,26 @@
-/// <reference path="CharacterManager.ts" />
-/// <reference path="FriendsMenuModel.ts" />
-/// <reference path="HomeModel.ts"        />
-/// <reference path="HomePresenter.ts"    />
-/// <reference path="HomeView.ts"         />
-/// <reference path="DialogManager.ts"    />
-/// <reference path="Flags.ts"            />
-/// <reference path="MainModel.ts"        />
-/// <reference path="MainPresenter.ts"    />
-/// <reference path="MainView.ts"         />
-/// <reference path="PersistentState.ts"  />
-/// <reference path="Player.ts"           />
-/// <reference path="QueueModel.ts"       />
-/// <reference path="QueuePresenter.ts"   />
-/// <reference path="QueueView.ts"        />
-/// <reference path="SaveModel.ts"        />
-/// <reference path="SavePresenter.ts"    />
-/// <reference path="SaveView.ts"         />
-/// <reference path="StoreModel.ts"       />
-/// <reference path="StorePresenter.ts"   />
-/// <reference path="StoreView.ts"        />
-/// <reference path="Timer.ts"            />
+/// <reference path="ActivitiesMenuModel.ts" />
+/// <reference path="CharacterManager.ts"    />
+/// <reference path="FriendsMenuModel.ts"    />
+/// <reference path="HomeModel.ts"           />
+/// <reference path="HomePresenter.ts"       />
+/// <reference path="HomeView.ts"            />
+/// <reference path="DialogManager.ts"       />
+/// <reference path="Flags.ts"               />
+/// <reference path="MainModel.ts"           />
+/// <reference path="MainPresenter.ts"       />
+/// <reference path="MainView.ts"            />
+/// <reference path="PersistentState.ts"     />
+/// <reference path="Player.ts"              />
+/// <reference path="QueueModel.ts"          />
+/// <reference path="QueuePresenter.ts"      />
+/// <reference path="QueueView.ts"           />
+/// <reference path="SaveModel.ts"           />
+/// <reference path="SavePresenter.ts"       />
+/// <reference path="SaveView.ts"            />
+/// <reference path="StoreModel.ts"          />
+/// <reference path="StorePresenter.ts"      />
+/// <reference path="StoreView.ts"           />
+/// <reference path="Timer.ts"               />
 
 function MapCharacterNameIntroFlags
 	( flags            : Flags
@@ -54,12 +55,13 @@ function Main(dialogs : IDialog[], characters : ICharacter[])
 
 	var player = new Player(timer);
 
-	var invitesModel = new FriendsMenuModel(characterManager);
-	var homeModel    = new HomeModel(timer, characterManager, dialogManager);
-	var mainModel    = new MainModel(player);
-	var queueModel   = new QueueModel(timer, characterManager, dialogManager, player);
-	var saveModel    = new SaveModel();
-	var storeModel   = new StoreModel(player);
+	var activititesModel = new ActivitiesMenuModel();
+	var invitesModel     = new FriendsMenuModel(characterManager);
+	var homeModel        = new HomeModel(timer, characterManager, dialogManager);
+	var mainModel        = new MainModel(player);
+	var queueModel       = new QueueModel(timer, characterManager, dialogManager, player);
+	var saveModel        = new SaveModel();
+	var storeModel       = new StoreModel(player);
 
 	var homeView  = new HomeView();
 	var queueView = new QueueView();
@@ -68,7 +70,7 @@ function Main(dialogs : IDialog[], characters : ICharacter[])
 
 	var mainView = new MainView([ homeView, queueView, storeView ]);
 
-	var homePresenter  = new HomePresenter(homeModel, invitesModel, mainModel, queueModel,  homeView);
+	var homePresenter  = new HomePresenter(homeModel, activititesModel, invitesModel, mainModel, queueModel,  homeView);
 	var mainPresenter  = new MainPresenter(mainModel,  mainView);
 	var queuePresenter = new QueuePresenter(mainModel, queueModel, queueView);
 	var savePresenter  = new SavePresenter(saveModel,  saveView);

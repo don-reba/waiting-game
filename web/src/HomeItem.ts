@@ -1,8 +1,11 @@
+/// <reference path="Activity.ts" />
+
 class HomeItemInfo
 {
-	graphic : string[];
-	x       : number;
-	y       : number;
+	graphic    : string[];
+	x          : number;
+	y          : number;
+	activities : Activity[];
 }
 
 enum HomeItem
@@ -18,6 +21,7 @@ module HomeItem
 		{ graphic : // Entrance
 			[]
 		, x : 2, y : 12
+		, activities : [ ]
 		},
 		{ graphic : // TV
 			[ "  _________  "
@@ -29,6 +33,7 @@ module HomeItem
 			, "%   %   %   %"
 			]
 		, x : 33, y : 0
+		, activities : [ Activity.TV ]
 		}
 		];
 

@@ -1,3 +1,54 @@
+var Activity;
+(function (Activity) {
+    Activity[Activity["None"] = 0] = "None";
+    Activity[Activity["Stop"] = 1] = "Stop";
+    Activity[Activity["TV"] = 2] = "TV";
+})(Activity || (Activity = {}));
+var Activity;
+(function (Activity) {
+    var names = ["Убивать время", "Разойтись по домам", "Смотреть фильмы"];
+    function GetName(activity) {
+        return names[activity];
+    }
+    Activity.GetName = GetName;
+})(Activity || (Activity = {}));
+var Signal = (function () {
+    function Signal() {
+        this.listeners = [];
+    }
+    Signal.prototype.Add = function (listener) {
+        this.listeners.push(listener);
+    };
+    Signal.prototype.Call = function () {
+        for (var i = 0, length = this.listeners.length; i != length; ++i)
+            this.listeners[i]();
+    };
+    return Signal;
+})();
+/// <reference path="Activity.ts" />
+/// <reference path="Signal.ts"   />
+/// <reference path="IActivitiesMenuModel.ts" />
+var ActivitiesMenuModel = (function () {
+    function ActivitiesMenuModel() {
+        this.isVisible = false;
+        this.Hidden = new Signal();
+        this.Shown = new Signal();
+    }
+    ActivitiesMenuModel.prototype.GetActivities = function () {
+        return [1 /* Stop */];
+    };
+    ActivitiesMenuModel.prototype.IsVisibile = function () {
+        return this.isVisible;
+    };
+    ActivitiesMenuModel.prototype.ToggleVisibility = function () {
+        this.isVisible = !this.isVisible;
+        if (this.isVisible)
+            this.Shown.Call();
+        else
+            this.Hidden.Call();
+    };
+    return ActivitiesMenuModel;
+})();
 /// <reference path="IPersistent.ts" />
 var Flags = (function () {
     function Flags() {
@@ -232,19 +283,6 @@ var DialogManager = (function () {
     };
     return DialogManager;
 })();
-var Signal = (function () {
-    function Signal() {
-        this.listeners = [];
-    }
-    Signal.prototype.Add = function (listener) {
-        this.listeners.push(listener);
-    };
-    Signal.prototype.Call = function () {
-        for (var i = 0, length = this.listeners.length; i != length; ++i)
-            this.listeners[i]();
-    };
-    return Signal;
-})();
 /// <reference path="ICharacter.ts" />
 /// <reference path="Signal.ts"     />
 /// <reference path="IFriendsMenuModel.ts" />
@@ -339,6 +377,7 @@ var HomeCanvas = (function () {
     }
     return HomeCanvas;
 })();
+/// <reference path="Activity.ts" />
 var HomeItemInfo = (function () {
     function HomeItemInfo() {
     }
@@ -352,17 +391,18 @@ var HomeItem;
 var HomeItem;
 (function (HomeItem) {
     var info = [
-        { graphic: [], x: 2, y: 12 },
-        { graphic: ["  _________  ", "=============", "             ", "             ", "             ", "             ", "%   %   %   %"], x: 33, y: 0 }
+        { graphic: [], x: 2, y: 12, activities: [] },
+        { graphic: ["  _________  ", "=============", "             ", "             ", "             ", "             ", "%   %   %   %"], x: 33, y: 0, activities: [2 /* TV */] }
     ];
     function GetInfo(item) {
         return info[item];
     }
     HomeItem.GetInfo = GetInfo;
 })(HomeItem || (HomeItem = {}));
+/// <reference path="Activity.ts"   />
 /// <reference path="HomeCanvas.ts" />
 /// <reference path="ICharacter.ts" />
-/// <reference path="Signal.ts" />
+/// <reference path="Signal.ts"     />
 /// <reference path="HomeItem.ts"    />
 /// <reference path="IHomeModel.ts"  />
 /// <reference path="IPersistent.ts" />
@@ -380,8 +420,8 @@ var HomeModel = (function () {
         this.ny = 23;
         // IHomeModel implementation
         this.DialogChanged = new Signal();
-        this.FriendsArriving = new Signal();
         this.GuestsChanged = new Signal();
+        this.StateChanged = new Signal();
         timer.AddEvent(this.OnAdvance.bind(this), 25);
         this.canvas = [];
         for (var y = 0; y != this.ny; ++y)
@@ -396,14 +436,17 @@ var HomeModel = (function () {
             this.speakerID = null;
         this.DialogChanged.Call();
     };
+    HomeModel.prototype.AreGuestsArriving = function () {
+        return this.waitingGuests.length > 0;
+    };
     HomeModel.prototype.AreGuestsIn = function () {
-        return this.waitingGuests.length + this.guests.length > 0;
+        return this.guests.length > 0;
     };
     HomeModel.prototype.GetCanvas = function () {
         this.Clear();
         for (var i = 0; i != this.items.length; ++i) {
             var item = this.items[i];
-            if (item == this.activity)
+            if (item == this.activeItem)
                 this.RenderActiveItem(item);
             else
                 this.RenderInactiveItem(item);
@@ -427,8 +470,8 @@ var HomeModel = (function () {
         for (var i = 0; i != friends.length; ++i)
             this.waitingGuests.push(friends[i].id);
         this.guests = [];
-        this.activity = 1 /* TV */;
-        this.FriendsArriving.Call();
+        this.activeItem = 1 /* TV */;
+        this.StateChanged.Call();
     };
     HomeModel.prototype.IsGuestAtTheDoor = function () {
         return this.atEntrance;
@@ -436,6 +479,18 @@ var HomeModel = (function () {
     HomeModel.prototype.LetTheGuestIn = function () {
         this.atEntrance = false;
         this.GuestsChanged.Call();
+        if (this.waitingGuests.length == 0)
+            this.StateChanged.Call();
+    };
+    HomeModel.prototype.SetActivity = function (activity) {
+        switch (activity) {
+            case 1 /* Stop */:
+                this.guests = [];
+                this.activeItem = null;
+                this.GuestsChanged.Call();
+                this.StateChanged.Call();
+                break;
+        }
     };
     HomeModel.prototype.StartDialog = function (speaker) {
         this.speakerID = speaker.id;
@@ -465,12 +520,12 @@ var HomeModel = (function () {
         this.waitingGuests = state.waitingGuests;
         this.guests = state.guests;
         this.atEntrance = state.atEntrance;
-        this.activity = state.activity;
+        this.activeItem = state.activeItem;
         this.dialogID = state.dialogID;
         this.speakerID = state.speakerID;
     };
     HomeModel.prototype.ToPersistentString = function () {
-        var state = { waitingGuests: this.waitingGuests, guests: this.guests, atEntrance: this.atEntrance, activity: this.activity, dialogID: this.dialogID, speakerID: this.speakerID };
+        var state = { waitingGuests: this.waitingGuests, guests: this.guests, atEntrance: this.atEntrance, activeItem: this.activeItem, dialogID: this.dialogID, speakerID: this.speakerID };
         return JSON.stringify(state);
     };
     // private implementation
@@ -522,6 +577,7 @@ var HomeModel = (function () {
     };
     return HomeModel;
 })();
+/// <reference path="Activity.ts"   />
 /// <reference path="HomeCanvas.ts" />
 /// <reference path="ICharacter.ts" />
 /// <reference path="Signal.ts"     />
@@ -537,38 +593,58 @@ var Moustache;
 /// <reference path="Signal.ts"    />
 /// <reference path="ICharacter.ts" />
 /// <reference path="IDialog.ts"    />
-/// <reference path="IFriendsMenuModel.ts" />
-/// <reference path="IHomeModel.ts"        />
-/// <reference path="IHomeView.ts"         />
-/// <reference path="IMainModel.ts"        />
-/// <reference path="IQueueModel.ts"       />
+/// <reference path="IActivitiesMenuModel.ts" />
+/// <reference path="IFriendsMenuModel.ts"    />
+/// <reference path="IHomeModel.ts"           />
+/// <reference path="IHomeView.ts"            />
+/// <reference path="IMainModel.ts"           />
+/// <reference path="IQueueModel.ts"          />
 var HomePresenter = (function () {
-    function HomePresenter(homeModel, invitesModel, mainModel, queueModel, homeView) {
+    function HomePresenter(homeModel, activitiesModel, invitesModel, mainModel, queueModel, homeView) {
         this.homeModel = homeModel;
+        this.activitiesModel = activitiesModel;
         this.invitesModel = invitesModel;
         this.mainModel = mainModel;
         this.queueModel = queueModel;
         this.homeView = homeView;
         homeModel.DialogChanged.Add(this.OnDialogChanged.bind(this));
-        homeModel.FriendsArriving.Add(this.OnFriendsArriving.bind(this));
         homeModel.GuestsChanged.Add(this.OnGuestsChanged.bind(this));
-        invitesModel.Cleared.Add(this.OnFriendsMenuCleared.bind(this));
-        invitesModel.Disabled.Add(this.OnFriendsMenuDisabled.bind(this));
-        invitesModel.Emptied.Add(this.OnFriendsMenuEmptied.bind(this));
-        invitesModel.Enabled.Add(this.OnFriendsMenuEnabled.bind(this));
-        invitesModel.Filled.Add(this.OnFriendsMenuFilled.bind(this));
-        invitesModel.Hidden.Add(this.OnFriendsMenuHidden.bind(this));
-        invitesModel.Selected.Add(this.OnFriendsMenuSelected.bind(this));
-        invitesModel.Shown.Add(this.OnFriendsMenuShown.bind(this));
-        homeView.FriendClicked.Add(this.OnFriendClicked.bind(this));
+        homeModel.StateChanged.Add(this.OnStateChanged.bind(this));
+        activitiesModel.Hidden.Add(this.OnActivitiesMenuHidden.bind(this));
+        activitiesModel.Shown.Add(this.OnActivitiesMenuShown.bind(this));
+        invitesModel.Cleared.Add(this.OnInvitesMenuCleared.bind(this));
+        invitesModel.Disabled.Add(this.OnInvitesMenuDisabled.bind(this));
+        invitesModel.Emptied.Add(this.OnInvitesMenuEmptied.bind(this));
+        invitesModel.Enabled.Add(this.OnInvitesMenuEnabled.bind(this));
+        invitesModel.Filled.Add(this.OnInvitesMenuFilled.bind(this));
+        invitesModel.Hidden.Add(this.OnInvitesMenuHidden.bind(this));
+        invitesModel.Selected.Add(this.OnInvitesMenuSelected.bind(this));
+        invitesModel.Shown.Add(this.OnInvitesMenuShown.bind(this));
+        homeView.ActivitiesClicked.Add(this.OnActivitiesClicked.bind(this));
+        homeView.ActivityClicked.Add(this.OnActivityClicked.bind(this));
         homeView.GoToQueue.Add(this.OnGoToQueue.bind(this));
         homeView.GoToStore.Add(this.OnGoToStore.bind(this));
         homeView.GuestClicked.Add(this.OnGuestClicked.bind(this));
-        homeView.InviteFriendsClicked.Add(this.OnInviteFriendsClicked.bind(this));
+        homeView.InviteButtonClicked.Add(this.OnInviteButtonClicked.bind(this));
+        homeView.InviteClicked.Add(this.OnInviteClicked.bind(this));
         homeView.InvitesClicked.Add(this.OnInvitesClicked.bind(this));
         homeView.ReplyClicked.Add(this.OnReplyClicked.bind(this));
         homeView.Shown.Add(this.OnShown.bind(this));
     }
+    HomePresenter.prototype.OnActivityClicked = function () {
+        this.homeModel.SetActivity(this.homeView.GetSelectedActivity());
+        this.homeView.HideActivitiesMenu();
+        this.homeView.HideActivitiesButton();
+    };
+    HomePresenter.prototype.OnActivitiesClicked = function () {
+        this.activitiesModel.ToggleVisibility();
+    };
+    HomePresenter.prototype.OnActivitiesMenuHidden = function () {
+        this.homeView.HideActivitiesMenu();
+    };
+    HomePresenter.prototype.OnActivitiesMenuShown = function () {
+        this.ShowActivitiesMenu();
+    };
     HomePresenter.prototype.OnDialogChanged = function () {
         var speaker = this.homeModel.GetSpeaker();
         var dialog = this.homeModel.GetDialog();
@@ -579,39 +655,35 @@ var HomePresenter = (function () {
     HomePresenter.prototype.OnInvitesClicked = function () {
         this.invitesModel.ToggleVisibility();
     };
-    HomePresenter.prototype.OnFriendClicked = function () {
-        this.invitesModel.ToggleSelection(this.homeView.GetMenuSelection());
+    HomePresenter.prototype.OnInviteClicked = function () {
+        this.invitesModel.ToggleSelection(this.homeView.GetSelectedInvite());
     };
-    HomePresenter.prototype.OnFriendsMenuCleared = function () {
-        this.homeView.SetMenuFriendState(this.invitesModel.GetSelection(), false);
+    HomePresenter.prototype.OnInvitesMenuCleared = function () {
+        this.homeView.SetInviteState(this.invitesModel.GetSelection(), false);
     };
-    HomePresenter.prototype.OnFriendsMenuDisabled = function () {
+    HomePresenter.prototype.OnInvitesMenuDisabled = function () {
         this.homeView.DisableUnselectedFriends();
     };
-    HomePresenter.prototype.OnFriendsMenuEmptied = function () {
+    HomePresenter.prototype.OnInvitesMenuEmptied = function () {
         this.homeView.SetInviteStatus(false);
     };
-    HomePresenter.prototype.OnFriendsMenuEnabled = function () {
+    HomePresenter.prototype.OnInvitesMenuEnabled = function () {
         this.homeView.EnableAllFriends();
     };
-    HomePresenter.prototype.OnFriendsMenuFilled = function () {
+    HomePresenter.prototype.OnInvitesMenuFilled = function () {
         this.homeView.SetInviteStatus(true);
     };
-    HomePresenter.prototype.OnFriendsMenuSelected = function () {
-        this.homeView.SetMenuFriendState(this.invitesModel.GetSelection(), true);
+    HomePresenter.prototype.OnInvitesMenuSelected = function () {
+        this.homeView.SetInviteState(this.invitesModel.GetSelection(), true);
     };
-    HomePresenter.prototype.OnFriendsMenuShown = function () {
-        this.ShowFriendsMenu();
+    HomePresenter.prototype.OnInvitesMenuShown = function () {
+        this.ShowInvitesMenu();
     };
-    HomePresenter.prototype.OnFriendsMenuChanged = function () {
-        this.homeView.ShowFriends(this.invitesModel.GetFriends());
+    HomePresenter.prototype.OnInvitesMenuChanged = function () {
+        this.homeView.ShowInvitesMenu(this.invitesModel.GetFriends());
     };
-    HomePresenter.prototype.OnFriendsMenuHidden = function () {
-        this.homeView.HideFriends();
-    };
-    HomePresenter.prototype.OnFriendsArriving = function () {
-        this.UpdateButtonStates();
-        this.homeView.SetCanvas(this.homeModel.GetCanvas());
+    HomePresenter.prototype.OnInvitesMenuHidden = function () {
+        this.homeView.HideInvitesMenu();
     };
     HomePresenter.prototype.OnGuestClicked = function () {
         this.homeModel.StartDialog(this.homeView.GetSelectedGuest());
@@ -626,9 +698,9 @@ var HomePresenter = (function () {
     HomePresenter.prototype.OnGuestsChanged = function () {
         this.homeView.SetCanvas(this.homeModel.GetCanvas());
     };
-    HomePresenter.prototype.OnInviteFriendsClicked = function () {
+    HomePresenter.prototype.OnInviteButtonClicked = function () {
         this.invitesModel.ToggleVisibility();
-        this.homeView.HideFriends();
+        this.homeView.HideInvitesMenu();
         this.homeModel.InviteFriends(this.invitesModel.GetSelectedFriends());
     };
     HomePresenter.prototype.OnReplyClicked = function () {
@@ -638,30 +710,45 @@ var HomePresenter = (function () {
         this.homeView.SetCanvas(this.homeModel.GetCanvas());
         this.homeView.SetDialog(this.homeModel.GetSpeaker(), this.homeModel.GetDialog());
         this.UpdateButtonStates();
-        this.ShowFriendsMenu();
+        this.ShowInvitesMenu();
+    };
+    HomePresenter.prototype.OnStateChanged = function () {
+        this.UpdateButtonStates();
     };
     // private implementation
-    HomePresenter.prototype.ShowFriendsMenu = function () {
+    HomePresenter.prototype.ShowActivitiesMenu = function () {
+        if (!this.activitiesModel.IsVisibile())
+            return;
+        this.homeView.ShowActivitiesMenu(this.activitiesModel.GetActivities());
+    };
+    HomePresenter.prototype.ShowInvitesMenu = function () {
         if (!this.invitesModel.IsVisible())
             return;
-        this.homeView.ShowFriends(this.invitesModel.GetFriends());
+        this.homeView.ShowInvitesMenu(this.invitesModel.GetFriends());
         this.homeView.SetInviteStatus(!this.invitesModel.IsEmpty());
         var selected = this.invitesModel.GetSelectedFriends();
         for (var i = 0; i != selected.length; ++i)
-            this.homeView.SetMenuFriendState(selected[i], true);
+            this.homeView.SetInviteState(selected[i], true);
         if (this.invitesModel.IsEnabled())
             this.homeView.EnableAllFriends();
         else
             this.homeView.DisableUnselectedFriends();
     };
     HomePresenter.prototype.UpdateButtonStates = function () {
-        if (this.homeModel.AreGuestsIn()) {
-            this.homeView.HideFriendsButton();
+        if (this.homeModel.AreGuestsArriving()) {
+            this.homeView.HideInvitesButton();
             this.homeView.HideTravelButtons();
+            this.homeView.HideActivitiesButton();
+        }
+        else if (this.homeModel.AreGuestsIn()) {
+            this.homeView.HideInvitesButton();
+            this.homeView.HideTravelButtons();
+            this.homeView.ShowActivitiesButton();
         }
         else {
-            this.homeView.ShowFriendsButton();
+            this.homeView.ShowInvitesButton();
             this.homeView.ShowTravelButtons();
+            this.homeView.HideActivitiesButton();
         }
     };
     return HomePresenter;
@@ -679,12 +766,14 @@ var ClientViewType;
 var HomeView = (function () {
     function HomeView() {
         // IHomeView implementation
-        this.FriendClicked = new Signal();
+        this.ActivityClicked = new Signal();
+        this.ActivitiesClicked = new Signal();
+        this.InviteClicked = new Signal();
         this.FriendsClicked = new Signal();
         this.GoToQueue = new Signal();
         this.GoToStore = new Signal();
         this.GuestClicked = new Signal();
-        this.InviteFriendsClicked = new Signal();
+        this.InviteButtonClicked = new Signal();
         this.InvitesClicked = new Signal();
         this.ReplyClicked = new Signal();
         this.Shown = new Signal();
@@ -710,8 +799,11 @@ var HomeView = (function () {
     HomeView.prototype.GetInvitesVisibility = function () {
         return $("#home-invites").is(":visible");
     };
-    HomeView.prototype.GetMenuSelection = function () {
-        return this.menuSelection;
+    HomeView.prototype.GetSelectedActivity = function () {
+        return this.selectedActivity;
+    };
+    HomeView.prototype.GetSelectedInvite = function () {
+        return this.selectedInvite;
     };
     HomeView.prototype.GetSelectedGuest = function () {
         return this.selectedGuest;
@@ -719,10 +811,16 @@ var HomeView = (function () {
     HomeView.prototype.GetSelectedReply = function () {
         return this.selectedReply;
     };
-    HomeView.prototype.HideFriends = function () {
+    HomeView.prototype.HideActivitiesButton = function () {
+        $("#toggle-activities").hide();
+    };
+    HomeView.prototype.HideActivitiesMenu = function () {
+        $("#home-activities").hide();
+    };
+    HomeView.prototype.HideInvitesMenu = function () {
         $("#home-invites").hide();
     };
-    HomeView.prototype.HideFriendsButton = function () {
+    HomeView.prototype.HideInvitesButton = function () {
         $("#toggle-invites").hide();
     };
     HomeView.prototype.HideTravelButtons = function () {
@@ -777,21 +875,46 @@ var HomeView = (function () {
     HomeView.prototype.SetInviteStatus = function (enabled) {
         $("#invite").prop("disabled", !enabled);
     };
-    HomeView.prototype.SetMenuFriendState = function (character, checked) {
+    HomeView.prototype.SetInviteState = function (character, checked) {
         var label = $("#home-invites ." + character.id);
         if (checked)
             label.addClass("checked");
         else
             label.removeClass("checked");
     };
-    HomeView.prototype.ShowFriends = function (characters) {
+    HomeView.prototype.ShowActivitiesButton = function () {
+        $("#toggle-activities").show();
+    };
+    HomeView.prototype.ShowActivitiesMenu = function (activities) {
+        var OnClick = function (e) {
+            this.selectedActivity = e.data;
+            this.ActivityClicked.Call();
+        };
+        var menu = $("#home-activities");
+        menu.empty();
+        for (var i = 0; i != activities.length; ++i) {
+            var a = activities[i];
+            var label = $("<label>");
+            label.text(Activity.GetName(a));
+            label.addClass("fg-clickable");
+            label.addClass("a" + a);
+            label.click(a, OnClick.bind(this));
+            menu.append(label);
+        }
+        Util.AlignUnderneath($("#toggle-activities"), menu);
+        menu.show();
+    };
+    HomeView.prototype.ShowInvitesButton = function () {
+        $("#toggle-invites").show();
+    };
+    HomeView.prototype.ShowInvitesMenu = function (characters) {
         var _this = this;
         var OnClick = function (e) {
-            this.menuSelection = e.data;
-            this.FriendClicked.Call();
+            this.selectedInvite = e.data;
+            this.InviteClicked.Call();
         };
-        var invites = $("#home-invites");
-        invites.empty();
+        var menu = $("#home-invites");
+        menu.empty();
         for (var i = 0; i != characters.length; ++i) {
             var c = characters[i];
             var label = $("<label>");
@@ -799,18 +922,15 @@ var HomeView = (function () {
             label.addClass("fg-clickable");
             label.addClass(c.id);
             label.click(c, OnClick.bind(this));
-            invites.append(label);
+            menu.append(label);
         }
         var button = $("<button id='invite'>пригласить в гости</button>");
         button.click(function () {
-            _this.InviteFriendsClicked.Call();
+            _this.InviteButtonClicked.Call();
         });
-        invites.append(button);
-        Util.AlignUnderneath($("#toggle-invites"), invites);
-        invites.show();
-    };
-    HomeView.prototype.ShowFriendsButton = function () {
-        $("#toggle-invites").show();
+        menu.append(button);
+        Util.AlignUnderneath($("#toggle-invites"), menu);
+        menu.show();
     };
     HomeView.prototype.ShowTravelButtons = function () {
         $("#go-queue").show();
@@ -843,9 +963,16 @@ var HomeView = (function () {
         toggleInvites.click(function () {
             _this.InvitesClicked.Call();
         });
+        var toggleActivities = $("<button id='toggle-activities'>");
+        toggleActivities.text("занятия…");
+        toggleActivities.click(function () {
+            _this.ActivitiesClicked.Call();
+        });
+        var activities = $("<div id='home-activities' class='menu fg-color'>");
+        activities.hide();
         var invites = $("<div id='home-invites' class='menu fg-color'>");
         invites.hide();
-        $("#buttons").append(goQueue).append(goStore).append(toggleInvites).append(invites);
+        $("#buttons").append(goQueue).append(goStore).append(toggleInvites).append(toggleActivities).append(activities).append(invites);
         this.Shown.Call();
     };
     return HomeView;
@@ -1338,7 +1465,7 @@ var QueueModel = (function () {
         }
     };
     QueueModel.prototype.OnKnock = function () {
-        if (this.queue.length < this.maxLength && Math.random() < 0.3) {
+        if (this.queue.length < this.maxLength && Math.random() < 0.4) {
             this.queue.push(this.MakeStockPosition());
             this.PeopleChanged.Call();
         }
@@ -1785,28 +1912,29 @@ var StoreView = (function () {
     };
     return StoreView;
 })();
-/// <reference path="CharacterManager.ts" />
-/// <reference path="FriendsMenuModel.ts" />
-/// <reference path="HomeModel.ts"        />
-/// <reference path="HomePresenter.ts"    />
-/// <reference path="HomeView.ts"         />
-/// <reference path="DialogManager.ts"    />
-/// <reference path="Flags.ts"            />
-/// <reference path="MainModel.ts"        />
-/// <reference path="MainPresenter.ts"    />
-/// <reference path="MainView.ts"         />
-/// <reference path="PersistentState.ts"  />
-/// <reference path="Player.ts"           />
-/// <reference path="QueueModel.ts"       />
-/// <reference path="QueuePresenter.ts"   />
-/// <reference path="QueueView.ts"        />
-/// <reference path="SaveModel.ts"        />
-/// <reference path="SavePresenter.ts"    />
-/// <reference path="SaveView.ts"         />
-/// <reference path="StoreModel.ts"       />
-/// <reference path="StorePresenter.ts"   />
-/// <reference path="StoreView.ts"        />
-/// <reference path="Timer.ts"            />
+/// <reference path="ActivitiesMenuModel.ts" />
+/// <reference path="CharacterManager.ts"    />
+/// <reference path="FriendsMenuModel.ts"    />
+/// <reference path="HomeModel.ts"           />
+/// <reference path="HomePresenter.ts"       />
+/// <reference path="HomeView.ts"            />
+/// <reference path="DialogManager.ts"       />
+/// <reference path="Flags.ts"               />
+/// <reference path="MainModel.ts"           />
+/// <reference path="MainPresenter.ts"       />
+/// <reference path="MainView.ts"            />
+/// <reference path="PersistentState.ts"     />
+/// <reference path="Player.ts"              />
+/// <reference path="QueueModel.ts"          />
+/// <reference path="QueuePresenter.ts"      />
+/// <reference path="QueueView.ts"           />
+/// <reference path="SaveModel.ts"           />
+/// <reference path="SavePresenter.ts"       />
+/// <reference path="SaveView.ts"            />
+/// <reference path="StoreModel.ts"          />
+/// <reference path="StorePresenter.ts"      />
+/// <reference path="StoreView.ts"           />
+/// <reference path="Timer.ts"               />
 function MapCharacterNameIntroFlags(flags, player, characterManager) {
     var characters = characterManager.GetAllCharacters();
     for (var i = 0; i != characters.length; ++i) {
@@ -1832,6 +1960,7 @@ function Main(dialogs, characters) {
     var characterManager = new CharacterManager(characters, flags);
     var timer = new Timer();
     var player = new Player(timer);
+    var activititesModel = new ActivitiesMenuModel();
     var invitesModel = new FriendsMenuModel(characterManager);
     var homeModel = new HomeModel(timer, characterManager, dialogManager);
     var mainModel = new MainModel(player);
@@ -1843,7 +1972,7 @@ function Main(dialogs, characters) {
     var saveView = new SaveView();
     var storeView = new StoreView();
     var mainView = new MainView([homeView, queueView, storeView]);
-    var homePresenter = new HomePresenter(homeModel, invitesModel, mainModel, queueModel, homeView);
+    var homePresenter = new HomePresenter(homeModel, activititesModel, invitesModel, mainModel, queueModel, homeView);
     var mainPresenter = new MainPresenter(mainModel, mainView);
     var queuePresenter = new QueuePresenter(mainModel, queueModel, queueView);
     var savePresenter = new SavePresenter(saveModel, saveView);

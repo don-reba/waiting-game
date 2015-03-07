@@ -186,7 +186,7 @@ class QueueModel implements IQueueModel, IPersistent
 
 	private OnKnock() : void
 	{
-		if (this.queue.length < this.maxLength && Math.random() < 0.3)
+		if (this.queue.length < this.maxLength && Math.random() < 0.4)
 		{
 			this.queue.push(this.MakeStockPosition());
 			this.PeopleChanged.Call();

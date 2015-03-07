@@ -7,7 +7,7 @@ class HomeModelState
 	waitingGuests   : string[];
 	guests          : string[];
 	atEntrance      : boolean;
-	activity        : HomeItem;
+	activeItem      : HomeItem;
 	dialogID        : string;
 	speakerID       : string;
 }
@@ -19,19 +19,19 @@ class HomeModel implements IHomeModel, IPersistent
 	private guests          : string[];
 	private atEntrance      : boolean;
 	private items           : HomeItem[];
-	private activity        : HomeItem;
+	private activeItem      : HomeItem;
 
 	private dialogID  : string;
 	private speakerID : string;
 
-	private nx         = 78;
-	private ny         = 23;
+	private nx : number = 78;
+	private ny : number = 23;
 
 	// IHomeModel implementation
 
-	DialogChanged   = new Signal();
-	FriendsArriving = new Signal();
-	GuestsChanged   = new Signal();
+	DialogChanged = new Signal();
+	GuestsChanged = new Signal();
+	StateChanged  = new Signal();
 
 	constructor
 		( private timer            : Timer
@@ -59,9 +59,14 @@ class HomeModel implements IHomeModel, IPersistent
 		this.DialogChanged.Call();
 	}
 
+	AreGuestsArriving() : boolean
+	{
+		return this.waitingGuests.length > 0;
+	}
+
 	AreGuestsIn() : boolean
 	{
-		return this.waitingGuests.length + this.guests.length > 0;
+		return this.guests.length > 0;
 	}
 
 	GetCanvas() : HomeCanvas
@@ -70,7 +75,7 @@ class HomeModel implements IHomeModel, IPersistent
 		for (var i = 0; i != this.items.length; ++i)
 		{
 			var item = this.items[i];
-			if (item == this.activity)
+			if (item == this.activeItem)
 				this.RenderActiveItem(item);
 			else
 				this.RenderInactiveItem(item);
@@ -105,9 +110,9 @@ class HomeModel implements IHomeModel, IPersistent
 	{
 		for (var i = 0; i != friends.length; ++i)
 			this.waitingGuests.push(friends[i].id);
-		this.guests          = [];
-		this.activity        = HomeItem.TV;
-		this.FriendsArriving.Call();
+		this.guests     = [];
+		this.activeItem = HomeItem.TV;
+		this.StateChanged.Call();
 	}
 
 	IsGuestAtTheDoor() : boolean
@@ -119,6 +124,21 @@ class HomeModel implements IHomeModel, IPersistent
 	{
 		this.atEntrance = false;
 		this.GuestsChanged.Call();
+		if (this.waitingGuests.length == 0)
+			this.StateChanged.Call();
+	}
+
+	SetActivity(activity : Activity) : void
+	{
+		switch (activity)
+		{
+		case Activity.Stop:
+			this.guests = [];
+			this.activeItem = null;
+			this.GuestsChanged.Call();
+			this.StateChanged.Call();
+			break;
+		}
 	}
 
 	StartDialog(speaker : ICharacter) : void
@@ -162,7 +182,7 @@ class HomeModel implements IHomeModel, IPersistent
 		this.waitingGuests = state.waitingGuests;
 		this.guests        = state.guests;
 		this.atEntrance    = state.atEntrance;
-		this.activity      = state.activity;
+		this.activeItem    = state.activeItem;
 		this.dialogID      = state.dialogID;
 		this.speakerID     = state.speakerID;
 	}
@@ -173,7 +193,7 @@ class HomeModel implements IHomeModel, IPersistent
 			{ waitingGuests : this.waitingGuests
 			, guests        : this.guests
 			, atEntrance    : this.atEntrance
-			, activity      : this.activity
+			, activeItem    : this.activeItem
 			, dialogID      : this.dialogID
 			, speakerID     : this.speakerID
 			};

@@ -4,18 +4,21 @@
 
 class HomeView implements IHomeView, IClientView
 {
-	private menuSelection : ICharacter;
-	private selectedGuest : ICharacter;
-	private selectedReply : string;
+	private selectedActivity : Activity;
+	private selectedInvite   : ICharacter;
+	private selectedGuest    : ICharacter;
+	private selectedReply    : string;
 
 	// IHomeView implementation
 
-	FriendClicked        = new Signal();
+	ActivityClicked      = new Signal();
+	ActivitiesClicked    = new Signal();
+	InviteClicked        = new Signal();
 	FriendsClicked       = new Signal();
 	GoToQueue            = new Signal();
 	GoToStore            = new Signal();
 	GuestClicked         = new Signal();
-	InviteFriendsClicked = new Signal();
+	InviteButtonClicked = new Signal();
 	InvitesClicked       = new Signal();
 	ReplyClicked         = new Signal();
 	Shown                = new Signal();
@@ -50,9 +53,14 @@ class HomeView implements IHomeView, IClientView
 		return $("#home-invites").is(":visible");
 	}
 
-	GetMenuSelection() : ICharacter
+	GetSelectedActivity() : Activity
 	{
-		return this.menuSelection;
+		return this.selectedActivity;
+	}
+
+	GetSelectedInvite() : ICharacter
+	{
+		return this.selectedInvite;
 	}
 
 	GetSelectedGuest() : ICharacter
@@ -65,12 +73,22 @@ class HomeView implements IHomeView, IClientView
 		return this.selectedReply;
 	}
 
-	HideFriends() : void
+	HideActivitiesButton() : void
+	{
+		$("#toggle-activities").hide();
+	}
+
+	HideActivitiesMenu() : void
+	{
+		$("#home-activities").hide();
+	}
+
+	HideInvitesMenu() : void
 	{
 		$("#home-invites").hide();
 	}
 
-	HideFriendsButton() : void
+	HideInvitesButton() : void
 	{
 		$("#toggle-invites").hide();
 	}
@@ -155,7 +173,7 @@ class HomeView implements IHomeView, IClientView
 		$("#invite").prop("disabled", !enabled);
 	}
 
-	SetMenuFriendState(character : ICharacter, checked : boolean) : void
+	SetInviteState(character : ICharacter, checked : boolean) : void
 	{
 		var label = $("#home-invites ." + character.id);
 		if (checked)
@@ -164,16 +182,55 @@ class HomeView implements IHomeView, IClientView
 			label.removeClass("checked");
 	}
 
-	ShowFriends(characters : ICharacter[]) : void
+	ShowActivitiesButton() : void
+	{
+		$("#toggle-activities").show();
+	}
+
+	ShowActivitiesMenu(activities : Activity[]) : void
 	{
 		var OnClick = function(e)
 		{
-			this.menuSelection = e.data;
-			this.FriendClicked.Call();
+			this.selectedActivity = e.data;
+			this.ActivityClicked.Call();
 		}
 
-		var invites = $("#home-invites");
-		invites.empty();
+		var menu = $("#home-activities");
+		menu.empty();
+
+		for (var i = 0; i != activities.length; ++i)
+		{
+			var a = activities[i];
+
+			var label = $("<label>");
+			label.text(Activity.GetName(a));
+			label.addClass("fg-clickable");
+			label.addClass("a" + a);
+			label.click(a, OnClick.bind(this));
+
+			menu.append(label);
+		}
+
+		Util.AlignUnderneath($("#toggle-activities"), menu);
+
+		menu.show();
+	}
+
+	ShowInvitesButton() : void
+	{
+		$("#toggle-invites").show();
+	}
+
+	ShowInvitesMenu(characters : ICharacter[]) : void
+	{
+		var OnClick = function(e)
+		{
+			this.selectedInvite = e.data;
+			this.InviteClicked.Call();
+		}
+
+		var menu = $("#home-invites");
+		menu.empty();
 
 		for (var i = 0; i != characters.length; ++i)
 		{
@@ -185,21 +242,16 @@ class HomeView implements IHomeView, IClientView
 			label.addClass(c.id);
 			label.click(c, OnClick.bind(this));
 
-			invites.append(label);
+			menu.append(label);
 		}
 
 		var button = $("<button id='invite'>пригласить в гости</button>");
-		button.click(() => { this.InviteFriendsClicked.Call() });
-		invites.append(button);
+		button.click(() => { this.InviteButtonClicked.Call() });
+		menu.append(button);
 
-		Util.AlignUnderneath($("#toggle-invites"), invites);
+		Util.AlignUnderneath($("#toggle-invites"), menu);
 
-		invites.show();
-	}
-
-	ShowFriendsButton() : void
-	{
-		$("#toggle-invites").show();
+		menu.show();
 	}
 
 	ShowTravelButtons() : void
@@ -239,6 +291,13 @@ class HomeView implements IHomeView, IClientView
 		toggleInvites.text("друзья…");
 		toggleInvites.click(() => { this.InvitesClicked.Call() });
 
+		var toggleActivities = $("<button id='toggle-activities'>");
+		toggleActivities.text("занятия…");
+		toggleActivities.click(() => { this.ActivitiesClicked.Call() });
+
+		var activities = $("<div id='home-activities' class='menu fg-color'>");
+		activities.hide();
+
 		var invites = $("<div id='home-invites' class='menu fg-color'>");
 		invites.hide();
 
@@ -246,6 +305,8 @@ class HomeView implements IHomeView, IClientView
 			.append(goQueue)
 			.append(goStore)
 			.append(toggleInvites)
+			.append(toggleActivities)
+			.append(activities)
 			.append(invites);
 
 		this.Shown.Call();

@@ -1,14 +1,17 @@
+/// <reference path="Activity.ts"   />
 /// <reference path="HomeCanvas.ts" />
 /// <reference path="ICharacter.ts" />
 /// <reference path="Signal.ts"     />
 
 interface IHomeView
 {
-	FriendClicked        : Signal;
+	ActivityClicked      : Signal;
+	ActivitiesClicked    : Signal;
+	InviteClicked        : Signal;
 	GoToQueue            : Signal;
 	GoToStore            : Signal;
 	GuestClicked         : Signal;
-	InviteFriendsClicked : Signal;
+	InviteButtonClicked : Signal;
 	InvitesClicked       : Signal;
 	ReplyClicked         : Signal;
 	Shown                : Signal;
@@ -17,17 +20,23 @@ interface IHomeView
 
 	EnableAllFriends() : void;
 
+	GetSelectedActivity() : Activity;
+
 	GetInvitesVisibility() : boolean;
 
-	GetMenuSelection() : ICharacter;
+	GetSelectedInvite() : ICharacter;
 
 	GetSelectedGuest() : ICharacter;
 
 	GetSelectedReply() : string;
 
-	HideFriends() : void;
+	HideActivitiesButton() : void;
 
-	HideFriendsButton() : void;
+	HideActivitiesMenu() : void;
+
+	HideInvitesMenu() : void;
+
+	HideInvitesButton() : void;
 
 	HideTravelButtons() : void;
 
@@ -37,11 +46,15 @@ interface IHomeView
 
 	SetInviteStatus(status : boolean) : void;
 
-	SetMenuFriendState(character : ICharacter, checked : boolean) : void;
+	SetInviteState(character : ICharacter, checked : boolean) : void;
 
-	ShowFriends(characters : ICharacter[]) : void;
+	ShowActivitiesButton() : void;
 
-	ShowFriendsButton() : void;
+	ShowActivitiesMenu(activities : Activity[]) : void;
+
+	ShowInvitesButton() : void;
+
+	ShowInvitesMenu(characters : ICharacter[]) : void;
 
 	ShowTravelButtons() : void;
 }
