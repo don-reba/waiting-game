@@ -87,12 +87,12 @@ class InvitesMenuModel implements IInvitesMenuModel, IPersistent
 		}
 		else
 		{
-			if (this.selected.length == this.maxFriends)
-				this.EnabledStateChanged.Call();
-
 			this.selection = this.characterManager.GetCharacter(this.selected[i]);
 			this.selected.splice(i, 1);
 			this.SelectionChanged.Call();
+
+			if (this.selected.length == this.maxFriends - 1)
+				this.EnabledStateChanged.Call();
 
 			if (this.selected.length == 0)
 				this.EmptiedStateChanged.Call();

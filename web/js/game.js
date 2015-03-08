@@ -296,11 +296,6 @@ var Hat;
     Hat[Hat["Tophat"] = 1] = "Tophat";
 })(Hat || (Hat = {}));
 /// <reference path="ICharacter.ts" />
-var HomeCanvas = (function () {
-    function HomeCanvas() {
-    }
-    return HomeCanvas;
-})();
 /// <reference path="Activity.ts" />
 var HomeItemInfo = (function () {
     function HomeItemInfo() {
@@ -377,10 +372,10 @@ var HomeModel = (function () {
         }
         if (this.atEntrance)
             this.RenderEntrance();
-        var characters = [null];
+        var characters = [{ character: null, isClickable: false }];
         for (var i = 0; i != this.guests.length; ++i) {
-            var guest = this.guests[i];
-            characters.push(this.characterManager.GetCharacter(guest));
+            var character = { character: this.characterManager.GetCharacter(this.guests[i]), isClickable: !this.atEntrance || i != this.guests.length - 1 };
+            characters.push(character);
         }
         return { rows: this.MergeLines(this.canvas), characters: characters };
     };
@@ -752,15 +747,22 @@ var HomeView = (function () {
         var html = canvas.rows.join("<br>");
         for (var i = 0; i != canvas.characters.length; ++i) {
             var c = canvas.characters[i];
-            var replacement = c ? "<span id='character-" + c.id + "' class='character'>\\o/</span>" : "<span class='player'>\\o/</span>";
+            var replacement = c.character ? "<span id='character-" + c.character.id + "'>\\o/</span>" : "<span class='player'>\\o/</span>";
             html = html.replace(" " + i + " ", replacement);
         }
         view.html(html);
         for (var i = 0; i != canvas.characters.length; ++i) {
             var c = canvas.characters[i];
-            if (c) {
-                var span = $("#character-" + c.id);
-                span.click(c, OnClickCharacter.bind(this));
+            if (c.character && c.isClickable) {
+                var span = $("#character-" + c.character.id);
+                span.addClass("character");
+                span.click(c.character, OnClickCharacter.bind(this));
+                var name = $("<span>");
+                name.attr("id", "character-name-" + c.character.id);
+                name.addClass("character-name");
+                name.addClass("base-font");
+                name.text(c.character.name);
+                span.append(name);
             }
         }
     };
@@ -951,11 +953,11 @@ var InvitesMenuModel = (function () {
             }
         }
         else {
-            if (this.selected.length == this.maxFriends)
-                this.EnabledStateChanged.Call();
             this.selection = this.characterManager.GetCharacter(this.selected[i]);
             this.selected.splice(i, 1);
             this.SelectionChanged.Call();
+            if (this.selected.length == this.maxFriends - 1)
+                this.EnabledStateChanged.Call();
             if (this.selected.length == 0)
                 this.EmptiedStateChanged.Call();
         }

@@ -10,15 +10,12 @@ html {
 	height : 100%;
 }
 body {
-	font-family    : Neucha;
-	font-size      : 100%;
-	letter-spacing : 0.05em;
-	word-spacing   : 0.1em;
-	text-align     : center;
-	height         : 100%;
+	font-size  : 100%;
+	text-align : center;
+	height     : 100%;
 }
 button {
-	font-family    : Neucha;
+	font-family : Neucha;
 }
 i {
 	font-style : italic;
@@ -38,6 +35,11 @@ aside {
 }
 .info-font {
 	font-size : 1.3em;
+}
+.base-font {
+	font-family    : Neucha;
+	letter-spacing : 0.05em;
+	word-spacing   : 0.1em;
 }
 
 .bg-clickable       { cursor           : pointer; }
@@ -302,23 +304,30 @@ aside {
 	z-index        : 0;
 }
 #home-dialog {
-	z-index          : 1;
+	z-index : 2;
 }
-#home-view span.character {
-	box-sizing       : border-box;
-	cursor           : pointer;
-	font-family      : inherit;
-	margin           : 0;
-	padding          : 0;
+#home-view .character {
+	cursor      : pointer;
+	font-family : inherit;
+	margin      : 0;
+	padding     : 0;
+	position    : relative;
+	text-align : center;
 }
-#home-view span.character:hover {
-	box-shadow: 0 0 0 1px black inset;
+#home-view .character:hover {
+	background-color : #B2D184;
 }
-#home-view span.player:hover {
-	background-color : #F0F0F0;
-	padding          : 0;
-	margin           : 0;
-	font-family      : inherit;
+#home-view .character-name {
+	display  : none;
+	position : absolute;
+	left     : 50%;
+	top      : 2em;
+	transform      : translateX(-50%);
+
+	z-index  : 1;
+}
+#home-view .character:hover .character-name {
+	display : inline;
 }
 
 /* queue */

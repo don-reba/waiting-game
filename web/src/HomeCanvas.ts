@@ -1,7 +1,13 @@
 /// <reference path="ICharacter.ts" />
 
-class HomeCanvas
+interface HomeCanvasCharacter
+{
+	character   : ICharacter;
+	isClickable : boolean;
+}
+
+interface HomeCanvas
 {
 	rows       : string[];
-	characters : ICharacter[];
+	characters : HomeCanvasCharacter[];
 }

@@ -83,11 +83,15 @@ class HomeModel implements IHomeModel, IPersistent
 		if (this.atEntrance)
 			this.RenderEntrance();
 
-		var characters = [ null ];
+		var characters : HomeCanvasCharacter[] =
+			[ { character : null, isClickable : false } ];
 		for (var i = 0; i != this.guests.length; ++i)
 		{
-			var guest = this.guests[i];
-			characters.push(this.characterManager.GetCharacter(guest));
+			var character : HomeCanvasCharacter =
+				{ character   : this.characterManager.GetCharacter(this.guests[i])
+				, isClickable : !this.atEntrance || i != this.guests.length - 1
+				};
+			characters.push(character);
 		}
 
 		return <HomeCanvas>

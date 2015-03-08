@@ -112,8 +112,8 @@ class HomeView implements IHomeView, IClientView
 		for (var i = 0; i != canvas.characters.length; ++i)
 		{
 			var c = canvas.characters[i];
-			var replacement = c
-				? "<span id='character-" + c.id + "' class='character'>\\o/</span>"
+			var replacement = c.character
+				? "<span id='character-" + c.character.id + "'>\\o/</span>"
 				: "<span class='player'>\\o/</span>";
 			html = html.replace(" " + i + " ", replacement);
 		}
@@ -122,10 +122,18 @@ class HomeView implements IHomeView, IClientView
 		for (var i = 0; i != canvas.characters.length; ++i)
 		{
 			var c = canvas.characters[i];
-			if (c)
+			if (c.character && c.isClickable)
 			{
-				var span = $("#character-" + c.id);
-				span.click(c, OnClickCharacter.bind(this));
+				var span = $("#character-" + c.character.id);
+				span.addClass("character");
+				span.click(c.character, OnClickCharacter.bind(this));
+
+				var name = $("<span>");
+				name.attr("id", "character-name-" + c.character.id);
+				name.addClass("character-name");
+				name.addClass("base-font");
+				name.text(c.character.name);
+				span.append(name);
 			}
 		}
 	}
