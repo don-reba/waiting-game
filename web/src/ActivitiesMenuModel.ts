@@ -10,8 +10,7 @@ class ActivitiesMenuModel implements IActivitiesMenuModel, IPersistent
 {
 	private isVisible : boolean  = false;
 
-	Hidden = new Signal();
-	Shown  = new Signal();
+	VisibilityChanged = new Signal();
 
 	// IActivitiesMenuModel implementation
 
@@ -20,18 +19,15 @@ class ActivitiesMenuModel implements IActivitiesMenuModel, IPersistent
 		return [ Activity.Stop ];
 	}
 
-	IsVisibile() : boolean
+	IsVisible() : boolean
 	{
 		return this.isVisible;
 	}
 
-	ToggleVisibility() : void
+	SetVisibility(visibility : boolean) : void
 	{
-		this.isVisible = !this.isVisible;
-		if (this.isVisible)
-			this.Shown.Call();
-		else
-			this.Hidden.Call();
+		this.isVisible = visibility;
+		this.VisibilityChanged.Call();
 	}
 
 	// IPersistent implementation

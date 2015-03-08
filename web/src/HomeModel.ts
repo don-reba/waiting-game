@@ -158,19 +158,20 @@ class HomeModel implements IHomeModel, IPersistent
 		if (this.waitingGuests.length == 0)
 			return;
 
+		if (Math.random() < 0.5)
+			return;
+
 		var i = Math.floor(Math.random() * this.waitingGuests.length);
-		var waiting = this.waitingGuests[i];
+		var id = this.waitingGuests[i];
 		this.waitingGuests.splice(i, 1);
-		this.guests.push(waiting);
+		this.guests.push(id);
 
 		this.atEntrance = true;
 
 		this.GuestsChanged.Call();
 
-		var speaker = this.characterManager.GetCharacter(waiting);
-
-		this.speakerID = speaker.id;
-		this.dialogID  = this.characterManager.GetDialogID(speaker.id, DialogType.HomeArrival);
+		this.speakerID = id;
+		this.dialogID  = this.characterManager.GetDialogID(id, DialogType.HomeArrival);
 		this.DialogChanged.Call();
 	}
 

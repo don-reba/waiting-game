@@ -14,7 +14,6 @@ class HomeView implements IHomeView, IClientView
 	ActivityClicked      = new Signal();
 	ActivitiesClicked    = new Signal();
 	InviteClicked        = new Signal();
-	FriendsClicked       = new Signal();
 	GoToQueue            = new Signal();
 	GoToStore            = new Signal();
 	GuestClicked         = new Signal();

@@ -3,14 +3,10 @@
 
 interface IInvitesMenuModel
 {
-	Cleared  : Signal;
-	Disabled : Signal;
-	Emptied  : Signal;
-	Enabled  : Signal;
-	Filled   : Signal;
-	Hidden   : Signal;
-	Selected : Signal;
-	Shown    : Signal;
+	EnabledStateChanged : Signal;
+	EmptiedStateChanged : Signal;
+	SelectionChanged    : Signal;
+	VisibilityChanged   : Signal;
 
 	GetFriends() : ICharacter[];
 
@@ -22,11 +18,13 @@ interface IInvitesMenuModel
 
 	IsEnabled() : boolean;
 
+	IsSelected(character : ICharacter) : boolean;
+
 	IsVisible() : boolean;
 
 	Reset() : void;
 
 	ToggleSelection(character : ICharacter) : void;
 
-	ToggleVisibility() : void;
+	SetVisibility(visibility : boolean) : void;
 }

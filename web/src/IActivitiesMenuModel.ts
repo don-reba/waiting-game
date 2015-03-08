@@ -3,12 +3,11 @@
 
 interface IActivitiesMenuModel
 {
-	Hidden : Signal;
-	Shown  : Signal;
+	VisibilityChanged : Signal;
 
 	GetActivities() : Activity[];
 
-	IsVisibile() : boolean;
+	IsVisible() : boolean;
 
-	ToggleVisibility() : void;
+	SetVisibility(visibility : boolean) : void;
 }

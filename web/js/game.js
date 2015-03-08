@@ -32,22 +32,18 @@ var Signal = (function () {
 var ActivitiesMenuModel = (function () {
     function ActivitiesMenuModel() {
         this.isVisible = false;
-        this.Hidden = new Signal();
-        this.Shown = new Signal();
+        this.VisibilityChanged = new Signal();
     }
     // IActivitiesMenuModel implementation
     ActivitiesMenuModel.prototype.GetActivities = function () {
         return [1 /* Stop */];
     };
-    ActivitiesMenuModel.prototype.IsVisibile = function () {
+    ActivitiesMenuModel.prototype.IsVisible = function () {
         return this.isVisible;
     };
-    ActivitiesMenuModel.prototype.ToggleVisibility = function () {
-        this.isVisible = !this.isVisible;
-        if (this.isVisible)
-            this.Shown.Call();
-        else
-            this.Hidden.Call();
+    ActivitiesMenuModel.prototype.SetVisibility = function (visibility) {
+        this.isVisible = visibility;
+        this.VisibilityChanged.Call();
     };
     // IPersistent implementation
     ActivitiesMenuModel.prototype.FromPersistentString = function (str) {
@@ -431,15 +427,16 @@ var HomeModel = (function () {
             return;
         if (this.waitingGuests.length == 0)
             return;
+        if (Math.random() < 0.5)
+            return;
         var i = Math.floor(Math.random() * this.waitingGuests.length);
-        var waiting = this.waitingGuests[i];
+        var id = this.waitingGuests[i];
         this.waitingGuests.splice(i, 1);
-        this.guests.push(waiting);
+        this.guests.push(id);
         this.atEntrance = true;
         this.GuestsChanged.Call();
-        var speaker = this.characterManager.GetCharacter(waiting);
-        this.speakerID = speaker.id;
-        this.dialogID = this.characterManager.GetDialogID(speaker.id, 2 /* HomeArrival */);
+        this.speakerID = id;
+        this.dialogID = this.characterManager.GetDialogID(id, 2 /* HomeArrival */);
         this.DialogChanged.Call();
     };
     // IPersistent implementation
@@ -540,16 +537,11 @@ var HomePresenter = (function () {
         homeModel.DialogChanged.Add(this.OnDialogChanged.bind(this));
         homeModel.GuestsChanged.Add(this.OnGuestsChanged.bind(this));
         homeModel.StateChanged.Add(this.OnStateChanged.bind(this));
-        activitiesModel.Hidden.Add(this.OnActivitiesMenuHidden.bind(this));
-        activitiesModel.Shown.Add(this.OnActivitiesMenuShown.bind(this));
-        invitesModel.Cleared.Add(this.OnInvitesMenuCleared.bind(this));
-        invitesModel.Disabled.Add(this.OnInvitesMenuDisabled.bind(this));
-        invitesModel.Emptied.Add(this.OnInvitesMenuEmptied.bind(this));
-        invitesModel.Enabled.Add(this.OnInvitesMenuEnabled.bind(this));
-        invitesModel.Filled.Add(this.OnInvitesMenuFilled.bind(this));
-        invitesModel.Hidden.Add(this.OnInvitesMenuHidden.bind(this));
-        invitesModel.Selected.Add(this.OnInvitesMenuSelected.bind(this));
-        invitesModel.Shown.Add(this.OnInvitesMenuShown.bind(this));
+        activitiesModel.VisibilityChanged.Add(this.OnActivitiesMenuVisibilityChanged.bind(this));
+        invitesModel.EmptiedStateChanged.Add(this.OnInvitesMenuEmptiedStateChanged.bind(this));
+        invitesModel.EnabledStateChanged.Add(this.OnInvitesMenuEnabledStateChanged.bind(this));
+        invitesModel.SelectionChanged.Add(this.OnInvitesMenuSelectionChanged.bind(this));
+        invitesModel.VisibilityChanged.Add(this.OnInvitesMenuVisibilityChanged.bind(this));
         homeView.ActivitiesClicked.Add(this.OnActivitiesClicked.bind(this));
         homeView.ActivityClicked.Add(this.OnActivityClicked.bind(this));
         homeView.GoToQueue.Add(this.OnGoToQueue.bind(this));
@@ -563,17 +555,14 @@ var HomePresenter = (function () {
     }
     HomePresenter.prototype.OnActivityClicked = function () {
         this.homeModel.SetActivity(this.homeView.GetSelectedActivity());
-        this.homeView.HideActivitiesMenu();
+        this.activitiesModel.SetVisibility(false);
         this.homeView.HideActivitiesButton();
     };
     HomePresenter.prototype.OnActivitiesClicked = function () {
-        this.activitiesModel.ToggleVisibility();
+        this.activitiesModel.SetVisibility(!this.activitiesModel.IsVisible());
     };
-    HomePresenter.prototype.OnActivitiesMenuHidden = function () {
-        this.homeView.HideActivitiesMenu();
-    };
-    HomePresenter.prototype.OnActivitiesMenuShown = function () {
-        this.ShowActivitiesMenu();
+    HomePresenter.prototype.OnActivitiesMenuVisibilityChanged = function () {
+        this.UpdateActivitiesMenuVisibility();
     };
     HomePresenter.prototype.OnDialogChanged = function () {
         var speaker = this.homeModel.GetSpeaker();
@@ -583,43 +572,33 @@ var HomePresenter = (function () {
             this.homeModel.LetTheGuestIn();
     };
     HomePresenter.prototype.OnInvitesClicked = function () {
-        this.invitesModel.ToggleVisibility();
+        this.invitesModel.SetVisibility(!this.invitesModel.IsVisible());
     };
     HomePresenter.prototype.OnInviteClicked = function () {
         this.invitesModel.ToggleSelection(this.homeView.GetSelectedInvite());
     };
     HomePresenter.prototype.OnInvitesButtonClicked = function () {
-        this.invitesModel.ToggleVisibility();
+        this.invitesModel.SetVisibility(false);
         this.homeView.HideInvitesMenu();
         this.homeModel.InviteFriends(this.invitesModel.GetSelectedFriends());
         this.invitesModel.Reset();
     };
-    HomePresenter.prototype.OnInvitesMenuCleared = function () {
-        this.homeView.SetInviteState(this.invitesModel.GetSelection(), false);
+    HomePresenter.prototype.OnInvitesMenuEmptiedStateChanged = function () {
+        this.homeView.SetInviteStatus(!this.invitesModel.IsEmpty());
     };
-    HomePresenter.prototype.OnInvitesMenuDisabled = function () {
-        this.homeView.DisableUnselectedFriends();
+    HomePresenter.prototype.OnInvitesMenuEnabledStateChanged = function () {
+        this.UpdateInvitesMenuEnabledState();
     };
-    HomePresenter.prototype.OnInvitesMenuEmptied = function () {
-        this.homeView.SetInviteStatus(false);
+    HomePresenter.prototype.OnInvitesMenuSelectionChanged = function () {
+        var selection = this.invitesModel.GetSelection();
+        var isSelected = this.invitesModel.IsSelected(selection);
+        this.homeView.SetInviteState(selection, isSelected);
     };
-    HomePresenter.prototype.OnInvitesMenuEnabled = function () {
-        this.homeView.EnableAllFriends();
-    };
-    HomePresenter.prototype.OnInvitesMenuFilled = function () {
-        this.homeView.SetInviteStatus(true);
-    };
-    HomePresenter.prototype.OnInvitesMenuSelected = function () {
-        this.homeView.SetInviteState(this.invitesModel.GetSelection(), true);
-    };
-    HomePresenter.prototype.OnInvitesMenuShown = function () {
-        this.ShowInvitesMenu();
+    HomePresenter.prototype.OnInvitesMenuVisibilityChanged = function () {
+        this.UpdateInvitesMenuVisibility();
     };
     HomePresenter.prototype.OnInvitesMenuChanged = function () {
         this.homeView.ShowInvitesMenu(this.invitesModel.GetFriends());
-    };
-    HomePresenter.prototype.OnInvitesMenuHidden = function () {
-        this.homeView.HideInvitesMenu();
     };
     HomePresenter.prototype.OnGuestClicked = function () {
         this.homeModel.StartDialog(this.homeView.GetSelectedGuest());
@@ -641,26 +620,32 @@ var HomePresenter = (function () {
         this.homeView.SetCanvas(this.homeModel.GetCanvas());
         this.homeView.SetDialog(this.homeModel.GetSpeaker(), this.homeModel.GetDialog());
         this.UpdateButtonStates();
-        this.ShowActivitiesMenu();
-        this.ShowInvitesMenu();
+        this.UpdateActivitiesMenuVisibility();
+        this.UpdateInvitesMenuVisibility();
     };
     HomePresenter.prototype.OnStateChanged = function () {
         this.UpdateButtonStates();
     };
     // private implementation
-    HomePresenter.prototype.ShowActivitiesMenu = function () {
-        if (!this.activitiesModel.IsVisibile())
-            return;
-        this.homeView.ShowActivitiesMenu(this.activitiesModel.GetActivities());
+    HomePresenter.prototype.UpdateActivitiesMenuVisibility = function () {
+        if (this.activitiesModel.IsVisible())
+            this.homeView.ShowActivitiesMenu(this.activitiesModel.GetActivities());
+        else
+            this.homeView.HideActivitiesMenu();
     };
-    HomePresenter.prototype.ShowInvitesMenu = function () {
-        if (!this.invitesModel.IsVisible())
+    HomePresenter.prototype.UpdateInvitesMenuVisibility = function () {
+        if (!this.invitesModel.IsVisible()) {
+            this.homeView.HideInvitesMenu();
             return;
+        }
         this.homeView.ShowInvitesMenu(this.invitesModel.GetFriends());
         this.homeView.SetInviteStatus(!this.invitesModel.IsEmpty());
         var selected = this.invitesModel.GetSelectedFriends();
         for (var i = 0; i != selected.length; ++i)
             this.homeView.SetInviteState(selected[i], true);
+        this.UpdateInvitesMenuEnabledState();
+    };
+    HomePresenter.prototype.UpdateInvitesMenuEnabledState = function () {
         if (this.invitesModel.IsEnabled())
             this.homeView.EnableAllFriends();
         else
@@ -701,7 +686,6 @@ var HomeView = (function () {
         this.ActivityClicked = new Signal();
         this.ActivitiesClicked = new Signal();
         this.InviteClicked = new Signal();
-        this.FriendsClicked = new Signal();
         this.GoToQueue = new Signal();
         this.GoToStore = new Signal();
         this.GuestClicked = new Signal();
@@ -920,14 +904,10 @@ var InvitesMenuModel = (function () {
         this.isVisible = false;
         this.selected = [];
         this.maxFriends = 3; // has to be single-digit
-        this.Cleared = new Signal();
-        this.Disabled = new Signal();
-        this.Emptied = new Signal();
-        this.Enabled = new Signal();
-        this.Filled = new Signal();
-        this.Hidden = new Signal();
-        this.Selected = new Signal();
-        this.Shown = new Signal();
+        this.EmptiedStateChanged = new Signal();
+        this.EnabledStateChanged = new Signal();
+        this.SelectionChanged = new Signal();
+        this.VisibilityChanged = new Signal();
     }
     // IInvitesMenuModel implementation
     InvitesMenuModel.prototype.GetFriends = function () {
@@ -948,6 +928,9 @@ var InvitesMenuModel = (function () {
     InvitesMenuModel.prototype.IsEnabled = function () {
         return this.selected.length < this.maxFriends;
     };
+    InvitesMenuModel.prototype.IsSelected = function (character) {
+        return this.selected.indexOf(character.id) >= 0;
+    };
     InvitesMenuModel.prototype.IsVisible = function () {
         return this.isVisible;
     };
@@ -960,29 +943,27 @@ var InvitesMenuModel = (function () {
             if (this.selected.length < this.maxFriends) {
                 this.selection = character;
                 this.selected.push(character.id);
-                this.Selected.Call();
+                this.SelectionChanged.Call();
                 if (this.selected.length == this.maxFriends)
-                    this.Disabled.Call();
+                    this.EnabledStateChanged.Call();
                 if (this.selected.length == 1)
-                    this.Filled.Call();
+                    this.EmptiedStateChanged.Call();
             }
         }
         else {
             if (this.selected.length == this.maxFriends)
-                this.Enabled.Call();
+                this.EnabledStateChanged.Call();
             this.selection = this.characterManager.GetCharacter(this.selected[i]);
             this.selected.splice(i, 1);
-            this.Cleared.Call();
+            this.SelectionChanged.Call();
             if (this.selected.length == 0)
-                this.Emptied.Call();
+                this.EmptiedStateChanged.Call();
         }
     };
-    InvitesMenuModel.prototype.ToggleVisibility = function () {
-        this.isVisible = !this.isVisible;
-        if (this.isVisible)
-            this.Shown.Call();
-        else
-            this.Hidden.Call();
+    InvitesMenuModel.prototype.SetVisibility = function (visibility) {
+        this.isVisible = visibility;
+        ;
+        this.VisibilityChanged.Call();
     };
     // IPersistent implementation
     InvitesMenuModel.prototype.FromPersistentString = function (str) {

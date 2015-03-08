@@ -16,14 +16,10 @@ class InvitesMenuModel implements IInvitesMenuModel, IPersistent
 
 	private maxFriends = 3;  // has to be single-digit
 
-	Cleared  = new Signal();
-	Disabled = new Signal();
-	Emptied  = new Signal();
-	Enabled  = new Signal();
-	Filled   = new Signal();
-	Hidden   = new Signal();
-	Selected = new Signal();
-	Shown    = new Signal();
+	EmptiedStateChanged = new Signal();
+	EnabledStateChanged = new Signal();
+	SelectionChanged    = new Signal();
+	VisibilityChanged   = new Signal();
 
 	constructor(private characterManager : CharacterManager)
 	{
@@ -56,6 +52,11 @@ class InvitesMenuModel implements IInvitesMenuModel, IPersistent
 		return this.selected.length < this.maxFriends;
 	}
 
+	IsSelected(character : ICharacter) : boolean
+	{
+		return this.selected.indexOf(character.id) >= 0;
+	}
+
 	IsVisible() : boolean
 	{
 		return this.isVisible;
@@ -75,36 +76,33 @@ class InvitesMenuModel implements IInvitesMenuModel, IPersistent
 			{
 				this.selection = character;
 				this.selected.push(character.id);
-				this.Selected.Call();
+				this.SelectionChanged.Call();
 
 				if (this.selected.length == this.maxFriends)
-					this.Disabled.Call();
+					this.EnabledStateChanged.Call();
 
 				if (this.selected.length == 1)
-					this.Filled.Call();
+					this.EmptiedStateChanged.Call();
 			}
 		}
 		else
 		{
 			if (this.selected.length == this.maxFriends)
-				this.Enabled.Call();
+				this.EnabledStateChanged.Call();
 
 			this.selection = this.characterManager.GetCharacter(this.selected[i]);
 			this.selected.splice(i, 1);
-			this.Cleared.Call();
+			this.SelectionChanged.Call();
 
 			if (this.selected.length == 0)
-				this.Emptied.Call();
+				this.EmptiedStateChanged.Call();
 		}
 	}
 
-	ToggleVisibility() : void
+	SetVisibility(visibility : boolean) : void
 	{
-		this.isVisible = !this.isVisible;
-		if (this.isVisible)
-			this.Shown.Call();
-		else
-			this.Hidden.Call();
+		this.isVisible = visibility;;
+		this.VisibilityChanged.Call();
 	}
 
 	// IPersistent implementation
