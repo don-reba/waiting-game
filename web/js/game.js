@@ -294,89 +294,6 @@ var DialogManager = (function () {
     };
     return DialogManager;
 })();
-/// <reference path="ICharacter.ts" />
-/// <reference path="Signal.ts"     />
-/// <reference path="IFriendsMenuModel.ts" />
-/// <reference path="IPersistent.ts"       />
-var FriendsMenuModel = (function () {
-    function FriendsMenuModel(characterManager) {
-        this.characterManager = characterManager;
-        this.isVisible = false;
-        this.selected = [];
-        this.maxFriends = 3; // has to be single-digit
-        this.Cleared = new Signal();
-        this.Disabled = new Signal();
-        this.Emptied = new Signal();
-        this.Enabled = new Signal();
-        this.Filled = new Signal();
-        this.Hidden = new Signal();
-        this.Selected = new Signal();
-        this.Shown = new Signal();
-    }
-    // IFriendsMenuModel implementation
-    FriendsMenuModel.prototype.GetFriends = function () {
-        return this.characterManager.GetAllCharacters();
-    };
-    FriendsMenuModel.prototype.GetSelectedFriends = function () {
-        var _this = this;
-        return this.selected.map(function (id) {
-            return _this.characterManager.GetCharacter(id);
-        });
-    };
-    FriendsMenuModel.prototype.GetSelection = function () {
-        return this.selection;
-    };
-    FriendsMenuModel.prototype.IsEmpty = function () {
-        return this.selected.length == 0;
-    };
-    FriendsMenuModel.prototype.IsEnabled = function () {
-        return this.selected.length < this.maxFriends;
-    };
-    FriendsMenuModel.prototype.IsVisible = function () {
-        return this.isVisible;
-    };
-    FriendsMenuModel.prototype.ToggleSelection = function (character) {
-        var i = this.selected.indexOf(character.id);
-        if (i < 0) {
-            if (this.selected.length < this.maxFriends) {
-                this.selection = character;
-                this.selected.push(character.id);
-                this.Selected.Call();
-                if (this.selected.length == this.maxFriends)
-                    this.Disabled.Call();
-                if (this.selected.length == 1)
-                    this.Filled.Call();
-            }
-        }
-        else {
-            if (this.selected.length == this.maxFriends)
-                this.Enabled.Call();
-            this.selection = this.characterManager.GetCharacter(this.selected[i]);
-            this.selected.splice(i, 1);
-            this.Cleared.Call();
-            if (this.selected.length == 0)
-                this.Emptied.Call();
-        }
-    };
-    FriendsMenuModel.prototype.ToggleVisibility = function () {
-        this.isVisible = !this.isVisible;
-        if (this.isVisible)
-            this.Shown.Call();
-        else
-            this.Hidden.Call();
-    };
-    // IPersistent implementation
-    FriendsMenuModel.prototype.FromPersistentString = function (str) {
-        var state = JSON.parse(str);
-        this.isVisible = state.isVisible;
-        this.selected = state.selected;
-    };
-    FriendsMenuModel.prototype.ToPersistentString = function () {
-        var state = { isVisible: this.isVisible, selected: this.selected };
-        return JSON.stringify(state);
-    };
-    return FriendsMenuModel;
-})();
 var Hat;
 (function (Hat) {
     Hat[Hat["None"] = 0] = "None";
@@ -588,6 +505,8 @@ var HomeModel = (function () {
     };
     return HomeModel;
 })();
+/// <reference path="ICharacter.ts" />
+/// <reference path="Signal.ts"     />
 /// <reference path="Activity.ts"   />
 /// <reference path="HomeCanvas.ts" />
 /// <reference path="ICharacter.ts" />
@@ -605,7 +524,7 @@ var Moustache;
 /// <reference path="ICharacter.ts" />
 /// <reference path="IDialog.ts"    />
 /// <reference path="IActivitiesMenuModel.ts" />
-/// <reference path="IFriendsMenuModel.ts"    />
+/// <reference path="IInvitesMenuModel.ts"    />
 /// <reference path="IHomeModel.ts"           />
 /// <reference path="IHomeView.ts"            />
 /// <reference path="IMainModel.ts"           />
@@ -636,7 +555,7 @@ var HomePresenter = (function () {
         homeView.GoToQueue.Add(this.OnGoToQueue.bind(this));
         homeView.GoToStore.Add(this.OnGoToStore.bind(this));
         homeView.GuestClicked.Add(this.OnGuestClicked.bind(this));
-        homeView.InviteButtonClicked.Add(this.OnInviteButtonClicked.bind(this));
+        homeView.InvitesButtonClicked.Add(this.OnInvitesButtonClicked.bind(this));
         homeView.InviteClicked.Add(this.OnInviteClicked.bind(this));
         homeView.InvitesClicked.Add(this.OnInvitesClicked.bind(this));
         homeView.ReplyClicked.Add(this.OnReplyClicked.bind(this));
@@ -668,6 +587,12 @@ var HomePresenter = (function () {
     };
     HomePresenter.prototype.OnInviteClicked = function () {
         this.invitesModel.ToggleSelection(this.homeView.GetSelectedInvite());
+    };
+    HomePresenter.prototype.OnInvitesButtonClicked = function () {
+        this.invitesModel.ToggleVisibility();
+        this.homeView.HideInvitesMenu();
+        this.homeModel.InviteFriends(this.invitesModel.GetSelectedFriends());
+        this.invitesModel.Reset();
     };
     HomePresenter.prototype.OnInvitesMenuCleared = function () {
         this.homeView.SetInviteState(this.invitesModel.GetSelection(), false);
@@ -708,11 +633,6 @@ var HomePresenter = (function () {
     };
     HomePresenter.prototype.OnGuestsChanged = function () {
         this.homeView.SetCanvas(this.homeModel.GetCanvas());
-    };
-    HomePresenter.prototype.OnInviteButtonClicked = function () {
-        this.invitesModel.ToggleVisibility();
-        this.homeView.HideInvitesMenu();
-        this.homeModel.InviteFriends(this.invitesModel.GetSelectedFriends());
     };
     HomePresenter.prototype.OnReplyClicked = function () {
         this.homeModel.AdvanceDialog(this.homeView.GetSelectedReply());
@@ -785,7 +705,7 @@ var HomeView = (function () {
         this.GoToQueue = new Signal();
         this.GoToStore = new Signal();
         this.GuestClicked = new Signal();
-        this.InviteButtonClicked = new Signal();
+        this.InvitesButtonClicked = new Signal();
         this.InvitesClicked = new Signal();
         this.ReplyClicked = new Signal();
         this.Shown = new Signal();
@@ -938,7 +858,7 @@ var HomeView = (function () {
         }
         var button = $("<button id='invite'>пригласить в гости</button>");
         button.click(function () {
-            _this.InviteButtonClicked.Call();
+            _this.InvitesButtonClicked.Call();
         });
         menu.append(button);
         Util.AlignUnderneath($("#toggle-invites"), menu);
@@ -992,6 +912,90 @@ var HomeView = (function () {
 /// <reference path="Hat.ts"         />
 /// <reference path="Moustache.ts"   />
 /// <reference path="IClientView.ts" />
+/// <reference path="IInvitesMenuModel.ts" />
+/// <reference path="IPersistent.ts"       />
+var InvitesMenuModel = (function () {
+    function InvitesMenuModel(characterManager) {
+        this.characterManager = characterManager;
+        this.isVisible = false;
+        this.selected = [];
+        this.maxFriends = 3; // has to be single-digit
+        this.Cleared = new Signal();
+        this.Disabled = new Signal();
+        this.Emptied = new Signal();
+        this.Enabled = new Signal();
+        this.Filled = new Signal();
+        this.Hidden = new Signal();
+        this.Selected = new Signal();
+        this.Shown = new Signal();
+    }
+    // IInvitesMenuModel implementation
+    InvitesMenuModel.prototype.GetFriends = function () {
+        return this.characterManager.GetAllCharacters();
+    };
+    InvitesMenuModel.prototype.GetSelectedFriends = function () {
+        var _this = this;
+        return this.selected.map(function (id) {
+            return _this.characterManager.GetCharacter(id);
+        });
+    };
+    InvitesMenuModel.prototype.GetSelection = function () {
+        return this.selection;
+    };
+    InvitesMenuModel.prototype.IsEmpty = function () {
+        return this.selected.length == 0;
+    };
+    InvitesMenuModel.prototype.IsEnabled = function () {
+        return this.selected.length < this.maxFriends;
+    };
+    InvitesMenuModel.prototype.IsVisible = function () {
+        return this.isVisible;
+    };
+    InvitesMenuModel.prototype.Reset = function () {
+        this.selected = [];
+    };
+    InvitesMenuModel.prototype.ToggleSelection = function (character) {
+        var i = this.selected.indexOf(character.id);
+        if (i < 0) {
+            if (this.selected.length < this.maxFriends) {
+                this.selection = character;
+                this.selected.push(character.id);
+                this.Selected.Call();
+                if (this.selected.length == this.maxFriends)
+                    this.Disabled.Call();
+                if (this.selected.length == 1)
+                    this.Filled.Call();
+            }
+        }
+        else {
+            if (this.selected.length == this.maxFriends)
+                this.Enabled.Call();
+            this.selection = this.characterManager.GetCharacter(this.selected[i]);
+            this.selected.splice(i, 1);
+            this.Cleared.Call();
+            if (this.selected.length == 0)
+                this.Emptied.Call();
+        }
+    };
+    InvitesMenuModel.prototype.ToggleVisibility = function () {
+        this.isVisible = !this.isVisible;
+        if (this.isVisible)
+            this.Shown.Call();
+        else
+            this.Hidden.Call();
+    };
+    // IPersistent implementation
+    InvitesMenuModel.prototype.FromPersistentString = function (str) {
+        var state = JSON.parse(str);
+        this.isVisible = state.isVisible;
+        this.selected = state.selected;
+    };
+    InvitesMenuModel.prototype.ToPersistentString = function () {
+        var state = { isVisible: this.isVisible, selected: this.selected };
+        return JSON.stringify(state);
+    };
+    return InvitesMenuModel;
+})();
 /// <reference path="ICharacter.ts" />
 /// <reference path="IDialog.ts"    />
 /// <reference path="Signal.ts" />
@@ -1926,7 +1930,7 @@ var StoreView = (function () {
 })();
 /// <reference path="ActivitiesMenuModel.ts" />
 /// <reference path="CharacterManager.ts"    />
-/// <reference path="FriendsMenuModel.ts"    />
+/// <reference path="InvitesMenuModel.ts"    />
 /// <reference path="HomeModel.ts"           />
 /// <reference path="HomePresenter.ts"       />
 /// <reference path="HomeView.ts"            />
@@ -1973,7 +1977,7 @@ function Main(dialogs, characters) {
     var timer = new Timer();
     var player = new Player(timer);
     var activitiesModel = new ActivitiesMenuModel();
-    var invitesModel = new FriendsMenuModel(characterManager);
+    var invitesModel = new InvitesMenuModel(characterManager);
     var homeModel = new HomeModel(timer, characterManager, dialogManager);
     var mainModel = new MainModel(player);
     var queueModel = new QueueModel(timer, characterManager, dialogManager, player);

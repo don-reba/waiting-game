@@ -1,7 +1,7 @@
 /// <reference path="ICharacter.ts" />
 /// <reference path="Signal.ts"     />
 
-interface IFriendsMenuModel
+interface IInvitesMenuModel
 {
 	Cleared  : Signal;
 	Disabled : Signal;
@@ -23,6 +23,8 @@ interface IFriendsMenuModel
 	IsEnabled() : boolean;
 
 	IsVisible() : boolean;
+
+	Reset() : void;
 
 	ToggleSelection(character : ICharacter) : void;
 

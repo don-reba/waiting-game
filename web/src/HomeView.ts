@@ -18,7 +18,7 @@ class HomeView implements IHomeView, IClientView
 	GoToQueue            = new Signal();
 	GoToStore            = new Signal();
 	GuestClicked         = new Signal();
-	InviteButtonClicked = new Signal();
+	InvitesButtonClicked = new Signal();
 	InvitesClicked       = new Signal();
 	ReplyClicked         = new Signal();
 	Shown                = new Signal();
@@ -246,7 +246,7 @@ class HomeView implements IHomeView, IClientView
 		}
 
 		var button = $("<button id='invite'>пригласить в гости</button>");
-		button.click(() => { this.InviteButtonClicked.Call() });
+		button.click(() => { this.InvitesButtonClicked.Call() });
 		menu.append(button);
 
 		Util.AlignUnderneath($("#toggle-invites"), menu);

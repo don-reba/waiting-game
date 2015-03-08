@@ -1,5 +1,5 @@
 /// <reference path="IActivitiesMenuModel.ts" />
-/// <reference path="IFriendsMenuModel.ts"    />
+/// <reference path="IInvitesMenuModel.ts"    />
 /// <reference path="IHomeModel.ts"           />
 /// <reference path="IHomeView.ts"            />
 /// <reference path="IMainModel.ts"           />
@@ -10,7 +10,7 @@ class HomePresenter
 	constructor
 		( private homeModel       : IHomeModel
 		, private activitiesModel : IActivitiesMenuModel
-		, private invitesModel    : IFriendsMenuModel
+		, private invitesModel    : IInvitesMenuModel
 		, private mainModel       : IMainModel
 		, private queueModel      : IQueueModel
 		, private homeView        : IHomeView
@@ -37,7 +37,7 @@ class HomePresenter
 		homeView.GoToQueue.Add(this.OnGoToQueue.bind(this));
 		homeView.GoToStore.Add(this.OnGoToStore.bind(this));
 		homeView.GuestClicked.Add(this.OnGuestClicked.bind(this));
-		homeView.InviteButtonClicked.Add(this.OnInviteButtonClicked.bind(this));
+		homeView.InvitesButtonClicked.Add(this.OnInvitesButtonClicked.bind(this));
 		homeView.InviteClicked.Add(this.OnInviteClicked.bind(this));
 		homeView.InvitesClicked.Add(this.OnInvitesClicked.bind(this));
 		homeView.ReplyClicked.Add(this.OnReplyClicked.bind(this));
@@ -83,6 +83,14 @@ class HomePresenter
 	private OnInviteClicked() : void
 	{
 		this.invitesModel.ToggleSelection(this.homeView.GetSelectedInvite());
+	}
+
+	private OnInvitesButtonClicked() : void
+	{
+		this.invitesModel.ToggleVisibility();
+		this.homeView.HideInvitesMenu();
+		this.homeModel.InviteFriends(this.invitesModel.GetSelectedFriends());
+		this.invitesModel.Reset();
 	}
 
 	private OnInvitesMenuCleared() : void
@@ -149,13 +157,6 @@ class HomePresenter
 	private OnGuestsChanged() : void
 	{
 		this.homeView.SetCanvas(this.homeModel.GetCanvas());
-	}
-
-	private OnInviteButtonClicked() : void
-	{
-		this.invitesModel.ToggleVisibility();
-		this.homeView.HideInvitesMenu();
-		this.homeModel.InviteFriends(this.invitesModel.GetSelectedFriends());
 	}
 
 	private OnReplyClicked() : void

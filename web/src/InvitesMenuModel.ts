@@ -1,13 +1,13 @@
-/// <reference path="IFriendsMenuModel.ts" />
+/// <reference path="IInvitesMenuModel.ts" />
 /// <reference path="IPersistent.ts"       />
 
-interface FriendsMenuModelState
+interface InvitesMenuModelState
 {
 	isVisible : boolean;
 	selected  : string[];
 }
 
-class FriendsMenuModel implements IFriendsMenuModel, IPersistent
+class InvitesMenuModel implements IInvitesMenuModel, IPersistent
 {
 	private isVisible : boolean  = false;
 	private selected  : string[] = [];
@@ -29,7 +29,7 @@ class FriendsMenuModel implements IFriendsMenuModel, IPersistent
 	{
 	}
 
-	// IFriendsMenuModel implementation
+	// IInvitesMenuModel implementation
 
 	GetFriends() : ICharacter[]
 	{
@@ -59,6 +59,11 @@ class FriendsMenuModel implements IFriendsMenuModel, IPersistent
 	IsVisible() : boolean
 	{
 		return this.isVisible;
+	}
+
+	Reset() : void
+	{
+		this.selected = [];
 	}
 
 	ToggleSelection(character : ICharacter) : void
@@ -106,14 +111,14 @@ class FriendsMenuModel implements IFriendsMenuModel, IPersistent
 
 	FromPersistentString(str : string) : void
 	{
-		var state = <FriendsMenuModelState>JSON.parse(str);
+		var state = <InvitesMenuModelState>JSON.parse(str);
 		this.isVisible = state.isVisible;
 		this.selected  = state.selected;
 	}
 
 	ToPersistentString() : string
 	{
-		var state : FriendsMenuModelState =
+		var state : InvitesMenuModelState =
 			{ isVisible : this.isVisible
 			, selected  : this.selected
 			};

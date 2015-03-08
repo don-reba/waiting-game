@@ -1,6 +1,6 @@
 /// <reference path="ActivitiesMenuModel.ts" />
 /// <reference path="CharacterManager.ts"    />
-/// <reference path="FriendsMenuModel.ts"    />
+/// <reference path="InvitesMenuModel.ts"    />
 /// <reference path="HomeModel.ts"           />
 /// <reference path="HomePresenter.ts"       />
 /// <reference path="HomeView.ts"            />
@@ -56,7 +56,7 @@ function Main(dialogs : IDialog[], characters : ICharacter[])
 	var player = new Player(timer);
 
 	var activitiesModel = new ActivitiesMenuModel();
-	var invitesModel    = new FriendsMenuModel(characterManager);
+	var invitesModel    = new InvitesMenuModel(characterManager);
 	var homeModel       = new HomeModel(timer, characterManager, dialogManager);
 	var mainModel       = new MainModel(player);
 	var queueModel      = new QueueModel(timer, characterManager, dialogManager, player);
