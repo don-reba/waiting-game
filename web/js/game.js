@@ -94,11 +94,6 @@ var Flags = (function () {
 })();
 var Util;
 (function (Util) {
-    function Sample(a) {
-        if (a.length > 0)
-            return a[Math.floor(Math.random() * a.length)];
-    }
-    Util.Sample = Sample;
     function AlignUnderneath(anchor, element) {
         var p = anchor.position();
         var h = anchor.outerHeight(false);
@@ -112,6 +107,16 @@ var Util;
     }
     Util.Random = Random;
 })(Util || (Util = {}));
+Array.prototype.find = function (f) {
+    for (var i = 0; i != this.length; ++i) {
+        if (f(this[i]))
+            return this[i];
+    }
+};
+Array.prototype.sample = function () {
+    if (this.length > 0)
+        return this[Math.floor(Math.random() * this.length)];
+};
 /// <reference path="ICharacter.ts" />
 /// <reference path="Flags.ts"      />
 /// <reference path="Util.ts"       />
@@ -170,7 +175,7 @@ var CharacterManager = (function () {
         return defaultID;
     };
     CharacterManager.prototype.GetRandomCharacter = function () {
-        return Util.Sample(this.characters);
+        return this.characters.sample();
     };
     // private implementation
     CharacterManager.prototype.ChooseConversation = function (conversations) {
@@ -336,10 +341,12 @@ var HomeModel = (function () {
         this.dialogManager = dialogManager;
         this.nx = 78;
         this.ny = 23;
+        this.speed = 2;
         // IHomeModel implementation
         this.DialogChanged = new Signal();
         this.GuestsChanged = new Signal();
         this.StateChanged = new Signal();
+        timer.AddEvent(this.OnAnimate.bind(this), 2);
         timer.AddEvent(this.OnKnock.bind(this), 25);
         this.canvas = [];
         for (var y = 0; y != this.ny; ++y)
@@ -368,7 +375,9 @@ var HomeModel = (function () {
         var characters = [];
         for (var i = 0; i != this.guests.length; ++i) {
             var guest = this.guests[i];
-            this.canvas[guest.y][guest.x] = String(i);
+            var x = Math.round(guest.x);
+            var y = Math.round(guest.y);
+            this.canvas[y][x] = String(i);
             var isPlayer = guest.id == null;
             var isAtEntrance = isAtEntrance && i == this.guests.length - 1;
             var character = { character: this.characterManager.GetCharacter(guest.id), isClickable: !isPlayer && !isAtEntrance };
@@ -396,19 +405,18 @@ var HomeModel = (function () {
     };
     HomeModel.prototype.LetTheGuestIn = function () {
         this.atEntrance = null;
-        var guest = this.guests[this.guests.length - 1];
-        var pos = this.positions[0];
+        var target = { id: this.guests[this.guests.length - 1].id, x: this.positions[0].x, y: this.positions[0].y };
+        this.targets.push(target);
         this.positions.shift();
-        guest.x = pos.x;
-        guest.y = pos.y;
         this.GuestsChanged.Call();
         if (this.waitingGuests.length == 0)
             this.StateChanged.Call();
     };
     HomeModel.prototype.SetActiveItem = function (item) {
+        this.activeItem = item;
         // get the free positions for this activity
         this.positions = [];
-        var info = HomeItem.GetInfo(item);
+        var info = HomeItem.GetInfo(this.activeItem);
         var gfx = info.graphic;
         for (var y = 0; y != gfx.length; ++y) {
             var line = gfx[y];
@@ -437,6 +445,32 @@ var HomeModel = (function () {
         this.DialogChanged.Call();
     };
     // event handlers
+    HomeModel.prototype.OnAnimate = function () {
+        if (this.targets.length == 0)
+            return;
+        for (var i = 0; i != this.targets.length; ++i) {
+            var t = this.targets[i];
+            var g = this.guests.find(function (g) {
+                return g.id == t.id;
+            });
+            var dx = t.x - g.x;
+            var dy = t.y - g.y;
+            var d = Math.sqrt(dx * dx + dy * dy);
+            if (d > this.speed) {
+                // move towards destnation
+                g.x += dx * this.speed / d;
+                g.y += dy * this.speed / d;
+            }
+            else {
+                // arrive at destination
+                g.x = t.x;
+                g.y = t.y;
+                this.targets.splice(i, 1);
+                --i;
+            }
+        }
+        this.GuestsChanged.Call();
+    };
     HomeModel.prototype.OnKnock = function () {
         if (this.atEntrance)
             return;
@@ -459,13 +493,15 @@ var HomeModel = (function () {
         var state = JSON.parse(str);
         this.waitingGuests = state.waitingGuests;
         this.guests = state.guests;
+        this.targets = state.targets;
+        this.positions = state.positions;
         this.atEntrance = state.atEntrance;
         this.activeItem = state.activeItem;
         this.dialogID = state.dialogID;
         this.speakerID = state.speakerID;
     };
     HomeModel.prototype.ToPersistentString = function () {
-        var state = { waitingGuests: this.waitingGuests, guests: this.guests, atEntrance: this.atEntrance, activeItem: this.activeItem, dialogID: this.dialogID, speakerID: this.speakerID };
+        var state = { waitingGuests: this.waitingGuests, guests: this.guests, targets: this.targets, positions: this.positions, atEntrance: this.atEntrance, activeItem: this.activeItem, dialogID: this.dialogID, speakerID: this.speakerID };
         return JSON.stringify(state);
     };
     // private implementation

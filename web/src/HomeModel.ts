@@ -16,33 +16,44 @@ interface Guest
 	y  : number;
 }
 
+interface Target
+{
+	id : string;
+	x  : number;
+	y  : number;
+}
+
 interface HomeModelState
 {
-	waitingGuests   : string[];
-	guests          : Guest[];
-	atEntrance      : boolean;
-	activeItem      : HomeItem;
-	dialogID        : string;
-	speakerID       : string;
+	waitingGuests : string[];
+	guests        : Guest[];
+	targets       : Target[];
+	positions     : Position[];
+	atEntrance    : boolean;
+	activeItem    : HomeItem;
+	dialogID      : string;
+	speakerID     : string;
 }
 
 class HomeModel implements IHomeModel, IPersistent
 {
-	private canvas        : string[][];
+	private canvas : string[][];
+
 	private waitingGuests : string[];
 	private guests        : Guest[];
-	private targets       : Guest[];
+	private targets       : Target[];
+	private positions     : Position[];
 	private atEntrance    : boolean;
 	private items         : HomeItem[];
 	private activeItem    : HomeItem;
 
-	private positions : Position[];
 
 	private dialogID  : string;
 	private speakerID : string;
 
-	private nx : number = 78;
-	private ny : number = 23;
+	private nx    : number = 78;
+	private ny    : number = 23;
+	private speed : number = 2;
 
 	// IHomeModel implementation
 
@@ -56,6 +67,7 @@ class HomeModel implements IHomeModel, IPersistent
 		, private dialogManager    : DialogManager
 		)
 	{
+		timer.AddEvent(this.OnAnimate.bind(this), 2);
 		timer.AddEvent(this.OnKnock.bind(this), 25);
 
 		this.canvas = [];
@@ -97,8 +109,10 @@ class HomeModel implements IHomeModel, IPersistent
 		for (var i = 0; i != this.guests.length; ++i)
 		{
 			var guest = this.guests[i];
+			var x     = Math.round(guest.x);
+			var y     = Math.round(guest.y);
 
-			this.canvas[guest.y][guest.x] = String(i);
+			this.canvas[y][x] = String(i);
 
 			var isPlayer     = guest.id == null;
 			var isAtEntrance = isAtEntrance && i == this.guests.length - 1;
@@ -152,11 +166,13 @@ class HomeModel implements IHomeModel, IPersistent
 	{
 		this.atEntrance = null;
 
-		var guest = this.guests[this.guests.length - 1];
-		var pos   = this.positions[0];
+		var target : Target =
+			{ id : this.guests[this.guests.length - 1].id
+			, x  : this.positions[0].x
+			, y  : this.positions[0].y
+			};
+		this.targets.push(target);
 		this.positions.shift();
-		guest.x = pos.x;
-		guest.y = pos.y;
 
 		this.GuestsChanged.Call();
 
@@ -166,10 +182,12 @@ class HomeModel implements IHomeModel, IPersistent
 
 	SetActiveItem(item : HomeItem) : void
 	{
+		this.activeItem = item;
+
 		// get the free positions for this activity
 		this.positions = [];
-		var info      = HomeItem.GetInfo(item);
-		var gfx       = info.graphic;
+		var info       = HomeItem.GetInfo(this.activeItem);
+		var gfx        = info.graphic;
 		for (var y = 0; y != gfx.length; ++y)
 		{
 			var line = gfx[y];
@@ -206,6 +224,40 @@ class HomeModel implements IHomeModel, IPersistent
 
 	// event handlers
 
+	private OnAnimate() : void
+	{
+		if (this.targets.length == 0)
+			return;
+
+		for (var i = 0; i != this.targets.length; ++i)
+		{
+			var t = this.targets[i];
+			var g = this.guests.find(g => { return g.id == t.id });
+
+			var dx = t.x - g.x;
+			var dy = t.y - g.y;
+
+			var d = Math.sqrt(dx * dx + dy * dy);
+
+			if (d > this.speed)
+			{
+				// move towards destnation
+				g.x += dx * this.speed / d;
+				g.y += dy * this.speed / d;
+			}
+			else
+			{
+				// arrive at destination
+				g.x = t.x;
+				g.y = t.y;
+				this.targets.splice(i, 1);
+				--i;
+			}
+		}
+
+		this.GuestsChanged.Call();
+	}
+
 	private OnKnock() : void
 	{
 		if (this.atEntrance)
@@ -238,6 +290,8 @@ class HomeModel implements IHomeModel, IPersistent
 		var state = <HomeModelState>JSON.parse(str);
 		this.waitingGuests = state.waitingGuests;
 		this.guests        = state.guests;
+		this.targets       = state.targets;
+		this.positions     = state.positions;
 		this.atEntrance    = state.atEntrance;
 		this.activeItem    = state.activeItem;
 		this.dialogID      = state.dialogID;
@@ -249,6 +303,8 @@ class HomeModel implements IHomeModel, IPersistent
 		var state : HomeModelState =
 			{ waitingGuests : this.waitingGuests
 			, guests        : this.guests
+			, targets       : this.targets
+			, positions     : this.positions
 			, atEntrance    : this.atEntrance
 			, activeItem    : this.activeItem
 			, dialogID      : this.dialogID

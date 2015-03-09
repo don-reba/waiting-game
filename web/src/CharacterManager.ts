@@ -75,7 +75,7 @@ class CharacterManager
 
 	GetRandomCharacter() : ICharacter
 	{
-		return Util.Sample(this.characters);
+		return this.characters.sample();
 	}
 
 	// private implementation
