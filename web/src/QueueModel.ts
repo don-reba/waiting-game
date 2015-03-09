@@ -2,6 +2,7 @@
 /// <reference path="DialogManager.ts"    />
 /// <reference path="IQueueModel.ts"      />
 /// <reference path="IPersistent.ts"      />
+/// <reference path="Util.ts"             />
 
 class QueuePosition
 {
@@ -203,7 +204,7 @@ class QueueModel implements IQueueModel, IPersistent
 			character = this.characterManager.GetRandomCharacter();
 		} while (this.InQueue(character));
 
-		var remaining = Math.floor(2 + Math.random() * 8);
+		var remaining = 2 + Util.Random(8);
 		var ticket    = String(this.ticket++);
 		return <QueuePosition>
 			{ characterID : character.id
@@ -214,7 +215,7 @@ class QueueModel implements IQueueModel, IPersistent
 
 	private MakePlayerPosition() : QueuePosition
 	{
-		var remaining = Math.floor(2 + Math.random() * 8);
+		var remaining = 2 + Util.Random(8);
 		var ticket    = String(this.ticket++);
 		return <QueuePosition>
 			{ characterID : null

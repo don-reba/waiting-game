@@ -10,19 +10,13 @@ class HomeItemInfo
 
 enum HomeItem
 {
-	Entrance = 0,
-	TV       = 1,
+	TV = 0,
 }
 
 module HomeItem
 {
 	var info : HomeItemInfo[] =
 		[
-		{ graphic : // Entrance
-			[]
-		, x : 2, y : 12
-		, activities : [ ]
-		},
 		{ graphic : // TV
 			[ "  _________  "
 			, "============="

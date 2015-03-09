@@ -35,6 +35,7 @@ class CharacterManager
 	GetCharacter(id : string) : ICharacter
 	{
 		if (id) return this.map[id];
+		return null;
 	}
 
 	GetDialogID(characterID : string, dialogType : DialogType) : string

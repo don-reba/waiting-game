@@ -1,11 +1,25 @@
 /// <reference path="HomeItem.ts"    />
 /// <reference path="IHomeModel.ts"  />
 /// <reference path="IPersistent.ts" />
+/// <reference path="Util.ts"        />
 
-class HomeModelState
+interface Position
+{
+	x : number;
+	y : number;
+}
+
+interface Guest
+{
+	id : string;
+	x  : number;
+	y  : number;
+}
+
+interface HomeModelState
 {
 	waitingGuests   : string[];
-	guests          : string[];
+	guests          : Guest[];
 	atEntrance      : boolean;
 	activeItem      : HomeItem;
 	dialogID        : string;
@@ -14,12 +28,15 @@ class HomeModelState
 
 class HomeModel implements IHomeModel, IPersistent
 {
-	private canvas          : string[][];
-	private waitingGuests   : string[];
-	private guests          : string[];
-	private atEntrance      : boolean;
-	private items           : HomeItem[];
-	private activeItem      : HomeItem;
+	private canvas        : string[][];
+	private waitingGuests : string[];
+	private guests        : Guest[];
+	private targets       : Guest[];
+	private atEntrance    : boolean;
+	private items         : HomeItem[];
+	private activeItem    : HomeItem;
+
+	private positions : Position[];
 
 	private dialogID  : string;
 	private speakerID : string;
@@ -39,14 +56,15 @@ class HomeModel implements IHomeModel, IPersistent
 		, private dialogManager    : DialogManager
 		)
 	{
-		timer.AddEvent(this.OnAdvance.bind(this), 25);
+		timer.AddEvent(this.OnKnock.bind(this), 25);
 
 		this.canvas = [];
 		for (var y = 0; y != this.ny; ++y)
 			this.canvas.push(new Array<string>(this.nx));
 
-		this.waitingGuests   = [];
-		this.guests          = [];
+		this.waitingGuests = [];
+		this.guests        = [];
+		this.targets       = [];
 
 		this.items = [ HomeItem.TV ];
 	}
@@ -73,23 +91,21 @@ class HomeModel implements IHomeModel, IPersistent
 	{
 		this.Clear();
 		for (var i = 0; i != this.items.length; ++i)
-		{
-			var item = this.items[i];
-			if (item == this.activeItem)
-				this.RenderActiveItem(item);
-			else
-				this.RenderInactiveItem(item);
-		}
-		if (this.atEntrance)
-			this.RenderEntrance();
+			this.RenderItem(this.items[i]);
 
-		var characters : HomeCanvasCharacter[] =
-			[ { character : null, isClickable : false } ];
+		var characters : HomeCanvasCharacter[] = [];
 		for (var i = 0; i != this.guests.length; ++i)
 		{
+			var guest = this.guests[i];
+
+			this.canvas[guest.y][guest.x] = String(i);
+
+			var isPlayer     = guest.id == null;
+			var isAtEntrance = isAtEntrance && i == this.guests.length - 1;
+
 			var character : HomeCanvasCharacter =
-				{ character   : this.characterManager.GetCharacter(this.guests[i])
-				, isClickable : !this.atEntrance || i != this.guests.length - 1
+				{ character   : this.characterManager.GetCharacter(guest.id)
+				, isClickable : !isPlayer && !isAtEntrance
 				};
 			characters.push(character);
 		}
@@ -110,12 +126,20 @@ class HomeModel implements IHomeModel, IPersistent
 		return this.characterManager.GetCharacter(this.speakerID);
 	}
 
-	InviteFriends(friends : ICharacter[]) : void
+	InviteGuests(guests : ICharacter[]) : void
 	{
-		for (var i = 0; i != friends.length; ++i)
-			this.waitingGuests.push(friends[i].id);
-		this.guests     = [];
-		this.activeItem = HomeItem.TV;
+		for (var i = 0; i != guests.length; ++i)
+			this.waitingGuests.push(guests[i].id);
+
+		var player = <Guest>
+			{ id : null
+			, x  : this.positions[0].x
+			, y  : this.positions[0].y
+			};
+		this.guests = [ player ];
+		this.positions.shift();
+
+		this.GuestsChanged.Call();
 		this.StateChanged.Call();
 	}
 
@@ -126,10 +150,35 @@ class HomeModel implements IHomeModel, IPersistent
 
 	LetTheGuestIn() : void
 	{
-		this.atEntrance = false;
+		this.atEntrance = null;
+
+		var guest = this.guests[this.guests.length - 1];
+		var pos   = this.positions[0];
+		this.positions.shift();
+		guest.x = pos.x;
+		guest.y = pos.y;
+
 		this.GuestsChanged.Call();
+
 		if (this.waitingGuests.length == 0)
 			this.StateChanged.Call();
+	}
+
+	SetActiveItem(item : HomeItem) : void
+	{
+		// get the free positions for this activity
+		this.positions = [];
+		var info      = HomeItem.GetInfo(item);
+		var gfx       = info.graphic;
+		for (var y = 0; y != gfx.length; ++y)
+		{
+			var line = gfx[y];
+			for (var x = 0; x != line.length; ++x)
+			{
+				if (line[x] == "%")
+					this.positions.push(<Position> { x : info.x + x, y : info.y + y });
+			}
+		}
 	}
 
 	SetActivity(activity : Activity) : void
@@ -137,10 +186,13 @@ class HomeModel implements IHomeModel, IPersistent
 		switch (activity)
 		{
 		case Activity.Stop:
-			this.guests = [];
+			this.guests     = [];
 			this.activeItem = null;
 			this.GuestsChanged.Call();
 			this.StateChanged.Call();
+			break;
+		case Activity.TV:
+			this.SetActiveItem(HomeItem.TV);
 			break;
 		}
 	}
@@ -154,7 +206,7 @@ class HomeModel implements IHomeModel, IPersistent
 
 	// event handlers
 
-	private OnAdvance() : void
+	private OnKnock() : void
 	{
 		if (this.atEntrance)
 			return;
@@ -165,10 +217,10 @@ class HomeModel implements IHomeModel, IPersistent
 		if (Math.random() < 0.5)
 			return;
 
-		var i = Math.floor(Math.random() * this.waitingGuests.length);
+		var i  = Util.Random(this.waitingGuests.length);
 		var id = this.waitingGuests[i];
 		this.waitingGuests.splice(i, 1);
-		this.guests.push(id);
+		this.guests.push({ id : id, x : 2, y : 12});
 
 		this.atEntrance = true;
 
@@ -217,37 +269,7 @@ class HomeModel implements IHomeModel, IPersistent
 		}
 	}
 
-	private RenderEntrance() : void
-	{
-		var info = HomeItem.GetInfo(HomeItem.Entrance);
-		// the last guest is the one at the entrance
-		this.canvas[info.y][info.x] = String(this.guests.length);
-	}
-
-	private RenderActiveItem(item : HomeItem) : void
-	{
-		var i = 0;
-		var n = this.atEntrance
-			? this.guests.length
-			: this.guests.length + 1;
-
-		var info = HomeItem.GetInfo(item);
-		var gfx = info.graphic;
-		for (var y = 0; y != gfx.length; ++y)
-		{
-			var src = gfx[y];
-			var dst = this.canvas[info.y + y];
-			for (var x = 0; x != src.length; ++x)
-			{
-				var c = src[x];
-				if (c === "%")
-					c = i < n ? String(i++) : ' ';
-				dst[info.x + x] = c;
-			}
-		}
-	}
-
-	private RenderInactiveItem(item : HomeItem) : void
+	private RenderItem(item : HomeItem) : void
 	{
 		var info = HomeItem.GetInfo(item);
 		var gfx = info.graphic;

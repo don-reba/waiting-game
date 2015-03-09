@@ -79,7 +79,8 @@ class HomePresenter
 	{
 		this.invitesModel.SetVisibility(false);
 		this.homeView.HideInvitesMenu();
-		this.homeModel.InviteFriends(this.invitesModel.GetSelectedFriends());
+		this.homeModel.SetActiveItem(HomeItem.TV);
+		this.homeModel.InviteGuests(this.invitesModel.GetSelectedFriends());
 		this.invitesModel.Reset();
 	}
 

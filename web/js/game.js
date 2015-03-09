@@ -107,6 +107,10 @@ var Util;
         element.css({ left: x + "px", top: y + "px" });
     }
     Util.AlignUnderneath = AlignUnderneath;
+    function Random(n) {
+        return Math.floor(Math.random() * n);
+    }
+    Util.Random = Random;
 })(Util || (Util = {}));
 /// <reference path="ICharacter.ts" />
 /// <reference path="Flags.ts"      />
@@ -134,6 +138,7 @@ var CharacterManager = (function () {
     CharacterManager.prototype.GetCharacter = function (id) {
         if (id)
             return this.map[id];
+        return null;
     };
     CharacterManager.prototype.GetDialogID = function (characterID, dialogType) {
         var conversations;
@@ -304,13 +309,11 @@ var HomeItemInfo = (function () {
 })();
 var HomeItem;
 (function (HomeItem) {
-    HomeItem[HomeItem["Entrance"] = 0] = "Entrance";
-    HomeItem[HomeItem["TV"] = 1] = "TV";
+    HomeItem[HomeItem["TV"] = 0] = "TV";
 })(HomeItem || (HomeItem = {}));
 var HomeItem;
 (function (HomeItem) {
     var info = [
-        { graphic: [], x: 2, y: 12, activities: [] },
         { graphic: ["  _________  ", "=============", "             ", "             ", "             ", "             ", "%   %   %   %"], x: 33, y: 0, activities: [2 /* TV */] }
     ];
     function GetInfo(item) {
@@ -325,11 +328,7 @@ var HomeItem;
 /// <reference path="HomeItem.ts"    />
 /// <reference path="IHomeModel.ts"  />
 /// <reference path="IPersistent.ts" />
-var HomeModelState = (function () {
-    function HomeModelState() {
-    }
-    return HomeModelState;
-})();
+/// <reference path="Util.ts"        />
 var HomeModel = (function () {
     function HomeModel(timer, characterManager, dialogManager) {
         this.timer = timer;
@@ -341,13 +340,14 @@ var HomeModel = (function () {
         this.DialogChanged = new Signal();
         this.GuestsChanged = new Signal();
         this.StateChanged = new Signal();
-        timer.AddEvent(this.OnAdvance.bind(this), 25);
+        timer.AddEvent(this.OnKnock.bind(this), 25);
         this.canvas = [];
         for (var y = 0; y != this.ny; ++y)
             this.canvas.push(new Array(this.nx));
         this.waitingGuests = [];
         this.guests = [];
-        this.items = [1 /* TV */];
+        this.targets = [];
+        this.items = [0 /* TV */];
     }
     HomeModel.prototype.AdvanceDialog = function (ref) {
         this.dialogID = ref;
@@ -363,18 +363,15 @@ var HomeModel = (function () {
     };
     HomeModel.prototype.GetCanvas = function () {
         this.Clear();
-        for (var i = 0; i != this.items.length; ++i) {
-            var item = this.items[i];
-            if (item == this.activeItem)
-                this.RenderActiveItem(item);
-            else
-                this.RenderInactiveItem(item);
-        }
-        if (this.atEntrance)
-            this.RenderEntrance();
-        var characters = [{ character: null, isClickable: false }];
+        for (var i = 0; i != this.items.length; ++i)
+            this.RenderItem(this.items[i]);
+        var characters = [];
         for (var i = 0; i != this.guests.length; ++i) {
-            var character = { character: this.characterManager.GetCharacter(this.guests[i]), isClickable: !this.atEntrance || i != this.guests.length - 1 };
+            var guest = this.guests[i];
+            this.canvas[guest.y][guest.x] = String(i);
+            var isPlayer = guest.id == null;
+            var isAtEntrance = isAtEntrance && i == this.guests.length - 1;
+            var character = { character: this.characterManager.GetCharacter(guest.id), isClickable: !isPlayer && !isAtEntrance };
             characters.push(character);
         }
         return { rows: this.MergeLines(this.canvas), characters: characters };
@@ -385,21 +382,41 @@ var HomeModel = (function () {
     HomeModel.prototype.GetSpeaker = function () {
         return this.characterManager.GetCharacter(this.speakerID);
     };
-    HomeModel.prototype.InviteFriends = function (friends) {
-        for (var i = 0; i != friends.length; ++i)
-            this.waitingGuests.push(friends[i].id);
-        this.guests = [];
-        this.activeItem = 1 /* TV */;
+    HomeModel.prototype.InviteGuests = function (guests) {
+        for (var i = 0; i != guests.length; ++i)
+            this.waitingGuests.push(guests[i].id);
+        var player = { id: null, x: this.positions[0].x, y: this.positions[0].y };
+        this.guests = [player];
+        this.positions.shift();
+        this.GuestsChanged.Call();
         this.StateChanged.Call();
     };
     HomeModel.prototype.IsGuestAtTheDoor = function () {
         return this.atEntrance;
     };
     HomeModel.prototype.LetTheGuestIn = function () {
-        this.atEntrance = false;
+        this.atEntrance = null;
+        var guest = this.guests[this.guests.length - 1];
+        var pos = this.positions[0];
+        this.positions.shift();
+        guest.x = pos.x;
+        guest.y = pos.y;
         this.GuestsChanged.Call();
         if (this.waitingGuests.length == 0)
             this.StateChanged.Call();
+    };
+    HomeModel.prototype.SetActiveItem = function (item) {
+        // get the free positions for this activity
+        this.positions = [];
+        var info = HomeItem.GetInfo(item);
+        var gfx = info.graphic;
+        for (var y = 0; y != gfx.length; ++y) {
+            var line = gfx[y];
+            for (var x = 0; x != line.length; ++x) {
+                if (line[x] == "%")
+                    this.positions.push({ x: info.x + x, y: info.y + y });
+            }
+        }
     };
     HomeModel.prototype.SetActivity = function (activity) {
         switch (activity) {
@@ -409,6 +426,9 @@ var HomeModel = (function () {
                 this.GuestsChanged.Call();
                 this.StateChanged.Call();
                 break;
+            case 2 /* TV */:
+                this.SetActiveItem(0 /* TV */);
+                break;
         }
     };
     HomeModel.prototype.StartDialog = function (speaker) {
@@ -417,17 +437,17 @@ var HomeModel = (function () {
         this.DialogChanged.Call();
     };
     // event handlers
-    HomeModel.prototype.OnAdvance = function () {
+    HomeModel.prototype.OnKnock = function () {
         if (this.atEntrance)
             return;
         if (this.waitingGuests.length == 0)
             return;
         if (Math.random() < 0.5)
             return;
-        var i = Math.floor(Math.random() * this.waitingGuests.length);
+        var i = Util.Random(this.waitingGuests.length);
         var id = this.waitingGuests[i];
         this.waitingGuests.splice(i, 1);
-        this.guests.push(id);
+        this.guests.push({ id: id, x: 2, y: 12 });
         this.atEntrance = true;
         this.GuestsChanged.Call();
         this.speakerID = id;
@@ -456,28 +476,7 @@ var HomeModel = (function () {
                 line[x] = " ";
         }
     };
-    HomeModel.prototype.RenderEntrance = function () {
-        var info = HomeItem.GetInfo(0 /* Entrance */);
-        // the last guest is the one at the entrance
-        this.canvas[info.y][info.x] = String(this.guests.length);
-    };
-    HomeModel.prototype.RenderActiveItem = function (item) {
-        var i = 0;
-        var n = this.atEntrance ? this.guests.length : this.guests.length + 1;
-        var info = HomeItem.GetInfo(item);
-        var gfx = info.graphic;
-        for (var y = 0; y != gfx.length; ++y) {
-            var src = gfx[y];
-            var dst = this.canvas[info.y + y];
-            for (var x = 0; x != src.length; ++x) {
-                var c = src[x];
-                if (c === "%")
-                    c = i < n ? String(i++) : ' ';
-                dst[info.x + x] = c;
-            }
-        }
-    };
-    HomeModel.prototype.RenderInactiveItem = function (item) {
+    HomeModel.prototype.RenderItem = function (item) {
         var info = HomeItem.GetInfo(item);
         var gfx = info.graphic;
         for (var y = 0; y != gfx.length; ++y) {
@@ -575,7 +574,8 @@ var HomePresenter = (function () {
     HomePresenter.prototype.OnInvitesButtonClicked = function () {
         this.invitesModel.SetVisibility(false);
         this.homeView.HideInvitesMenu();
-        this.homeModel.InviteFriends(this.invitesModel.GetSelectedFriends());
+        this.homeModel.SetActiveItem(0 /* TV */);
+        this.homeModel.InviteGuests(this.invitesModel.GetSelectedFriends());
         this.invitesModel.Reset();
     };
     HomePresenter.prototype.OnInvitesMenuEmptiedStateChanged = function () {
@@ -748,7 +748,7 @@ var HomeView = (function () {
         for (var i = 0; i != canvas.characters.length; ++i) {
             var c = canvas.characters[i];
             var replacement = c.character ? "<span id='character-" + c.character.id + "'>\\o/</span>" : "<span class='player'>\\o/</span>";
-            html = html.replace(" " + i + " ", replacement);
+            html = html.replace(new RegExp("." + i + "."), replacement);
         }
         view.html(html);
         for (var i = 0; i != canvas.characters.length; ++i) {
@@ -1228,7 +1228,7 @@ var Timer = (function () {
 var PersistentState = (function () {
     function PersistentState(items, timer) {
         this.items = items;
-        this.version = "11";
+        this.version = "12";
         timer.AddEvent(this.Save.bind(this), 20);
     }
     // get the state string from each item and store it in local storage
@@ -1346,6 +1346,7 @@ var Player = (function () {
 /// <reference path="DialogManager.ts"    />
 /// <reference path="IQueueModel.ts"      />
 /// <reference path="IPersistent.ts"      />
+/// <reference path="Util.ts"             />
 var QueuePosition = (function () {
     function QueuePosition() {
     }
@@ -1475,12 +1476,12 @@ var QueueModel = (function () {
         do {
             character = this.characterManager.GetRandomCharacter();
         } while (this.InQueue(character));
-        var remaining = Math.floor(2 + Math.random() * 8);
+        var remaining = 2 + Util.Random(8);
         var ticket = String(this.ticket++);
         return { characterID: character.id, remaining: remaining, ticket: ticket };
     };
     QueueModel.prototype.MakePlayerPosition = function () {
-        var remaining = Math.floor(2 + Math.random() * 8);
+        var remaining = 2 + Util.Random(8);
         var ticket = String(this.ticket++);
         return { characterID: null, remaining: remaining, ticket: ticket };
     };

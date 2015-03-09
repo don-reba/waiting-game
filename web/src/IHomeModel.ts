@@ -21,11 +21,13 @@ interface IHomeModel
 
 	GetSpeaker() : ICharacter;
 
-	InviteFriends(friends : ICharacter[]) : void;
+	InviteGuests(guests : ICharacter[]) : void;
 
 	IsGuestAtTheDoor() : boolean;
 
 	LetTheGuestIn() : void;
+
+	SetActiveItem(item : HomeItem) : void;
 
 	SetActivity(activity : Activity) : void;
 

@@ -16,4 +16,9 @@ module Util
 
 		element.css({ left : x + "px", top : y + "px" });
 	}
+
+	export function Random(n : number)
+	{
+		return Math.floor(Math.random() * n);
+	}
 }
