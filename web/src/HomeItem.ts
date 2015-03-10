@@ -1,16 +1,13 @@
-/// <reference path="Activity.ts" />
-
 class HomeItemInfo
 {
 	graphic    : string[];
 	x          : number;
 	y          : number;
-	activities : Activity[];
 }
 
 enum HomeItem
-{
-	TV = 0,
+{ TV    = 0
+, Table = 1
 }
 
 module HomeItem
@@ -19,15 +16,25 @@ module HomeItem
 		[
 		{ graphic : // TV
 			[ "  _________  "
-			, "============="
+			, "═════════════"
 			, "             "
 			, "             "
 			, "             "
 			, "             "
 			, "%   %   %   %"
 			]
-		, x : 33, y : 0
-		, activities : [ Activity.TV ]
+		, x : 32, y : 0
+		},
+		{ graphic : // Tabletop
+			[ "         %         "
+			, "   ┌───────────┐   "
+			, "   │  ╔═════╗  │   "
+			, " % │  ║     ║  │ % "
+			, "   │  ╚═════╝  │   "
+			, "   └───────────┘   "
+			, "         %         "
+			]
+		, x : 29, y : 9
 		}
 		];
 

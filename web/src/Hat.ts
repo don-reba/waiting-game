@@ -1,5 +1,4 @@
 enum Hat
-{
-	None   = 0,
-	Tophat = 1
+{ None   = 0
+, Tophat = 1
 }

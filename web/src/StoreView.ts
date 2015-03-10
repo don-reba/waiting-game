@@ -67,7 +67,7 @@ class StoreView implements IStoreView, IClientView
 	{
 		var goHome = $("<button id='go-home'>");
 		goHome.text("вернуться домой");
-		goHome.click(() => { this.GoToHome.Call(); });
+		goHome.click(() => { this.GoToHome.Call() });
 
 		$("#buttons").append(goHome);
 

@@ -1,6 +1,7 @@
 /// <reference path="HomeItem.ts"    />
 /// <reference path="IHomeModel.ts"  />
 /// <reference path="IPersistent.ts" />
+/// <reference path="Player.ts"      />
 /// <reference path="Util.ts"        />
 
 interface Position
@@ -30,7 +31,7 @@ interface HomeModelState
 	targets       : Target[];
 	positions     : Position[];
 	atEntrance    : boolean;
-	activeItem    : HomeItem;
+	activity      : Activity;
 	dialogID      : string;
 	speakerID     : string;
 }
@@ -39,13 +40,12 @@ class HomeModel implements IHomeModel, IPersistent
 {
 	private canvas : string[][];
 
-	private waitingGuests : string[];
-	private guests        : Guest[];
-	private targets       : Target[];
-	private positions     : Position[];
-	private atEntrance    : boolean;
-	private items         : HomeItem[];
-	private activeItem    : HomeItem;
+	private waitingGuests : string[]   = [];
+	private guests        : Guest[]    = [];
+	private targets       : Target[]   = [];
+	private positions     : Position[] = [];
+	private atEntrance    : boolean    = false;
+	private activity      : Activity   = Activity.None;
 
 
 	private dialogID  : string;
@@ -65,6 +65,7 @@ class HomeModel implements IHomeModel, IPersistent
 		( private timer            : Timer
 		, private characterManager : CharacterManager
 		, private dialogManager    : DialogManager
+		, private player           : Player
 		)
 	{
 		timer.AddEvent(this.OnAnimate.bind(this), 2);
@@ -73,12 +74,6 @@ class HomeModel implements IHomeModel, IPersistent
 		this.canvas = [];
 		for (var y = 0; y != this.ny; ++y)
 			this.canvas.push(new Array<string>(this.nx));
-
-		this.waitingGuests = [];
-		this.guests        = [];
-		this.targets       = [];
-
-		this.items = [ HomeItem.TV ];
 	}
 
 	AdvanceDialog(ref : string) : void
@@ -99,11 +94,17 @@ class HomeModel implements IHomeModel, IPersistent
 		return this.guests.length > 0;
 	}
 
+	GetActivity() : Activity
+	{
+		return this.activity;
+	}
+
 	GetCanvas() : HomeCanvas
 	{
 		this.Clear();
-		for (var i = 0; i != this.items.length; ++i)
-			this.RenderItem(this.items[i]);
+		var items = this.GetHomeItems();
+		for (var i = 0; i != items.length; ++i)
+			this.RenderItem(items[i]);
 
 		var characters : HomeCanvasCharacter[] = [];
 		for (var i = 0; i != this.guests.length; ++i)
@@ -180,38 +181,19 @@ class HomeModel implements IHomeModel, IPersistent
 			this.StateChanged.Call();
 	}
 
-	SetActiveItem(item : HomeItem) : void
-	{
-		this.activeItem = item;
-
-		// get the free positions for this activity
-		this.positions = [];
-		var info       = HomeItem.GetInfo(this.activeItem);
-		var gfx        = info.graphic;
-		for (var y = 0; y != gfx.length; ++y)
-		{
-			var line = gfx[y];
-			for (var x = 0; x != line.length; ++x)
-			{
-				if (line[x] == "%")
-					this.positions.push(<Position> { x : info.x + x, y : info.y + y });
-			}
-		}
-	}
-
 	SetActivity(activity : Activity) : void
 	{
 		switch (activity)
 		{
 		case Activity.Stop:
-			this.guests     = [];
-			this.activeItem = null;
+			this.guests   = [];
+			this.activity = Activity.None;
 			this.GuestsChanged.Call();
 			this.StateChanged.Call();
 			break;
-		case Activity.TV:
-			this.SetActiveItem(HomeItem.TV);
-			break;
+		default:
+			this.activity = activity;
+			this.UpdateActiveItem();
 		}
 	}
 
@@ -293,7 +275,7 @@ class HomeModel implements IHomeModel, IPersistent
 		this.targets       = state.targets;
 		this.positions     = state.positions;
 		this.atEntrance    = state.atEntrance;
-		this.activeItem    = state.activeItem;
+		this.activity      = state.activity;
 		this.dialogID      = state.dialogID;
 		this.speakerID     = state.speakerID;
 	}
@@ -306,7 +288,7 @@ class HomeModel implements IHomeModel, IPersistent
 			, targets       : this.targets
 			, positions     : this.positions
 			, atEntrance    : this.atEntrance
-			, activeItem    : this.activeItem
+			, activity      : this.activity
 			, dialogID      : this.dialogID
 			, speakerID     : this.speakerID
 			};
@@ -325,6 +307,24 @@ class HomeModel implements IHomeModel, IPersistent
 		}
 	}
 
+	private GetHomeItems() : HomeItem[]
+	{
+		var items = [];
+		if (this.player.HasItem(Item.TV))
+			items.push(HomeItem.TV);
+		if (this.player.HasItem(Item.Table))
+			items.push(HomeItem.Table);
+		return items;
+	}
+
+	private MergeLines(canvas : string[][]) : string[]
+	{
+		var result = Array<string>(canvas.length);
+		for (var y = 0; y != canvas.length; ++y)
+			result[y] = canvas[y].join("");
+		return result;
+	}
+
 	private RenderItem(item : HomeItem) : void
 	{
 		var info = HomeItem.GetInfo(item);
@@ -341,11 +341,29 @@ class HomeModel implements IHomeModel, IPersistent
 		}
 	}
 
-	private MergeLines(canvas : string[][]) : string[]
+	private UpdateActiveItem() : void
 	{
-		var result = Array<string>(canvas.length);
-		for (var y = 0; y != canvas.length; ++y)
-			result[y] = canvas[y].join("");
-		return result;
+		var item = null;
+		switch (this.activity)
+		{
+		case Activity.Community: item = HomeItem.TV;    break;
+		case Activity.Monopoly:  item = HomeItem.Table; break;
+		}
+
+		// get the free positions for this activity
+		this.positions = [];
+		if (item == null)
+			return;
+		var info = HomeItem.GetInfo(item);
+		var gfx  = info.graphic;
+		for (var y = 0; y != gfx.length; ++y)
+		{
+			var line = gfx[y];
+			for (var x = 0; x != line.length; ++x)
+			{
+				if (line[x] == "%")
+					this.positions.push(<Position> { x : info.x + x, y : info.y + y });
+			}
+		}
 	}
 }

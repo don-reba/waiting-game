@@ -18,7 +18,7 @@ class MainView implements IMainView
 	SetClientView(viewType : ClientViewType): void
 	{
 		var i = this
-			.clientViews.map((v) => { return v.GetType(); })
+			.clientViews.map((v) => { return v.GetType() })
 			.indexOf(viewType);
 		if (i < 0) return;
 

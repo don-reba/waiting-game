@@ -3,7 +3,7 @@
 
 class DialogManager
 {
-	private map : { [id : string] : IDialog; } = {};
+	private map : { [id : string] : IDialog } = {};
 
 	constructor
 		( private dialogs : IDialog[]

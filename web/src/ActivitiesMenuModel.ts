@@ -1,5 +1,6 @@
 /// <reference path="IActivitiesMenuModel.ts" />
 /// <reference path="IPersistent.ts"          />
+/// <reference path="Player.ts"               />
 
 interface ActivitiesMenuModelState
 {
@@ -12,11 +13,30 @@ class ActivitiesMenuModel implements IActivitiesMenuModel, IPersistent
 
 	VisibilityChanged = new Signal();
 
+	constructor(private player : Player)
+	{
+	}
+
 	// IActivitiesMenuModel implementation
 
 	GetActivities() : Activity[]
 	{
-		return [ Activity.Stop ];
+		var activities = [];
+		if (this.player.HasItem(Item.Community))
+			activities.push(Activity.Community);
+		if (this.player.HasItem(Item.Monopoly))
+			activities.push(Activity.Monopoly);
+		activities.push(Activity.Stop);
+		return activities;
+	}
+
+	HasActivities() : boolean
+	{
+		if (this.player.HasItem(Item.Community))
+			return true;
+		if (this.player.HasItem(Item.Monopoly))
+			return true;
+		return false;
 	}
 
 	IsVisible() : boolean

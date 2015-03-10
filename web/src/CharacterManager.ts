@@ -12,7 +12,7 @@ enum DialogType
 
 class CharacterManager
 {
-	private map : { [ id : string ] : ICharacter; } = {}
+	private map : { [ id : string ] : ICharacter } = {}
 
 	// public interface
 

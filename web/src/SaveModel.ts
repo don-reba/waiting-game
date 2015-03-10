@@ -19,6 +19,7 @@ class SaveModel implements ISaveModel
 			var val = localStorage[key];
 			data.push([key, val]);
 		}
+		data.sort(this.Compare);
 		return data;
 	}
 
@@ -27,5 +28,12 @@ class SaveModel implements ISaveModel
 		for (var i = 0; i != data.length; ++i)
 			localStorage[data[i][0]] = data[i][1];
 		location.reload();
+	}
+
+	// private implementation
+
+	private Compare(a : [string, string], b : [string, string]) : number
+	{
+		return a[0].localeCompare(b[0]);
 	}
 }

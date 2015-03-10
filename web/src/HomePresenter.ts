@@ -43,7 +43,6 @@ class HomePresenter
 	{
 		this.homeModel.SetActivity(this.homeView.GetSelectedActivity());
 		this.activitiesModel.SetVisibility(false);
-		this.homeView.HideActivitiesButton();
 	}
 
 	private OnActivitiesClicked() : void
@@ -79,7 +78,7 @@ class HomePresenter
 	{
 		this.invitesModel.SetVisibility(false);
 		this.homeView.HideInvitesMenu();
-		this.homeModel.SetActiveItem(HomeItem.TV);
+		this.homeModel.SetActivity(this.activitiesModel.GetActivities()[0]);
 		this.homeModel.InviteGuests(this.invitesModel.GetSelectedFriends());
 		this.invitesModel.Reset();
 	}
@@ -156,9 +155,14 @@ class HomePresenter
 	private UpdateActivitiesMenuVisibility()
 	{
 		if (this.activitiesModel.IsVisible())
+		{
 			this.homeView.ShowActivitiesMenu(this.activitiesModel.GetActivities());
+			this.homeView.SelectActivity(this.homeModel.GetActivity());
+		}
 		else
+		{
 			this.homeView.HideActivitiesMenu();
+		}
 	}
 
 	private UpdateInvitesMenuVisibility() : void
@@ -204,7 +208,10 @@ class HomePresenter
 		}
 		else
 		{
-			this.homeView.ShowInvitesButton();
+			if (this.activitiesModel.HasActivities())
+				this.homeView.ShowInvitesButton();
+			else
+				this.homeView.HideInvitesButton();
 			this.homeView.ShowTravelButtons();
 			this.homeView.HideActivitiesButton();
 		}

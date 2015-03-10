@@ -98,6 +98,12 @@ class HomeView implements IHomeView, IClientView
 		$("#go-store").hide();
 	}
 
+	SelectActivity(a : Activity) : void
+	{
+		$("#home-activities label").removeClass("checked");
+		$("#home-activities label.a" + a).addClass("checked");
+	}
+
 	SetCanvas(canvas : HomeCanvas) : void
 	{
 		var OnClickCharacter = function(e)

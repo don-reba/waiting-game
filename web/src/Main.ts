@@ -55,9 +55,9 @@ function Main(dialogs : IDialog[], characters : ICharacter[])
 
 	var player = new Player(timer);
 
-	var activitiesModel = new ActivitiesMenuModel();
+	var activitiesModel = new ActivitiesMenuModel(player);
 	var invitesModel    = new InvitesMenuModel(characterManager);
-	var homeModel       = new HomeModel(timer, characterManager, dialogManager);
+	var homeModel       = new HomeModel(timer, characterManager, dialogManager, player);
 	var mainModel       = new MainModel(player);
 	var queueModel      = new QueueModel(timer, characterManager, dialogManager, player);
 	var saveModel       = new SaveModel();

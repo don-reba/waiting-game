@@ -40,6 +40,8 @@ interface IHomeView
 
 	HideTravelButtons() : void;
 
+	SelectActivity(activity : Activity) : void;
+
 	SetCanvas(canvas : HomeCanvas) : void;
 
 	SetDialog(speaker : ICharacter, dialog : IDialog) : void;

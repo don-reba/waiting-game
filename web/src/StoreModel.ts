@@ -21,27 +21,40 @@ class StoreModel implements IStoreModel
 
 		var items = [];
 
-		var moustache = this.player.GetMoustache();
-		if (!moustache)
-		{
-			var item    = Item.PencilMoustache;
-			var price   = Item.GetInfo(item).price;
-			var enabled = price <= money;
+		if (!this.player.GetMoustache())
+			items.push(this.GetSaleInfo(Item.PencilMoustache, money));
 
-			items.push([item, enabled]);
+		if (!this.player.GetHat())
+			items.push(this.GetSaleInfo(Item.Tophat, money));
+
+		if (!this.player.HasItem(Item.TV))
+		{
+			items.push(this.GetSaleInfo(Item.TV, money));
+		}
+		else
+		{
+			if (!this.player.HasItem(Item.Community))
+				items.push(this.GetSaleInfo(Item.Community, money));
 		}
 
-		var hat = this.player.GetHat();
-		if (!hat)
+		if (!this.player.HasItem(Item.Table))
 		{
-			var item    = Item.Tophat;
-			var price   = Item.GetInfo(item).price;
-			var enabled = price <= money;
-
-			items.push([item, enabled]);
+			items.push(this.GetSaleInfo(Item.Table, money));
+		}
+		else
+		{
+			if (!this.player.HasItem(Item.Monopoly))
+				items.push(this.GetSaleInfo(Item.Monopoly, money));
 		}
 
 		return items;
+	}
+
+	GetSaleInfo(item : Item, money : number) : [Item, boolean]
+	{
+		var price   = Item.GetInfo(item).price;
+		var enabled = price <= money;
+		return [item, enabled];
 	}
 
 	Purchase(item : Item) : void
@@ -71,6 +84,8 @@ class StoreModel implements IStoreModel
 			case Item.Tophat:
 				this.player.SetHat(Hat.Tophat);
 				break;
+			default:
+				this.player.AddItem(item);
 		}
 	}
 

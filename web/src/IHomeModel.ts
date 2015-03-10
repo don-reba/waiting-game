@@ -15,6 +15,8 @@ interface IHomeModel
 
 	AreGuestsIn() : boolean;
 
+	GetActivity() : Activity;
+
 	GetCanvas() : HomeCanvas;
 
 	GetDialog() : IDialog;
@@ -26,8 +28,6 @@ interface IHomeModel
 	IsGuestAtTheDoor() : boolean;
 
 	LetTheGuestIn() : void;
-
-	SetActiveItem(item : HomeItem) : void;
 
 	SetActivity(activity : Activity) : void;
 

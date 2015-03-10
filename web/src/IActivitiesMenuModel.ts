@@ -7,6 +7,8 @@ interface IActivitiesMenuModel
 
 	GetActivities() : Activity[];
 
+	HasActivities() : boolean;
+
 	IsVisible() : boolean;
 
 	SetVisibility(visibility : boolean) : void;

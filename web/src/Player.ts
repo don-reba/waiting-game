@@ -1,3 +1,4 @@
+/// <reference path="Item.ts"        />
 /// <reference path="ICharacter.ts"  />
 /// <reference path="IPersistent.ts" />
 /// <reference path="Moustache.ts"   />
@@ -10,6 +11,8 @@ class PlayerState
 	money     : number;
 	rate      : number;
 	hasMet    : string[];
+	friends   : string[];
+	items     : Item[];
 }
 
 class Player implements IPersistent
@@ -19,6 +22,8 @@ class Player implements IPersistent
 	private money     : number    = 0;
 	private rate      : number    = 0.5;
 	private hasMet    : string[]  = [];
+	private friends   : string[]  = [];
+	private items     : Item[]    = [];
 
 	HatChanged       = new Signal();
 	MoustacheChanged = new Signal();
@@ -30,14 +35,15 @@ class Player implements IPersistent
 		timer.AddEvent(this.OnPay.bind(this), 10);
 	}
 
-	GetMoney() : number
+	AddItem(item : Item) : void
 	{
-		return this.money;
+		if (this.items.indexOf(item) < 0)
+			this.items.push(item);
 	}
 
-	GetRate() : number
+	GetFriends() : string[]
 	{
-		return this.rate;
+		return this.friends;
 	}
 
 	GetHat() : Hat
@@ -45,9 +51,29 @@ class Player implements IPersistent
 		return this.hat;
 	}
 
+	GetItems() : Item[]
+	{
+		return this.items;
+	}
+
+	GetMoney() : number
+	{
+		return this.money;
+	}
+
 	GetMoustache() : Moustache
 	{
 		return this.moustache;
+	}
+
+	GetRate() : number
+	{
+		return this.rate;
+	}
+
+	HasItem(item : Item) : boolean
+	{
+		return this.items.indexOf(item) >= 0;
 	}
 
 	// complexity: linear
@@ -91,6 +117,8 @@ class Player implements IPersistent
 		this.money     = state.money;
 		this.rate      = state.rate;
 		this.hasMet    = state.hasMet;
+		this.friends   = state.friends;
+		this.items     = state.items;
 	}
 
 	ToPersistentString() : string
@@ -101,6 +129,8 @@ class Player implements IPersistent
 			, money     : this.money
 			, rate      : this.rate
 			, hasMet    : this.hasMet
+			, friends   : this.friends
+			, items     : this.items
 			};
 		return JSON.stringify(state);
 	}

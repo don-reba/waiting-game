@@ -81,7 +81,7 @@ class QueueModel implements IQueueModel, IPersistent
 
 	EnterQueue() : void
 	{
-		if (this.queue.every(p => { return p.characterID != null; }))
+		if (this.queue.every(p => { return p.characterID != null }))
 			this.queue.push(this.MakePlayerPosition());
 	}
 
@@ -236,7 +236,7 @@ class QueueModel implements IQueueModel, IPersistent
 
 	private InQueue(c : ICharacter) : boolean
 	{
-		return this.queue.some(p => { return p.characterID && p.characterID === c.id; });
+		return this.queue.some(p => { return p.characterID && p.characterID === c.id });
 	}
 
 	private AdvanceQueue() : void
