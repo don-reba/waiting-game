@@ -465,7 +465,7 @@ var HomeItem;
 (function (HomeItem) {
     var info = [
         { graphic: ["  _________  ", "═════════════", "             ", "             ", "             ", "             ", "%   %   %   %"], x: 32, y: 0 },
-        { graphic: ["         %         ", "   ┌───────────┐   ", "   │  ╔═════╗  │   ", " % │  ║     ║  │ % ", "   │  ╚═════╝  │   ", "   └───────────┘   ", "         %         "], x: 29, y: 9 }
+        { graphic: ["         %         ", "   ┌───────────┐   ", "   │  ╔═════╗  │   ", " % │  ║     ║  │ % ", "   │  ╚═════╝  │   ", "   └───────────┘   ", "         %         "], x: 29, y: 12 }
     ];
     function GetInfo(item) {
         return info[item];
@@ -531,7 +531,7 @@ var HomeModel = (function () {
             var guest = this.guests[i];
             var x = Math.round(guest.x);
             var y = Math.round(guest.y);
-            this.canvas[y][x] = String(i);
+            this.RenderGuest(i);
             var isPlayer = guest.id == null;
             var isAtEntrance = isAtEntrance && i == this.guests.length - 1;
             var character = { character: this.characterManager.GetCharacter(guest.id), isClickable: !isPlayer && !isAtEntrance };
@@ -665,11 +665,24 @@ var HomeModel = (function () {
             items.push(1 /* Table */);
         return items;
     };
+    HomeModel.prototype.IsDigit = function (n) {
+        return [true, true, true, true][n];
+    };
     HomeModel.prototype.MergeLines = function (canvas) {
         var result = Array(canvas.length);
         for (var y = 0; y != canvas.length; ++y)
             result[y] = canvas[y].join("");
         return result;
+    };
+    HomeModel.prototype.RenderGuest = function (i) {
+        var guest = this.guests[i];
+        var x = Math.round(guest.x);
+        var y = Math.round(guest.y);
+        // check that we don't overlap another guest
+        var row = this.canvas[y];
+        if (this.IsDigit(row[x - 1]) || this.IsDigit(row[x]) || this.IsDigit(row[x + 1]))
+            return;
+        row[x - 1] = row[x] = row[x + 1] = String(i);
     };
     HomeModel.prototype.RenderItem = function (item) {
         var info = HomeItem.GetInfo(item);
@@ -963,7 +976,8 @@ var HomeView = (function () {
         for (var i = 0; i != canvas.characters.length; ++i) {
             var c = canvas.characters[i];
             var replacement = c.character ? "<span id='character-" + c.character.id + "'>\\o/</span>" : "<span class='player'>\\o/</span>";
-            html = html.replace(new RegExp("." + i + "."), replacement);
+            var n = String(i);
+            html = html.replace(n + n + n, replacement);
         }
         view.html(html);
         for (var i = 0; i != canvas.characters.length; ++i) {

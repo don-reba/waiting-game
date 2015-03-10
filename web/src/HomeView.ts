@@ -121,7 +121,8 @@ class HomeView implements IHomeView, IClientView
 			var replacement = c.character
 				? "<span id='character-" + c.character.id + "'>\\o/</span>"
 				: "<span class='player'>\\o/</span>";
-			html = html.replace(new RegExp("." + i + "."), replacement);
+			var n = String(i);
+			html = html.replace(n + n + n, replacement);
 		}
 		view.html(html);
 

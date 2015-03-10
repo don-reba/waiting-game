@@ -113,7 +113,7 @@ class HomeModel implements IHomeModel, IPersistent
 			var x     = Math.round(guest.x);
 			var y     = Math.round(guest.y);
 
-			this.canvas[y][x] = String(i);
+			this.RenderGuest(i);
 
 			var isPlayer     = guest.id == null;
 			var isAtEntrance = isAtEntrance && i == this.guests.length - 1;
@@ -328,12 +328,31 @@ class HomeModel implements IHomeModel, IPersistent
 		return items;
 	}
 
+	private IsDigit(n : any) : boolean
+	{
+		return [true, true, true, true][<number>n];
+	}
+
 	private MergeLines(canvas : string[][]) : string[]
 	{
 		var result = Array<string>(canvas.length);
 		for (var y = 0; y != canvas.length; ++y)
 			result[y] = canvas[y].join("");
 		return result;
+	}
+
+	private RenderGuest(i : number) : void
+	{
+		var guest = this.guests[i];
+		var x     = Math.round(guest.x);
+		var y     = Math.round(guest.y);
+
+		// check that we don't overlap another guest
+		var row = this.canvas[y];
+		if (this.IsDigit(row[x-1]) || this.IsDigit(row[x]) || this.IsDigit(row[x+1]))
+			return;
+
+		row[x-1] = row[x] = row[x+1] = String(i);
 	}
 
 	private RenderItem(item : HomeItem) : void
