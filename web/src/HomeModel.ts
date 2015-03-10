@@ -53,7 +53,7 @@ class HomeModel implements IHomeModel, IPersistent
 
 	private nx    : number = 78;
 	private ny    : number = 23;
-	private speed : number = 2;
+	private speed : number = 3;
 
 	// IHomeModel implementation
 
@@ -194,6 +194,17 @@ class HomeModel implements IHomeModel, IPersistent
 		default:
 			this.activity = activity;
 			this.UpdateActiveItem();
+
+			this.targets = [];
+			for (var i = 0; i != this.guests.length; ++i)
+			{
+				var target : Target =
+					{ id : this.guests[i].id
+					, x  : this.positions[i].x
+					, y  : this.positions[i].y
+					};
+				this.targets.push(target);
+			}
 		}
 	}
 

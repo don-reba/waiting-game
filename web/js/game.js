@@ -2,11 +2,12 @@ var Activity;
 (function (Activity) {
     Activity[Activity["None"] = 0] = "None";
     Activity[Activity["Stop"] = 1] = "Stop";
-    Activity[Activity["TV"] = 2] = "TV";
+    Activity[Activity["Community"] = 2] = "Community";
+    Activity[Activity["Monopoly"] = 3] = "Monopoly";
 })(Activity || (Activity = {}));
 var Activity;
 (function (Activity) {
-    var names = ["Убивать время", "Разойтись по домам", "Смотреть фильмы"];
+    var names = ["Убивать время", "Разойтись по домам", "Смотреть комьюнити", "Играть в Монополию"];
     function GetName(activity) {
         return names[activity];
     }
@@ -27,16 +28,160 @@ var Signal = (function () {
 })();
 /// <reference path="Activity.ts" />
 /// <reference path="Signal.ts"   />
+var ItemInfo = (function () {
+    function ItemInfo() {
+    }
+    return ItemInfo;
+})();
+var Item;
+(function (Item) {
+    Item[Item["PencilMoustache"] = 0] = "PencilMoustache";
+    Item[Item["Tophat"] = 1] = "Tophat";
+    Item[Item["TV"] = 2] = "TV";
+    Item[Item["Table"] = 3] = "Table";
+    Item[Item["Community"] = 4] = "Community";
+    Item[Item["Monopoly"] = 5] = "Monopoly";
+})(Item || (Item = {}));
+var Item;
+(function (Item) {
+    var items = [
+        { name: "Усы «Карандаш»", description: "Мужественность со скидкой.", price: 1000 },
+        { name: "Шляпа «Цилиндр»", description: "Выбор успешного человека.", price: 10000 },
+        { name: "Телевизор", description: "С тёплым ламповым звуком.", price: 100000 },
+        { name: "Кофейный столик", description: "Для приёма гостей.", price: 50000 },
+        { name: "«Комьюнити»", description: "Испанский 101", price: 20000 },
+        { name: "«Монополия»", description: "Отличный способ разрушить дружбу.", price: 20000 },
+    ];
+    function GetInfo(item) {
+        return items[item];
+    }
+    Item.GetInfo = GetInfo;
+})(Item || (Item = {}));
+var Moustache;
+(function (Moustache) {
+    Moustache[Moustache["None"] = 0] = "None";
+    Moustache[Moustache["Pencil"] = 1] = "Pencil";
+    Moustache[Moustache["French"] = 2] = "French";
+    Moustache[Moustache["Handlebar"] = 3] = "Handlebar";
+})(Moustache || (Moustache = {}));
+/// <reference path="Item.ts"        />
+/// <reference path="ICharacter.ts"  />
+/// <reference path="IPersistent.ts" />
+/// <reference path="Moustache.ts"   />
+/// <reference path="Signal.ts"      />
+var PlayerState = (function () {
+    function PlayerState() {
+    }
+    return PlayerState;
+})();
+var Player = (function () {
+    function Player(timer) {
+        this.hat = 0 /* None */;
+        this.moustache = 0 /* None */;
+        this.money = 0;
+        this.rate = 0.5;
+        this.hasMet = [];
+        this.friends = [];
+        this.items = [];
+        this.HatChanged = new Signal();
+        this.MoustacheChanged = new Signal();
+        this.MoneyChanged = new Signal();
+        this.RateChanged = new Signal();
+        timer.AddEvent(this.OnPay.bind(this), 10);
+    }
+    Player.prototype.AddItem = function (item) {
+        if (this.items.indexOf(item) < 0)
+            this.items.push(item);
+    };
+    Player.prototype.GetFriends = function () {
+        return this.friends;
+    };
+    Player.prototype.GetHat = function () {
+        return this.hat;
+    };
+    Player.prototype.GetItems = function () {
+        return this.items;
+    };
+    Player.prototype.GetMoney = function () {
+        return this.money;
+    };
+    Player.prototype.GetMoustache = function () {
+        return this.moustache;
+    };
+    Player.prototype.GetRate = function () {
+        return this.rate;
+    };
+    Player.prototype.HasItem = function (item) {
+        return this.items.indexOf(item) >= 0;
+    };
+    // complexity: linear
+    Player.prototype.HasNotMet = function (character) {
+        return this.hasMet.indexOf(character.id) < 0;
+    };
+    // complexity: linear
+    Player.prototype.IntroduceTo = function (character) {
+        if (this.hasMet.indexOf(character.id) < 0)
+            this.hasMet.push(character.id);
+    };
+    Player.prototype.SetHat = function (hat) {
+        this.hat = hat;
+        this.HatChanged.Call();
+    };
+    Player.prototype.SetMoney = function (money) {
+        this.money = money;
+        this.MoneyChanged.Call();
+    };
+    Player.prototype.SetMoustache = function (moustache) {
+        this.moustache = moustache;
+        this.MoustacheChanged.Call();
+    };
+    // IPersistent implementation
+    Player.prototype.FromPersistentString = function (str) {
+        var state = JSON.parse(str);
+        this.hat = state.hat;
+        this.moustache = state.moustache;
+        this.money = state.money;
+        this.rate = state.rate;
+        this.hasMet = state.hasMet;
+        this.friends = state.friends;
+        this.items = state.items;
+    };
+    Player.prototype.ToPersistentString = function () {
+        var state = { hat: this.hat, moustache: this.moustache, money: this.money, rate: this.rate, hasMet: this.hasMet, friends: this.friends, items: this.items };
+        return JSON.stringify(state);
+    };
+    // private implementation
+    Player.prototype.OnPay = function () {
+        this.money += this.rate;
+        this.MoneyChanged.Call();
+    };
+    return Player;
+})();
 /// <reference path="IActivitiesMenuModel.ts" />
 /// <reference path="IPersistent.ts"          />
+/// <reference path="Player.ts"               />
 var ActivitiesMenuModel = (function () {
-    function ActivitiesMenuModel() {
+    function ActivitiesMenuModel(player) {
+        this.player = player;
         this.isVisible = false;
         this.VisibilityChanged = new Signal();
     }
     // IActivitiesMenuModel implementation
     ActivitiesMenuModel.prototype.GetActivities = function () {
-        return [1 /* Stop */];
+        var activities = [];
+        if (this.player.HasItem(4 /* Community */))
+            activities.push(2 /* Community */);
+        if (this.player.HasItem(5 /* Monopoly */))
+            activities.push(3 /* Monopoly */);
+        activities.push(1 /* Stop */);
+        return activities;
+    };
+    ActivitiesMenuModel.prototype.HasActivities = function () {
+        if (this.player.HasItem(4 /* Community */))
+            return true;
+        if (this.player.HasItem(5 /* Monopoly */))
+            return true;
+        return false;
     };
     ActivitiesMenuModel.prototype.IsVisible = function () {
         return this.isVisible;
@@ -306,7 +451,6 @@ var Hat;
     Hat[Hat["Tophat"] = 1] = "Tophat";
 })(Hat || (Hat = {}));
 /// <reference path="ICharacter.ts" />
-/// <reference path="Activity.ts" />
 var HomeItemInfo = (function () {
     function HomeItemInfo() {
     }
@@ -315,11 +459,13 @@ var HomeItemInfo = (function () {
 var HomeItem;
 (function (HomeItem) {
     HomeItem[HomeItem["TV"] = 0] = "TV";
+    HomeItem[HomeItem["Table"] = 1] = "Table";
 })(HomeItem || (HomeItem = {}));
 var HomeItem;
 (function (HomeItem) {
     var info = [
-        { graphic: ["  _________  ", "=============", "             ", "             ", "             ", "             ", "%   %   %   %"], x: 33, y: 0, activities: [2 /* TV */] }
+        { graphic: ["  _________  ", "═════════════", "             ", "             ", "             ", "             ", "%   %   %   %"], x: 32, y: 0 },
+        { graphic: ["         %         ", "   ┌───────────┐   ", "   │  ╔═════╗  │   ", " % │  ║     ║  │ % ", "   │  ╚═════╝  │   ", "   └───────────┘   ", "         %         "], x: 29, y: 9 }
     ];
     function GetInfo(item) {
         return info[item];
@@ -333,15 +479,23 @@ var HomeItem;
 /// <reference path="HomeItem.ts"    />
 /// <reference path="IHomeModel.ts"  />
 /// <reference path="IPersistent.ts" />
+/// <reference path="Player.ts"      />
 /// <reference path="Util.ts"        />
 var HomeModel = (function () {
-    function HomeModel(timer, characterManager, dialogManager) {
+    function HomeModel(timer, characterManager, dialogManager, player) {
         this.timer = timer;
         this.characterManager = characterManager;
         this.dialogManager = dialogManager;
+        this.player = player;
+        this.waitingGuests = [];
+        this.guests = [];
+        this.targets = [];
+        this.positions = [];
+        this.atEntrance = false;
+        this.activity = 0 /* None */;
         this.nx = 78;
         this.ny = 23;
-        this.speed = 2;
+        this.speed = 3;
         // IHomeModel implementation
         this.DialogChanged = new Signal();
         this.GuestsChanged = new Signal();
@@ -351,10 +505,6 @@ var HomeModel = (function () {
         this.canvas = [];
         for (var y = 0; y != this.ny; ++y)
             this.canvas.push(new Array(this.nx));
-        this.waitingGuests = [];
-        this.guests = [];
-        this.targets = [];
-        this.items = [0 /* TV */];
     }
     HomeModel.prototype.AdvanceDialog = function (ref) {
         this.dialogID = ref;
@@ -368,10 +518,14 @@ var HomeModel = (function () {
     HomeModel.prototype.AreGuestsIn = function () {
         return this.guests.length > 0;
     };
+    HomeModel.prototype.GetActivity = function () {
+        return this.activity;
+    };
     HomeModel.prototype.GetCanvas = function () {
         this.Clear();
-        for (var i = 0; i != this.items.length; ++i)
-            this.RenderItem(this.items[i]);
+        var items = this.GetHomeItems();
+        for (var i = 0; i != items.length; ++i)
+            this.RenderItem(items[i]);
         var characters = [];
         for (var i = 0; i != this.guests.length; ++i) {
             var guest = this.guests[i];
@@ -412,31 +566,22 @@ var HomeModel = (function () {
         if (this.waitingGuests.length == 0)
             this.StateChanged.Call();
     };
-    HomeModel.prototype.SetActiveItem = function (item) {
-        this.activeItem = item;
-        // get the free positions for this activity
-        this.positions = [];
-        var info = HomeItem.GetInfo(this.activeItem);
-        var gfx = info.graphic;
-        for (var y = 0; y != gfx.length; ++y) {
-            var line = gfx[y];
-            for (var x = 0; x != line.length; ++x) {
-                if (line[x] == "%")
-                    this.positions.push({ x: info.x + x, y: info.y + y });
-            }
-        }
-    };
     HomeModel.prototype.SetActivity = function (activity) {
         switch (activity) {
             case 1 /* Stop */:
                 this.guests = [];
-                this.activeItem = null;
+                this.activity = 0 /* None */;
                 this.GuestsChanged.Call();
                 this.StateChanged.Call();
                 break;
-            case 2 /* TV */:
-                this.SetActiveItem(0 /* TV */);
-                break;
+            default:
+                this.activity = activity;
+                this.UpdateActiveItem();
+                this.targets = [];
+                for (var i = 0; i != this.guests.length; ++i) {
+                    var target = { id: this.guests[i].id, x: this.positions[i].x, y: this.positions[i].y };
+                    this.targets.push(target);
+                }
         }
     };
     HomeModel.prototype.StartDialog = function (speaker) {
@@ -496,12 +641,12 @@ var HomeModel = (function () {
         this.targets = state.targets;
         this.positions = state.positions;
         this.atEntrance = state.atEntrance;
-        this.activeItem = state.activeItem;
+        this.activity = state.activity;
         this.dialogID = state.dialogID;
         this.speakerID = state.speakerID;
     };
     HomeModel.prototype.ToPersistentString = function () {
-        var state = { waitingGuests: this.waitingGuests, guests: this.guests, targets: this.targets, positions: this.positions, atEntrance: this.atEntrance, activeItem: this.activeItem, dialogID: this.dialogID, speakerID: this.speakerID };
+        var state = { waitingGuests: this.waitingGuests, guests: this.guests, targets: this.targets, positions: this.positions, atEntrance: this.atEntrance, activity: this.activity, dialogID: this.dialogID, speakerID: this.speakerID };
         return JSON.stringify(state);
     };
     // private implementation
@@ -511,6 +656,20 @@ var HomeModel = (function () {
             for (var x = 0; x != this.nx; ++x)
                 line[x] = " ";
         }
+    };
+    HomeModel.prototype.GetHomeItems = function () {
+        var items = [];
+        if (this.player.HasItem(2 /* TV */))
+            items.push(0 /* TV */);
+        if (this.player.HasItem(3 /* Table */))
+            items.push(1 /* Table */);
+        return items;
+    };
+    HomeModel.prototype.MergeLines = function (canvas) {
+        var result = Array(canvas.length);
+        for (var y = 0; y != canvas.length; ++y)
+            result[y] = canvas[y].join("");
+        return result;
     };
     HomeModel.prototype.RenderItem = function (item) {
         var info = HomeItem.GetInfo(item);
@@ -524,11 +683,29 @@ var HomeModel = (function () {
             }
         }
     };
-    HomeModel.prototype.MergeLines = function (canvas) {
-        var result = Array(canvas.length);
-        for (var y = 0; y != canvas.length; ++y)
-            result[y] = canvas[y].join("");
-        return result;
+    HomeModel.prototype.UpdateActiveItem = function () {
+        var item = null;
+        switch (this.activity) {
+            case 2 /* Community */:
+                item = 0 /* TV */;
+                break;
+            case 3 /* Monopoly */:
+                item = 1 /* Table */;
+                break;
+        }
+        // get the free positions for this activity
+        this.positions = [];
+        if (item == null)
+            return;
+        var info = HomeItem.GetInfo(item);
+        var gfx = info.graphic;
+        for (var y = 0; y != gfx.length; ++y) {
+            var line = gfx[y];
+            for (var x = 0; x != line.length; ++x) {
+                if (line[x] == "%")
+                    this.positions.push({ x: info.x + x, y: info.y + y });
+            }
+        }
     };
     return HomeModel;
 })();
@@ -538,13 +715,6 @@ var HomeModel = (function () {
 /// <reference path="HomeCanvas.ts" />
 /// <reference path="ICharacter.ts" />
 /// <reference path="Signal.ts"     />
-var Moustache;
-(function (Moustache) {
-    Moustache[Moustache["None"] = 0] = "None";
-    Moustache[Moustache["Pencil"] = 1] = "Pencil";
-    Moustache[Moustache["French"] = 2] = "French";
-    Moustache[Moustache["Handlebar"] = 3] = "Handlebar";
-})(Moustache || (Moustache = {}));
 /// <reference path="Hat.ts"       />
 /// <reference path="Moustache.ts" />
 /// <reference path="Signal.ts"    />
@@ -586,7 +756,6 @@ var HomePresenter = (function () {
     HomePresenter.prototype.OnActivityClicked = function () {
         this.homeModel.SetActivity(this.homeView.GetSelectedActivity());
         this.activitiesModel.SetVisibility(false);
-        this.homeView.HideActivitiesButton();
     };
     HomePresenter.prototype.OnActivitiesClicked = function () {
         this.activitiesModel.SetVisibility(!this.activitiesModel.IsVisible());
@@ -610,7 +779,7 @@ var HomePresenter = (function () {
     HomePresenter.prototype.OnInvitesButtonClicked = function () {
         this.invitesModel.SetVisibility(false);
         this.homeView.HideInvitesMenu();
-        this.homeModel.SetActiveItem(0 /* TV */);
+        this.homeModel.SetActivity(this.activitiesModel.GetActivities()[0]);
         this.homeModel.InviteGuests(this.invitesModel.GetSelectedFriends());
         this.invitesModel.Reset();
     };
@@ -659,10 +828,13 @@ var HomePresenter = (function () {
     };
     // private implementation
     HomePresenter.prototype.UpdateActivitiesMenuVisibility = function () {
-        if (this.activitiesModel.IsVisible())
+        if (this.activitiesModel.IsVisible()) {
             this.homeView.ShowActivitiesMenu(this.activitiesModel.GetActivities());
-        else
+            this.homeView.SelectActivity(this.homeModel.GetActivity());
+        }
+        else {
             this.homeView.HideActivitiesMenu();
+        }
     };
     HomePresenter.prototype.UpdateInvitesMenuVisibility = function () {
         if (!this.invitesModel.IsVisible()) {
@@ -694,7 +866,10 @@ var HomePresenter = (function () {
             this.homeView.ShowActivitiesButton();
         }
         else {
-            this.homeView.ShowInvitesButton();
+            if (this.activitiesModel.HasActivities())
+                this.homeView.ShowInvitesButton();
+            else
+                this.homeView.HideInvitesButton();
             this.homeView.ShowTravelButtons();
             this.homeView.HideActivitiesButton();
         }
@@ -773,6 +948,10 @@ var HomeView = (function () {
     HomeView.prototype.HideTravelButtons = function () {
         $("#go-queue").hide();
         $("#go-store").hide();
+    };
+    HomeView.prototype.SelectActivity = function (a) {
+        $("#home-activities label").removeClass("checked");
+        $("#home-activities label.a" + a).addClass("checked");
     };
     HomeView.prototype.SetCanvas = function (canvas) {
         var OnClickCharacter = function (e) {
@@ -1018,27 +1197,6 @@ var InvitesMenuModel = (function () {
 /// <reference path="ICharacter.ts" />
 /// <reference path="IDialog.ts"    />
 /// <reference path="Signal.ts" />
-var ItemInfo = (function () {
-    function ItemInfo() {
-    }
-    return ItemInfo;
-})();
-var Item;
-(function (Item) {
-    Item[Item["PencilMoustache"] = 0] = "PencilMoustache";
-    Item[Item["Tophat"] = 1] = "Tophat";
-})(Item || (Item = {}));
-var Item;
-(function (Item) {
-    var items = [
-        { name: "Усы «Карандаш»", description: "Мужественность со скидкой.", price: 1000 },
-        { name: "Шляпа «Цилиндр»", description: "Выбор успешного человека.", price: 10000 }
-    ];
-    function GetInfo(item) {
-        return items[item];
-    }
-    Item.GetInfo = GetInfo;
-})(Item || (Item = {}));
 /// <reference path="Item.ts" />
 /// <reference path="Item.ts" />
 /// <reference path="IMainModel.ts"  />
@@ -1264,7 +1422,7 @@ var Timer = (function () {
 var PersistentState = (function () {
     function PersistentState(items, timer) {
         this.items = items;
-        this.version = "12";
+        this.version = "13";
         timer.AddEvent(this.Save.bind(this), 20);
     }
     // get the state string from each item and store it in local storage
@@ -1302,81 +1460,6 @@ var PersistentState = (function () {
         }
     };
     return PersistentState;
-})();
-/// <reference path="ICharacter.ts"  />
-/// <reference path="IPersistent.ts" />
-/// <reference path="Moustache.ts"   />
-/// <reference path="Signal.ts"      />
-var PlayerState = (function () {
-    function PlayerState() {
-    }
-    return PlayerState;
-})();
-var Player = (function () {
-    function Player(timer) {
-        this.hat = 0 /* None */;
-        this.moustache = 0 /* None */;
-        this.money = 0;
-        this.rate = 0.5;
-        this.hasMet = [];
-        this.HatChanged = new Signal();
-        this.MoustacheChanged = new Signal();
-        this.MoneyChanged = new Signal();
-        this.RateChanged = new Signal();
-        timer.AddEvent(this.OnPay.bind(this), 10);
-    }
-    Player.prototype.GetMoney = function () {
-        return this.money;
-    };
-    Player.prototype.GetRate = function () {
-        return this.rate;
-    };
-    Player.prototype.GetHat = function () {
-        return this.hat;
-    };
-    Player.prototype.GetMoustache = function () {
-        return this.moustache;
-    };
-    // complexity: linear
-    Player.prototype.HasNotMet = function (character) {
-        return this.hasMet.indexOf(character.id) < 0;
-    };
-    // complexity: linear
-    Player.prototype.IntroduceTo = function (character) {
-        if (this.hasMet.indexOf(character.id) < 0)
-            this.hasMet.push(character.id);
-    };
-    Player.prototype.SetHat = function (hat) {
-        this.hat = hat;
-        this.HatChanged.Call();
-    };
-    Player.prototype.SetMoney = function (money) {
-        this.money = money;
-        this.MoneyChanged.Call();
-    };
-    Player.prototype.SetMoustache = function (moustache) {
-        this.moustache = moustache;
-        this.MoustacheChanged.Call();
-    };
-    // IPersistent implementation
-    Player.prototype.FromPersistentString = function (str) {
-        var state = JSON.parse(str);
-        this.hat = state.hat;
-        this.moustache = state.moustache;
-        this.money = state.money;
-        this.rate = state.rate;
-        this.hasMet = state.hasMet;
-    };
-    Player.prototype.ToPersistentString = function () {
-        var state = { hat: this.hat, moustache: this.moustache, money: this.money, rate: this.rate, hasMet: this.hasMet };
-        return JSON.stringify(state);
-    };
-    // private implementation
-    Player.prototype.OnPay = function () {
-        this.money += this.rate;
-        this.MoneyChanged.Call();
-    };
-    return Player;
 })();
 /// <reference path="CharacterManager.ts" />
 /// <reference path="DialogManager.ts"    />
@@ -1734,12 +1817,17 @@ var SaveModel = (function () {
             var val = localStorage[key];
             data.push([key, val]);
         }
+        data.sort(this.Compare);
         return data;
     };
     SaveModel.prototype.SetSaveData = function (data) {
         for (var i = 0; i != data.length; ++i)
             localStorage[data[i][0]] = data[i][1];
         location.reload();
+    };
+    // private implementation
+    SaveModel.prototype.Compare = function (a, b) {
+        return a[0].localeCompare(b[0]);
     };
     return SaveModel;
 })();
@@ -1822,21 +1910,30 @@ var StoreModel = (function () {
     StoreModel.prototype.GetItems = function () {
         var money = this.player.GetMoney();
         var items = [];
-        var moustache = this.player.GetMoustache();
-        if (!moustache) {
-            var item = 0 /* PencilMoustache */;
-            var price = Item.GetInfo(item).price;
-            var enabled = price <= money;
-            items.push([item, enabled]);
+        if (!this.player.GetMoustache())
+            items.push(this.GetSaleInfo(0 /* PencilMoustache */, money));
+        if (!this.player.GetHat())
+            items.push(this.GetSaleInfo(1 /* Tophat */, money));
+        if (!this.player.HasItem(2 /* TV */)) {
+            items.push(this.GetSaleInfo(2 /* TV */, money));
         }
-        var hat = this.player.GetHat();
-        if (!hat) {
-            var item = 1 /* Tophat */;
-            var price = Item.GetInfo(item).price;
-            var enabled = price <= money;
-            items.push([item, enabled]);
+        else {
+            if (!this.player.HasItem(4 /* Community */))
+                items.push(this.GetSaleInfo(4 /* Community */, money));
+        }
+        if (!this.player.HasItem(3 /* Table */)) {
+            items.push(this.GetSaleInfo(3 /* Table */, money));
+        }
+        else {
+            if (!this.player.HasItem(5 /* Monopoly */))
+                items.push(this.GetSaleInfo(5 /* Monopoly */, money));
         }
         return items;
+    };
+    StoreModel.prototype.GetSaleInfo = function (item, money) {
+        var price = Item.GetInfo(item).price;
+        var enabled = price <= money;
+        return [item, enabled];
     };
     StoreModel.prototype.Purchase = function (item) {
         var price = Item.GetInfo(item).price;
@@ -1858,6 +1955,8 @@ var StoreModel = (function () {
             case 1 /* Tophat */:
                 this.player.SetHat(1 /* Tophat */);
                 break;
+            default:
+                this.player.AddItem(item);
         }
     };
     StoreModel.prototype.OnMoneyChanged = function () {
@@ -1996,9 +2095,9 @@ function Main(dialogs, characters) {
     var characterManager = new CharacterManager(characters, flags);
     var timer = new Timer();
     var player = new Player(timer);
-    var activitiesModel = new ActivitiesMenuModel();
+    var activitiesModel = new ActivitiesMenuModel(player);
     var invitesModel = new InvitesMenuModel(characterManager);
-    var homeModel = new HomeModel(timer, characterManager, dialogManager);
+    var homeModel = new HomeModel(timer, characterManager, dialogManager, player);
     var mainModel = new MainModel(player);
     var queueModel = new QueueModel(timer, characterManager, dialogManager, player);
     var saveModel = new SaveModel();
