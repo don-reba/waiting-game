@@ -21,6 +21,7 @@
 		, { "dialog" : "ShadyFiller3Intro",                        "requires" : [ "InspirationMachinations" ] }
 		, { "dialog" : "ShadyInspriationMachinationsReceiveIntro", "requires" : [ "InspirationMachinationsDone" ] }
 		, { "dialog" : "ShadyFiller4Intro",                        "requires" : [ "CatMachinations" ] }
+		, { "dialog" : "ShadyCatMachinationsReceiveIntro",         "requires" : [ "CatMachinationsDone" ] }
 		]
 	, "queueEscape" :
 		[ { "dialog" : "ShadyQueueEscapeIntro" } ]
@@ -55,6 +56,8 @@
 		, { "dialog" : "PoetIntroductionIntro",            "requires" : [ "PoetIntroductionPending" ] }
 		, { "dialog" : "PoetDuelIntro",                    "requires" : [ "DuelOfPoets" ] }
 		, { "dialog" : "PoetInspirationMachinationsIntro", "requires" : [ "InspirationMachinations" ] }
+		, { "dialog" : "PoetFiller1Intro",                 "requires" : [ "PoetFiller1Pending" ] }
+		, { "dialog" : "PoetFiller2Intro",                 "requires" : [ "PoetFiller2Pending" ] }
 		]
 	, "queueEscape" :
 		[ { "dialog" : "PoetQueueEscape" } ]
@@ -67,6 +70,7 @@
 		, { "dialog" : "AnnyVillainQuestIntro", "requires" : [ "VillainAnnyQuest" ] }
 		, { "dialog" : "AnnyFiller1Intro",      "requires" : [ "AnnyFiller1Pending" ] }
 		, { "dialog" : "AnnyMakingUpIntro",     "requires" : [ "MakeUpWithAnny" ] }
+		, { "dialog" : "VirginMachinations",    "requires" : [ "VirginMachinations" ] }
 		]
 	, "queueEscape" :
 		[ { "dialog" : "AnnyQueueEscape" } ]
@@ -115,6 +119,7 @@
 		, { "dialog" : "VillainAnnyQuestReceiveIntro",     "requires" : [ "VillainAnnyQuestReport" ] }
 		, { "dialog" : "VillainKostikQuestReceiveIntro",   "requires" : [ "VillainKostikQuestPending" ] }
 		, { "dialog" : "VillainEpilogueIntro",             "requires" : [ "VillainPostMortem" ] }
+		, { "dialog" : "VillainCatMachinationIntro",       "requires" : [ "CatMachinations" ] }
 		]
 	, "queueEscape" :
 		[ { "dialog" : "VillainQueueEscape" } ]

@@ -415,6 +415,36 @@
 		, { "text" : "Я умею играть! Умею! Обезьянкой!", "ref" : null }
 		]
 	},
+	{ "id"   : "ShadyCatMachinationsReceiveIntro"
+	, "text" : "С первым проданным рабом вас! Вы прирождённый работорговец, я так сразу и сказал жене. Кстати, работорговля — её идея. Всё потому что дочка нам все уши прожужжала, выпрашивая раба. "
+	, "replies" :
+		[ { "text" : "А если бы у меня были драконы, я бы освобождала рабов. Ах…", "ref" : "ShadyCatMachinationsReceiveNextOrder" }
+		, { "text" : "Знаете, мне кажется, работорговля - моё истинное призвание! Жаль, что у меня нет работорговческого диплома.", "ref" : "ShadyCatMachinationsReceiveNextOrder" }
+		, { "text" : "ВЫ НАЗВАЛИ МЕНЯ РЫБОТОРГОВЦЕМ?! Послышалось? Ладно! Но я слежу за вами!", "ref" : "ShadyCatMachinationsReceiveNextOrder" }
+		]
+	},
+	{ "id"   : "ShadyCatMachinationsReceiveNextOrder"
+	, "text" : "Так вот, недавно встретил в очереди Хтоническое Чудовище. У бедняги нет собственной жертвенной девственницы, больно смотреть на бедолагу. Наш долг подыскать для него подходящую рабыню!"
+	, "replies" :
+		[ { "text" : "Подозрительно напоминает сводничество! Сводничество аморально, не то что благородная работорговля!", "ref" : "ShadyCatMachinationsReceiveMatchmaking" }
+		, { "text" : "Может снова продадим кота? Нарядим его в платьице.", "ref" : "ShadyCatMachinationsReceiveCat" }
+		]
+	},
+	{ "id"   : "ShadyCatMachinationsReceiveMatchmaking"
+	, "text" : "Вы неправильно поняли. Девственницы нужны Хтоническим Чудовищам, чтобы их съедать."
+	, "replies" :
+		[ { "text" : "Оу, так они что-то вроде блинов? Тогда окей!", "ref" : null }
+		, { "text" : "Да! Мы должны помочь голодающим! До встречи!", "ref" : null }
+		]
+	},
+	{ "id"   : "ShadyCatMachinationsReceiveCat"
+	, "text" : "Нет, обман может обнаружиться, репутация для работорговца превыше всего."
+	, "replies" :
+		[ { "text" : "Извините, о чём я только думала. Пойду искать подходящую девочку.", "ref" : null }
+		, { "text" : "Теперь меня тревожит собственное желание наряжать котиков в платья. Схожу к психологу!", "ref" : null }
+		, { "text" : "Но… но ведь котики лучше девственниц! Ну и ладно, ну и как хотите, продам вашу дурацкую девственницу.", "ref" : null }
+		]
+	},
 	{ "id"   : "ShadyQueueEscapeIntro"
 	, "text" : "Простите, подошла моя очередь. Оставайтесь на линии, ваш звонок важен для нас!"
 	, "replies" :
@@ -972,6 +1002,68 @@
 	, "sets"   : [ "InspirationMachinationsDone" ]
 	, "clears" : [ "InspirationMachinations" ]
 	},
+	{ "id"   : "PoetFiller1Intro"
+	, "text" : "Наставник, славного вам дня!<br>Увы, сей день ужасен для меня."
+	, "replies" :
+		[ { "text" : "Но что стряслось, мой ученик, тебя терзает нервный тик!", "ref" : "PoetFiller1Troubled" }
+		, { "text" : "День-пельмень!", "ref" : "PoetFiller1Troubled" }
+		, { "text" : "Прости, но мне пора бежать, спешу глаголы срифмовать!", "ref" : null }
+		]
+	},
+	{ "id"   : "PoetFiller1Troubled"
+	, "text" : "Задумал эпос об очередях,<br>Но я бездарен, как… хм…"
+	, "replies" :
+		[ { "text" : "Бурах?", "ref" : "PoetFiller1Exactly" }
+		, { "text" : "Клёвый птах?", "ref" : "PoetFiller1Exactly" }
+		, { "text" : "Ох, ах?", "ref" : "PoetFiller1Exactly" }
+		, { "text" : "Очередях-шмочередях!", "ref" : "PoetFiller1Exactly" }
+		]
+	},
+	{ "id"   : "PoetFiller1Exactly"
+	, "text" : "Да, именно, почему мне сразу не пришло это в голову? Спасибо, наставник, вы мне очень помогли сегодня."
+	, "replies" :
+		[ { "text" : "Хм, если бы все были так благодарны, когда я подтверждаю их бездарность.", "ref" : null }
+		, { "text" : "Пока-шмока!", "ref" : null }
+		]
+	, "sets"   : [ "PoetFiller2Pending" ]
+	, "clears" : [ "PoetFiller1Pending" ]
+	},
+	{ "id"   : "PoetFiller2Intro"
+	, "text" : "На помощь! На помощь! Случилась беда!"
+	, "replies" :
+		[ { "text" : "В реке утонула одна борода?", "ref" : "PoetFiller2Trouble" }
+		, { "text" : "От маленькой Лю убежала еда? <i> От одной мысли об этом вы дрожите. </i>", "ref" : "PoetFiller2Trouble" }
+		, { "text" : "Да?", "ref" : "PoetFiller2Trouble" }
+		, { "text" : "Беда-шмеда!", "ref" : "PoetFiller2Trouble" }
+		]
+	},
+	{ "id"   : "PoetFiller2Trouble"
+	, "text" : "Мне к “очередь” рифм не найти никогда!"
+	, "replies" :
+		[ { "text" : "Очередь-шмочередь!", "ref" : "PoetFiller2Genius" }
+		, { "text" : "Хм, и впрямь к этому слову нет рифм. Неловко!", "ref" : "PoetFiller2Awkward" }
+		]
+	},
+	{ "id"   : "PoetFiller2Genius"
+	, "text" : "Невероятно! Как вам это удаётся, наставник!"
+	, "replies" :
+		[ { "text" : "Я талантливая и скромная!", "ref" : null }
+		, { "text" : "Невероятно-шмевероятно!", "ref" : null }
+		, { "text" : "Поэтические упражнения в скайпе дают плоды!", "ref" : null }
+		]
+	, "sets"   : [ "PoetFiller3Pending" ]
+	, "clears" : [ "PoetFiller2Pending" ]
+	},
+	{ "id"   : "PoetFiller2Awkward"
+	, "text" : "Вот-вот. Что же делать?"
+	, "replies" :
+		[ { "text" : "Сделаем вид, что ничего не произошло! До встречи.", "ref" : null }
+		, { "text" : "Не знаю, как вас, а меня сейчас унесёт гигантский птеродактиль. А вот и он.", "ref" : null }
+		, { "text" : "Страдать! Мы же поэты, это единственное, на что мы годимся!", "ref" : null }
+		]
+	, "sets"   : [ "PoetFiller3Pending" ]
+	, "clears" : [ "PoetFiller2Pending" ]
+	},
 	{ "id"   : "PoetQueueEscape"
 	, "text" : "Наш диалог был безупречен,<br>Но с музой я спешу на встречу!"
 	, "replies" :
@@ -1209,6 +1301,49 @@
 		, { "text" : "<i> Зачем я помирилась с ней? Опять эта тяга к саморазрушению, у меня никакого контроля над собственной жизнью. </i>", "ref" : null }
 		]
 	, "clears" : [ "MakeUpWithAnny" ]
+	},
+	{ "id"   : "AnnyVirginMachinationsIntro"
+	, "text" : "Привет, дорогая! Что новенького? :)"
+	, "replies" :
+		[ { "text" : "Знаешь, я познакомилась с таким потрясающим мальчиком!", "ref" : "AnnyVirginMachinationsTellMe" }
+		, { "text" : "Личные вопросы, их-ха! А ты сейчас с кем-нибудь встречаешься?", "ref" : "AnnyVirginMachinationsSeeingAnyone" }
+		, { "text" : "Нет, не могу, слишком омерзительно. Прощай!", "ref" : null }
+		]
+	},
+	{ "id"   : "AnnyVirginMachinationsTellMe"
+	, "text" : "Оу, расскажи! Он красивый?))))"
+	, "replies" :
+		[ { "text" : "Да! У него волевой подбородок, наверное. И чувственные губы! На каждом из ртов.", "ref" : null }
+		, { "text" : "У него такие мускулистые щупальца!", "ref" : "AnnyVirginMachinationsMeetHim" }
+		, { "text" : "Душевные качества гораздо важнее! Он такой мудрый, ведь ему сотни тысяч лет.", "ref" : "AnnyVirginMachinationsMeetHim" }
+		, { "text" : "Не совсем, но ты знаешь, сколько зарабатывают хтонические чудовища? Они очень востребованы!", "ref" : "AnnyVirginMachinationsMeetHim" }
+		]
+	},
+	{ "id"   : "AnnyVirginMachinationsMeetHim"
+	, "text" : "Эй, ты могла бы нас познакомить! Я не уведу его у тебя, мы же подруженьки. Ты же доверяешь подруженьке, да? <aside> Последнее предложение прозвучало хищно. Или вам показалось? </aside>"
+	, "replies" :
+		[ { "text" : "Да, конечно! Подруженьки навсегда! Я вас познакомлю!", "ref" : null }
+		, { "text" : "Наверняка ты не предашь меня, ведь это всего лишь отношения, а не партия в циву. Окей, познакомлю!", "ref" : null }
+		, { "text" : "Если ты уведешь его, моё сердце будет разбито! Но я устрою вашу встречу, потому я доверчивая. И никакого рабства!", "ref" : null }
+		]
+	, "sets"   : [ "VirginMachinations2" ]
+	, "clears" : [ "VirginMachinations" ]
+	},
+	{ "id"   : "AnnyVirginMachinationsSeeingAnyone"
+	, "text" : "Эх, нет, сейчас я одна( Я так одинока((( Это потому что я страшная, да?((((("
+	, "replies" :
+		[ { "text" : "Да! Ой, в смысле, если хочешь, познакомлю тебя с этим мальчиком. Он оценит твои вкусовые, эм, в смысле, душевные качества по достоинству!", "ref" : "AnnyVirginMachinationsDate" }
+		, { "text" : "Давай познакомлю вас, он любит страшненьких!", "ref" : "AnnyVirginMachinationsDate" }
+		]
+	},
+	{ "id"   : "AnnyVirginMachinationsDate"
+	, "text" : "Нет, я стесняюсь своего уродства! ;( Хотя, так я никогда не выйду замуж. Знакомь, не съест же он меня!"
+	, "replies" :
+		[ { "text" : "Да, конечно, не съест… АХАХАХАХА! Прости, поперхнулась.", "ref" : null }
+		, { "text" : "Можешь прийти на свидание в маске, чтобы не отпугнуть его уродством.", "ref" : null }
+		]
+	, "sets"   : [ "VirginMachinations2" ]
+	, "clears" : [ "VirginMachinations" ]
 	},
 	{ "id"   : "AnnyQueueEscape"
 	, "text" : "Моя очередь подошла. Ещё увидимся) Чмоки! Пока-пока, подруженька!"
@@ -2038,6 +2173,62 @@
 		, { "text" : "Я ему ещё отомщу! Когда он меньше всего будет ожидать!", "ref" : null }
 		, { "text" : "Лучше оставлю его в “покое”. О да, всё ещё не потеряла сноровку.", "ref" : null }
 		]
+	},
+	{ "id"   : "VillainCatMachinationIntro"
+	, "text" : "…и тогда моя армия кукурузных человечков завоюет весь мир! АХАХАХАХА!"
+	, "replies" :
+		[ { "text" : "<aside> Тактично покашлять. </aside>", "ref" : "VillainCatMachinationOffer" }
+		, { "text" : "<aside> Нетактично покашлять. </aside>", "ref" : "VillainCatMachinationOffer" }
+		, { "text" : "Неловко прерывать поток ваших мыслей, но у меня для вас потрясающее предложение!", "ref" : "VillainCatMachinationOffer" }
+		]
+	},
+	{ "id"   : "VillainCatMachinationOffer"
+	, "text" : "Да, что тебе нужно? Нет, я больше не покупаю орбитальные пылесосы, они ломаются, не засосав и тысячи человек."
+	, "replies" :
+		[ { "text" : "Я никогда не унизила бы себя и вас, предлагая вам какой-то жалкий орбитальный пылесос! Сегодня я продаю товар куда лучшего качества: злодейского кота! Вон он, стоит в очереди.", "ref" : "VillainCatMachinationEvil", "requires" : [ "CatPresent" ] }
+		, { "text" : "А мне всегда лень делать уборку! Кстати, а купите кота? Коты клёвые! Кот буквально означает “кот”! Все любят пушистых котиков :)", "ref" : "VillainCatMachinationCute" }
+		]
+	},
+	{ "id"   : "VillainCatMachinationEvil"
+	, "text" : "Хм, признаться, я давно хотел белого персидского кота, их удобно поглаживать, пересказывая врагам краткое содержание злодейского плана. Но на коте, которого предлагаешь ты - ни единого белого пятнышка."
+	, "replies" :
+		[ { "text" : "Не беда, скоро он поседеет! Это очень старый кот!", "ref" : "VillainCatMachinationPersian" }
+		, { "text" : "Просто он красится. На самом деле этот кот - альбинос.", "ref" : "VillainCatMachinationPersian" }
+		, { "text" : "Чепуха, это идеологически белый кот, он воевал за барона Врангеля!", "ref" : "VillainCatMachinationPersian" }
+		]
+	},
+	{ "id"   : "VillainCatMachinationPersian"
+	, "text" : "Допустим, но перс ли он?"
+	, "replies" :
+		[ { "text" : "Разумеется, его прадед состоял евнухом при Дарии III!", "ref" : "VillainCatMachinationPurchaseEvil" }
+		, { "text" : "Конечно! Но говорите тише, у него нет вида на жительство.", "ref" : "VillainCatMachinationPurchaseEvil" }
+		]
+	},
+	{ "id"   : "VillainCatMachinationPurchaseEvil"
+	, "text" : "Что ж, хорошо. Я покупаю его. Надеюсь, он не царапается! Я… боюсь физической боли."
+	, "replies" :
+		[ { "text" : "Проверьте! Вы же любите сюрпризы? А я пойду.", "ref" : null }
+		, { "text" : "Зато этот кот никогда не причинит вам душевную боль! До встречи.", "ref" : null }
+		]
+	, "sets"   : [ "CatMachinationsDone" ]
+	, "clears" : [ "CatMachinations" ]
+	},
+	{ "id"   : "VillainCatMachinationCute"
+	, "text" : "А-а-а! Улыбка! Сопли! Сантименты! Прочь! Прочь! Изыди!"
+	, "replies" :
+		[ { "text" : "Вам что, не нравятся милые пушистенькие котятки? :)", "ref" : "VillainCatMachinationPurchaseCute" }
+		, { "text" : "Не вы только посмотрите, какой это мимимишный котёночек!)))", "ref" : "VillainCatMachinationPurchaseCute" }
+		, { "text" : "Давайте вместе споём песенку про милых котяток и дружбу!", "ref" : "VillainCatMachinationPurchaseCute" }
+		]
+	},
+	{ "id"   : "VillainCatMachinationPurchaseCute"
+	, "text" : "Остановитесь! Я покупаю этого кота, только прекратите!"
+	, "replies" :
+		[ { "text" : "Спасибо, вы такой лапочка :)", "ref" : null }
+		, { "text" : "Идите же и обрадуйте его! Наверняка он мечтает заключить нового хозяина в когти, то есть, мягкие, пушистые объятия.", "ref" : null }
+		]
+	, "sets"   : [ "CatMachinationsDone" ]
+	, "clears" : [ "CatMachinations" ]
 	},
 	{ "id"   : "VillainQueueEscape"
 	, "text" : "О да! Да! Подошла моя очередь! Настало моё время! Ахахаха!"
