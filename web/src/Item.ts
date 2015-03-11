@@ -35,7 +35,7 @@ module Item
 		, price       : 50000
 		},
 		{ name        : "«Комьюнити»"
-		, description : "Испанский 101"
+		, description : "Испанский 101."
 		, price       : 20000
 		},
 		{ name        : "«Монополия»"

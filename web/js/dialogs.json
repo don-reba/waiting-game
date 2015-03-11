@@ -1434,7 +1434,7 @@
 		, { "text" : "<aside> Подрисовать ему неклёвые усы и рога мелком, пока не очнулся. </aside>", "ref" : null }
 		, { "text" : "Хм, нужно позвонить в похоронное бюро.", "ref" : null }
 		]
-	, "sets"   : [ "KostikFiller2Pending", "KostikExistQueue" ]
+	, "sets"   : [ "KostikFiller2Pending", "KostikExitQueue" ]
 	, "clears" : [ "KostikFiller1Pending" ]
 	},
 	{ "id"   : "KostikFiller1Baby"
@@ -1452,7 +1452,7 @@
 		, { "text" : "Ну вот, теперь придётся знакомиться с его мамой.", "ref" : null }
 		, { "text" : "Ах, если бы отобрать конфекту у ребёнка было бы так же просто. Хочу конфетку…", "ref" : null }
 		]
-	, "sets"   : [ "KostikFiller2Pending", "KostikExistQueue" ]
+	, "sets"   : [ "KostikFiller2Pending", "KostikExitQueue" ]
 	, "clears" : [ "KostikFiller1Pending" ]
 	},
 	{ "id"   : "KostikQueueEscape"

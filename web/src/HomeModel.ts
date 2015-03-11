@@ -55,12 +55,6 @@ class HomeModel implements IHomeModel, IPersistent
 	private ny    : number = 23;
 	private speed : number = 3;
 
-	// IHomeModel implementation
-
-	DialogChanged = new Signal();
-	GuestsChanged = new Signal();
-	StateChanged  = new Signal();
-
 	constructor
 		( private timer            : Timer
 		, private characterManager : CharacterManager
@@ -75,6 +69,12 @@ class HomeModel implements IHomeModel, IPersistent
 		for (var y = 0; y != this.ny; ++y)
 			this.canvas.push(new Array<string>(this.nx));
 	}
+
+	// IHomeModel implementation
+
+	DialogChanged = new Signal();
+	GuestsChanged = new Signal();
+	StateChanged  = new Signal();
 
 	AdvanceDialog(ref : string) : void
 	{

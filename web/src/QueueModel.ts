@@ -50,6 +50,18 @@ class QueueModel implements IQueueModel, IPersistent
 			this.queue.push(this.MakeStockPosition());
 	}
 
+	Remove(character : ICharacter) : void
+	{
+		for (var i = 0; i != this.queue.length; ++i)
+		{
+			if (this.queue[i].characterID != character.id)
+				continue;
+			this.queue.splice(i, 1);
+			this.PeopleChanged.Call();
+			return;
+		}
+	}
+
 	// IQueueModel implementation
 
 	CurrentTicketChanged = new Signal();

@@ -49,7 +49,7 @@ var Item;
         { name: "Шляпа «Цилиндр»", description: "Выбор успешного человека.", price: 10000 },
         { name: "Телевизор", description: "С тёплым ламповым звуком.", price: 100000 },
         { name: "Кофейный столик", description: "Для приёма гостей.", price: 50000 },
-        { name: "«Комьюнити»", description: "Испанский 101", price: 20000 },
+        { name: "«Комьюнити»", description: "Испанский 101.", price: 20000 },
         { name: "«Монополия»", description: "Отличный способ разрушить дружбу.", price: 20000 },
     ];
     function GetInfo(item) {
@@ -1528,6 +1528,15 @@ var QueueModel = (function () {
         for (var i = 0; i != this.maxLength; ++i)
             this.queue.push(this.MakeStockPosition());
     }
+    QueueModel.prototype.Remove = function (character) {
+        for (var i = 0; i != this.queue.length; ++i) {
+            if (this.queue[i].characterID != character.id)
+                continue;
+            this.queue.splice(i, 1);
+            this.PeopleChanged.Call();
+            return;
+        }
+    };
     QueueModel.prototype.AdvanceDialog = function (ref) {
         var finishedLastMansDialog = !ref && this.queue[0].characterID == this.speakerID;
         var waitingToAdvance = !this.head || this.head.remaining <= 0;
@@ -2102,12 +2111,13 @@ var StoreView = (function () {
 /// <reference path="StorePresenter.ts"      />
 /// <reference path="StoreView.ts"           />
 /// <reference path="Timer.ts"               />
-function MapCharacterNameFlags(flags, player, characterManager) {
+function MapCharacterNameFlags(flags, player, characterManager, queueModel) {
     var characters = characterManager.GetAllCharacters();
     for (var i = 0; i != characters.length; ++i) {
         var c = characters[i];
         flags.SetCheck(c.id + "Intro", player.HasNotMet.bind(player, c));
         flags.SetControl(c.id + "Friendship", player.Befriend.bind(player, c));
+        flags.SetControl(c.id + "ExitQueue", queueModel.Remove.bind(queueModel, c));
     }
 }
 function MapPlayerStateFlags(flags, player) {
@@ -2146,7 +2156,7 @@ function Main(dialogs, characters) {
     var storePresenter = new StorePresenter(mainModel, storeModel, storeView);
     var persistentItems = [["activitiesMenu", activitiesModel], ["invitesMenu", invitesModel], ["main", mainModel], ["home", homeModel], ["queue", queueModel], ["player", player], ["timer", timer], ["flags", flags]];
     var persistentState = new PersistentState(persistentItems, timer);
-    MapCharacterNameFlags(flags, player, characterManager);
+    MapCharacterNameFlags(flags, player, characterManager, queueModel);
     MapPlayerStateFlags(flags, player);
     persistentState.Load();
     savePresenter.Load();
