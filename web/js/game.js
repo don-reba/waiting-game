@@ -127,6 +127,9 @@ var Player = (function () {
         if (this.hasMet.indexOf(character.id) < 0)
             this.hasMet.push(character.id);
     };
+    Player.prototype.IsFriendsWith = function (character) {
+        return this.friends.indexOf(character.id) >= 0;
+    };
     Player.prototype.SetHat = function (hat) {
         this.hat = hat;
         this.HatChanged.Call();
@@ -2116,6 +2119,7 @@ function MapCharacterNameFlags(flags, player, characterManager, queueModel) {
     for (var i = 0; i != characters.length; ++i) {
         var c = characters[i];
         flags.SetCheck(c.id + "Intro", player.HasNotMet.bind(player, c));
+        flags.SetCheck(c.id + "Friendship", player.IsFriendsWith.bind(player, c));
         flags.SetControl(c.id + "Friendship", player.Befriend.bind(player, c));
         flags.SetControl(c.id + "ExitQueue", queueModel.Remove.bind(queueModel, c));
     }

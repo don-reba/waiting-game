@@ -762,7 +762,7 @@
 		, { "text" : "Мистер Усы, как вы похорошели! Сделали пластическую операцию? Нет? О, пойдёмте домой, вы расскажите мне за ужином.", "ref" : null }
 		, { "text" : "Благодарю! Мы с усами будем навещать вас, чтобы вам не было одиноко! До усвидания!", "ref" : null }
 		]
-	, "sets"   : [ "MoustacheUpgradeObtained" ]
+	, "sets"   : [ "MoustacheUpgradeObtained", "MrMoustacheFriendship" ]
 	, "clears" : [ "MrMoustacheUpgradePending" ]
 	},
 	{ "id"   : "MrMoustacheMoustacheFillerIntro"
@@ -963,7 +963,7 @@
 		, { "text" : "Да, мне тоже.", "ref" : null }
 		, { "text" : "Ура, я король поэтов! ВЛААААСТЬ!", "ref" : null }
 		]
-	, "sets"   : [ "PoetFiller1Pending" ]
+	, "sets"   : [ "PoetFiller1Pending", "PoetFriendship" ]
 	, "clears" : [ "DuelOfPoets" ]
 	},
 	{ "id"   : "PoetInspirationMachinationsIntro"

@@ -95,6 +95,11 @@ class Player implements IPersistent
 			this.hasMet.push(character.id);
 	}
 
+	IsFriendsWith(character : ICharacter) : boolean
+	{
+		return this.friends.indexOf(character.id) >= 0;
+	}
+
 	SetHat(hat : Hat) : void
 	{
 		this.hat = hat;

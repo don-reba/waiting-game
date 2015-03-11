@@ -36,6 +36,8 @@ function MapCharacterNameFlags
 
 		flags.SetCheck(c.id + "Intro", player.HasNotMet.bind(player, c));
 
+		flags.SetCheck(c.id + "Friendship", player.IsFriendsWith.bind(player, c));
+
 		flags.SetControl(c.id + "Friendship", player.Befriend.bind(player, c));
 
 		flags.SetControl(c.id + "ExitQueue", queueModel.Remove.bind(queueModel, c));
