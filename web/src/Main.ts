@@ -22,7 +22,7 @@
 /// <reference path="StoreView.ts"           />
 /// <reference path="Timer.ts"               />
 
-function MapCharacterNameIntroFlags
+function MapCharacterNameFlags
 	( flags            : Flags
 	, player           : Player
 	, characterManager : CharacterManager
@@ -32,8 +32,10 @@ function MapCharacterNameIntroFlags
 	for (var i = 0; i != characters.length; ++i)
 	{
 		var c = characters[i]
-		var f = c.id + "Intro";
-		flags.SetCheck(f, player.HasNotMet.bind(player, c));
+
+		flags.SetCheck(c.id + "Intro", player.HasNotMet.bind(player, c));
+
+		flags.SetControl(c.id + "Friendship", player.Befriend.bind(player, c));
 	}
 }
 
@@ -56,7 +58,7 @@ function Main(dialogs : IDialog[], characters : ICharacter[])
 	var player = new Player(timer);
 
 	var activitiesModel = new ActivitiesMenuModel(player);
-	var invitesModel    = new InvitesMenuModel(characterManager);
+	var invitesModel    = new InvitesMenuModel(characterManager, player);
 	var homeModel       = new HomeModel(timer, characterManager, dialogManager, player);
 	var mainModel       = new MainModel(player);
 	var queueModel      = new QueueModel(timer, characterManager, dialogManager, player);
@@ -88,7 +90,7 @@ function Main(dialogs : IDialog[], characters : ICharacter[])
 		];
 	var persistentState = new PersistentState(persistentItems, timer);
 
-	MapCharacterNameIntroFlags(flags, player, characterManager);
+	MapCharacterNameFlags(flags, player, characterManager);
 	MapPlayerStateFlags(flags, player);
 
 	persistentState.Load();

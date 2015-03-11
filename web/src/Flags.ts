@@ -11,6 +11,8 @@ class Flags implements IPersistent
 
 	private checks : { [index : string] : () => boolean } = {};
 
+	private controls : { [index : string] : () => void } = {};
+
 	// public interface
 
 	Clear(flag : string) : void
@@ -30,13 +32,21 @@ class Flags implements IPersistent
 
 	Set(flag : string) : void
 	{
-		if (this.flags.indexOf(flag) < 0)
+		var Control = this.controls[flag];
+		if (Control)
+			Control();
+		else if (this.flags.indexOf(flag) < 0)
 			this.flags.push(flag);
 	}
 
 	SetCheck(flag : string, Check : () => boolean) : void
 	{
 		this.checks[flag] = Check;
+	}
+
+	SetControl(flag : string, Control : () => void) : void
+	{
+		this.controls[flag] = Control;
 	}
 
 	// IPersistent implementation

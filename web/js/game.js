@@ -93,7 +93,11 @@ var Player = (function () {
         if (this.items.indexOf(item) < 0)
             this.items.push(item);
     };
-    Player.prototype.GetFriends = function () {
+    Player.prototype.Befriend = function (character) {
+        if (this.friends.indexOf(character.id) < 0)
+            this.friends.push(character.id);
+    };
+    Player.prototype.GetFriendIDs = function () {
         return this.friends;
     };
     Player.prototype.GetHat = function () {
@@ -206,6 +210,7 @@ var Flags = (function () {
     function Flags() {
         this.flags = [];
         this.checks = {};
+        this.controls = {};
     }
     // public interface
     Flags.prototype.Clear = function (flag) {
@@ -220,11 +225,17 @@ var Flags = (function () {
         return this.flags.indexOf(flag) >= 0;
     };
     Flags.prototype.Set = function (flag) {
-        if (this.flags.indexOf(flag) < 0)
+        var Control = this.controls[flag];
+        if (Control)
+            Control();
+        else if (this.flags.indexOf(flag) < 0)
             this.flags.push(flag);
     };
     Flags.prototype.SetCheck = function (flag, Check) {
         this.checks[flag] = Check;
+    };
+    Flags.prototype.SetControl = function (flag, Control) {
+        this.controls[flag] = Control;
     };
     // IPersistent implementation
     Flags.prototype.FromPersistentString = function (str) {
@@ -879,7 +890,7 @@ var HomePresenter = (function () {
             this.homeView.ShowActivitiesButton();
         }
         else {
-            if (this.activitiesModel.HasActivities())
+            if (this.invitesModel.HasInvites() && this.activitiesModel.HasActivities())
                 this.homeView.ShowInvitesButton();
             else
                 this.homeView.HideInvitesButton();
@@ -1130,8 +1141,9 @@ var HomeView = (function () {
 /// <reference path="IInvitesMenuModel.ts" />
 /// <reference path="IPersistent.ts"       />
 var InvitesMenuModel = (function () {
-    function InvitesMenuModel(characterManager) {
+    function InvitesMenuModel(characterManager, player) {
         this.characterManager = characterManager;
+        this.player = player;
         this.isVisible = false;
         this.selected = [];
         this.maxFriends = 3; // has to be single-digit
@@ -1142,7 +1154,10 @@ var InvitesMenuModel = (function () {
     }
     // IInvitesMenuModel implementation
     InvitesMenuModel.prototype.GetFriends = function () {
-        return this.characterManager.GetAllCharacters();
+        var _this = this;
+        return this.player.GetFriendIDs().map(function (id) {
+            return _this.characterManager.GetCharacter(id);
+        });
     };
     InvitesMenuModel.prototype.GetSelectedFriends = function () {
         var _this = this;
@@ -1152,6 +1167,9 @@ var InvitesMenuModel = (function () {
     };
     InvitesMenuModel.prototype.GetSelection = function () {
         return this.selection;
+    };
+    InvitesMenuModel.prototype.HasInvites = function () {
+        return this.player.GetFriendIDs().length > 0;
     };
     InvitesMenuModel.prototype.IsEmpty = function () {
         return this.selected.length == 0;
@@ -2084,12 +2102,12 @@ var StoreView = (function () {
 /// <reference path="StorePresenter.ts"      />
 /// <reference path="StoreView.ts"           />
 /// <reference path="Timer.ts"               />
-function MapCharacterNameIntroFlags(flags, player, characterManager) {
+function MapCharacterNameFlags(flags, player, characterManager) {
     var characters = characterManager.GetAllCharacters();
     for (var i = 0; i != characters.length; ++i) {
         var c = characters[i];
-        var f = c.id + "Intro";
-        flags.SetCheck(f, player.HasNotMet.bind(player, c));
+        flags.SetCheck(c.id + "Intro", player.HasNotMet.bind(player, c));
+        flags.SetControl(c.id + "Friendship", player.Befriend.bind(player, c));
     }
 }
 function MapPlayerStateFlags(flags, player) {
@@ -2110,7 +2128,7 @@ function Main(dialogs, characters) {
     var timer = new Timer();
     var player = new Player(timer);
     var activitiesModel = new ActivitiesMenuModel(player);
-    var invitesModel = new InvitesMenuModel(characterManager);
+    var invitesModel = new InvitesMenuModel(characterManager, player);
     var homeModel = new HomeModel(timer, characterManager, dialogManager, player);
     var mainModel = new MainModel(player);
     var queueModel = new QueueModel(timer, characterManager, dialogManager, player);
@@ -2128,7 +2146,7 @@ function Main(dialogs, characters) {
     var storePresenter = new StorePresenter(mainModel, storeModel, storeView);
     var persistentItems = [["activitiesMenu", activitiesModel], ["invitesMenu", invitesModel], ["main", mainModel], ["home", homeModel], ["queue", queueModel], ["player", player], ["timer", timer], ["flags", flags]];
     var persistentState = new PersistentState(persistentItems, timer);
-    MapCharacterNameIntroFlags(flags, player, characterManager);
+    MapCharacterNameFlags(flags, player, characterManager);
     MapPlayerStateFlags(flags, player);
     persistentState.Load();
     savePresenter.Load();

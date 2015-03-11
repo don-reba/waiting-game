@@ -329,6 +329,9 @@ aside {
 #home-view .character:hover .character-name {
 	display : inline;
 }
+#home-view .player {
+	color : #006;
+}
 
 /* queue */
 

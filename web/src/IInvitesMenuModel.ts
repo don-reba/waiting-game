@@ -14,6 +14,8 @@ interface IInvitesMenuModel
 
 	GetSelection() : ICharacter;
 
+	HasInvites() : boolean;
+
 	IsEmpty() : boolean;
 
 	IsEnabled() : boolean;

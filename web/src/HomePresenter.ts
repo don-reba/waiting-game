@@ -208,7 +208,7 @@ class HomePresenter
 		}
 		else
 		{
-			if (this.activitiesModel.HasActivities())
+			if (this.invitesModel.HasInvites() && this.activitiesModel.HasActivities())
 				this.homeView.ShowInvitesButton();
 			else
 				this.homeView.HideInvitesButton();

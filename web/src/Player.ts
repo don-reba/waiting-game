@@ -41,7 +41,13 @@ class Player implements IPersistent
 			this.items.push(item);
 	}
 
-	GetFriends() : string[]
+	Befriend(character : ICharacter)
+	{
+		if (this.friends.indexOf(character.id) < 0)
+			this.friends.push(character.id);
+	}
+
+	GetFriendIDs() : string[]
 	{
 		return this.friends;
 	}

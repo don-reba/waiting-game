@@ -21,7 +21,10 @@ class InvitesMenuModel implements IInvitesMenuModel, IPersistent
 	SelectionChanged    = new Signal();
 	VisibilityChanged   = new Signal();
 
-	constructor(private characterManager : CharacterManager)
+	constructor
+		( private characterManager : CharacterManager
+		, private player           : Player
+		)
 	{
 	}
 
@@ -29,7 +32,8 @@ class InvitesMenuModel implements IInvitesMenuModel, IPersistent
 
 	GetFriends() : ICharacter[]
 	{
-		return this.characterManager.GetAllCharacters();
+		return this.player.GetFriendIDs()
+			.map(id => { return this.characterManager.GetCharacter(id) });
 	}
 
 	GetSelectedFriends() : ICharacter[]
@@ -40,6 +44,11 @@ class InvitesMenuModel implements IInvitesMenuModel, IPersistent
 	GetSelection() : ICharacter
 	{
 		return this.selection;
+	}
+
+	HasInvites() : boolean
+	{
+		return this.player.GetFriendIDs().length > 0;
 	}
 
 	IsEmpty() : boolean
