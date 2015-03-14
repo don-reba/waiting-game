@@ -411,7 +411,7 @@ aside {
 	height          : 100%;
 }
 #store-items {
-	background : url("../svg/holly.svg") 0 0 / 100% 100%;
+	background      : url("../svg/holly.svg") 0 0 / 100% 100%;
 	display         : flex;
 	flex-flow       : row wrap;
 	justify-content : center;
@@ -419,10 +419,10 @@ aside {
 	padding         : 2em;
 	position        : absolute;
 
-	top      : 0;
-	right    : 0;
-	bottom   : 0;
-	left     : 0;
+	top             : 0;
+	right           : 0;
+	bottom          : 0;
+	left            : 0;
 }
 #store-items li {
 	border      : 1px solid black;

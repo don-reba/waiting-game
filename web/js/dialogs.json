@@ -9,26 +9,27 @@
 	{ "id"   : "StdQueueConversation2"
 	, "text" : "Извините…"
 	, "replies" :
-		[ { "text" : "Прощайте!", "ref" : null }
-		]
+		[ { "text" : "Прощайте!", "ref" : null } ]
 	},
 	{ "id"   : "StdQueueEscape"
 	, "text" : "Извините, моя очередь."
 	, "replies" :
-		[ { "text" : "До свидания", "ref" : null }
-		]
+		[ { "text" : "До свидания", "ref" : null } ]
 	},
 	{ "id"   : "StdHomeArrival"
 	, "text" : "А вот и я!"
 	, "replies" :
-		[ { "text" : "Привет!", "ref" : null }
-		]
+		[ { "text" : "Привет!", "ref" : null } ]
 	},
 	{ "id"   : "StdHomeConversation"
 	, "text" : "…"
 	, "replies" :
-		[ { "text" : "Погодите, я забыла утюг на плите!", "ref" : null }
-		]
+		[ { "text" : "Погодите, я забыла утюг на плите!", "ref" : null } ]
+	},
+	{ "id"   : "StdPterodactyl"
+	, "text" : "<aside>Над вами проносится тень, раздаётся пронзительный крик гигантского птеродактиля, и вот вы парите в облаках!<br>Неловкая пауза осталась далеко позади.</aside>"
+	, "replies" :
+		[ { "text" : "Спасибо, гигантский птеродактиль! Ты — мой лучший друг!", "ref" : null } ]
 	},
 	{ "id"   : "ShadyDescriptionIntro"
 	, "text" : "<aside>Человек с набриллиантиненными волосами и цветным галстуком широко улыбается вам.</aside>"

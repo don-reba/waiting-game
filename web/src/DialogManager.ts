@@ -14,7 +14,7 @@ class DialogManager
 			this.map[dialogs[i].id] = dialogs[i];
 	}
 
-	ActivateDialog(dialogID : string) : string
+	ActivateDialog(dialogID : string) : void
 	{
 		if (!dialogID)
 			return;

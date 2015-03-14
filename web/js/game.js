@@ -80,14 +80,16 @@ var Player = (function () {
         this.moustache = 0 /* None */;
         this.money = 0;
         this.rate = 0.5;
+        this.composure = 0;
         this.hasMet = [];
         this.friends = [];
         this.items = [];
+        this.Awkward = new Signal();
         this.HatChanged = new Signal();
         this.MoustacheChanged = new Signal();
         this.MoneyChanged = new Signal();
         this.RateChanged = new Signal();
-        timer.AddEvent(this.OnPay.bind(this), 10);
+        timer.AddEvent(this.OnSecond.bind(this), 10);
     }
     Player.prototype.AddItem = function (item) {
         if (this.items.indexOf(item) < 0)
@@ -96,6 +98,9 @@ var Player = (function () {
     Player.prototype.Befriend = function (character) {
         if (this.friends.indexOf(character.id) < 0)
             this.friends.push(character.id);
+    };
+    Player.prototype.ClearComposure = function () {
+        this.composure = 0;
     };
     Player.prototype.GetFriendIDs = function () {
         return this.friends;
@@ -130,6 +135,9 @@ var Player = (function () {
     Player.prototype.IsFriendsWith = function (character) {
         return this.friends.indexOf(character.id) >= 0;
     };
+    Player.prototype.ResetComposure = function () {
+        this.composure = 30;
+    };
     Player.prototype.SetHat = function (hat) {
         this.hat = hat;
         this.HatChanged.Call();
@@ -149,18 +157,24 @@ var Player = (function () {
         this.moustache = state.moustache;
         this.money = state.money;
         this.rate = state.rate;
+        this.composure = state.composure;
         this.hasMet = state.hasMet;
         this.friends = state.friends;
         this.items = state.items;
     };
     Player.prototype.ToPersistentString = function () {
-        var state = { hat: this.hat, moustache: this.moustache, money: this.money, rate: this.rate, hasMet: this.hasMet, friends: this.friends, items: this.items };
+        var state = { hat: this.hat, moustache: this.moustache, money: this.money, rate: this.rate, composure: this.composure, hasMet: this.hasMet, friends: this.friends, items: this.items };
         return JSON.stringify(state);
     };
     // private implementation
-    Player.prototype.OnPay = function () {
+    Player.prototype.OnSecond = function () {
         this.money += this.rate;
         this.MoneyChanged.Call();
+        if (this.composure > 0) {
+            --this.composure;
+            if (this.composure == 0)
+                this.Awkward.Call();
+        }
     };
     return Player;
 })();
@@ -1526,6 +1540,7 @@ var QueueModel = (function () {
         this.PlayerTicketChanged = new Signal();
         timer.AddEvent(this.OnAdvance.bind(this), 40);
         timer.AddEvent(this.OnKnock.bind(this), 37);
+        player.Awkward.Add(this.OnAwkward.bind(this));
         this.ticket = 1;
         this.queue = [];
         this.head = this.MakeStockPosition();
@@ -1542,12 +1557,16 @@ var QueueModel = (function () {
         }
     };
     QueueModel.prototype.AdvanceDialog = function (ref) {
+        if (ref)
+            this.player.ResetComposure();
+        else
+            this.player.ClearComposure();
         var finishedLastMansDialog = !ref && this.queue[0].characterID == this.speakerID;
         var waitingToAdvance = !this.head || this.head.remaining <= 0;
         if (finishedLastMansDialog && waitingToAdvance)
             this.AdvanceQueue();
         this.dialogID = ref;
-        if (!this.dialogID)
+        if (!ref)
             this.speakerID = null;
         this.DialogChanged.Call();
         this.dialogManager.ActivateDialog(this.dialogID);
@@ -1598,6 +1617,7 @@ var QueueModel = (function () {
         this.dialogID = this.characterManager.GetDialogID(speaker.id, 1 /* QueueConversation */);
         this.DialogChanged.Call();
         var hasNotMet = this.player.HasNotMet(speaker);
+        this.player.ResetComposure();
         this.player.IntroduceTo(speaker);
         this.dialogManager.ActivateDialog(this.dialogID);
         if (hasNotMet)
@@ -1628,6 +1648,13 @@ var QueueModel = (function () {
                 this.AdvanceQueue();
         }
     };
+    QueueModel.prototype.OnAwkward = function () {
+        if (!this.speakerID)
+            return;
+        this.speakerID = "";
+        this.dialogID = "StdPterodactyl";
+        this.DialogChanged.Call();
+    };
     QueueModel.prototype.OnKnock = function () {
         if (this.queue.length < this.maxLength && Math.random() < 0.4) {
             this.queue.push(this.MakeStockPosition());
@@ -1635,32 +1662,6 @@ var QueueModel = (function () {
         }
     };
     // private implementation
-    QueueModel.prototype.MakeStockPosition = function () {
-        var character;
-        do {
-            character = this.characterManager.GetRandomCharacter();
-        } while (this.InQueue(character));
-        var remaining = 2 + Util.Random(8);
-        var ticket = String(this.ticket++);
-        return { characterID: character.id, remaining: remaining, ticket: ticket };
-    };
-    QueueModel.prototype.MakePlayerPosition = function () {
-        var remaining = 2 + Util.Random(8);
-        var ticket = String(this.ticket++);
-        return { characterID: null, remaining: remaining, ticket: ticket };
-    };
-    QueueModel.prototype.HoldLast = function () {
-        var holdDialogID = this.characterManager.GetDialogID(this.speakerID, 0 /* QueueEscape */);
-        if (this.dialogID != holdDialogID) {
-            this.dialogID = holdDialogID;
-            this.DialogChanged.Call();
-        }
-    };
-    QueueModel.prototype.InQueue = function (c) {
-        return this.queue.some(function (p) {
-            return p.characterID && p.characterID === c.id;
-        });
-    };
     QueueModel.prototype.AdvanceQueue = function () {
         if (this.queue.length > 0) {
             this.head = this.queue[0];
@@ -1674,6 +1675,33 @@ var QueueModel = (function () {
             this.head = null;
         }
         this.CurrentTicketChanged.Call();
+    };
+    QueueModel.prototype.GenerateRemaining = function () {
+        var min = 4;
+        var max = 16;
+        return min + Util.Random(max - min);
+    };
+    QueueModel.prototype.HoldLast = function () {
+        var holdDialogID = this.characterManager.GetDialogID(this.speakerID, 0 /* QueueEscape */);
+        if (this.dialogID != holdDialogID) {
+            this.dialogID = holdDialogID;
+            this.DialogChanged.Call();
+        }
+    };
+    QueueModel.prototype.InQueue = function (c) {
+        return this.queue.some(function (p) {
+            return p.characterID && p.characterID === c.id;
+        });
+    };
+    QueueModel.prototype.MakeStockPosition = function () {
+        var character;
+        do {
+            character = this.characterManager.GetRandomCharacter();
+        } while (this.InQueue(character));
+        return { characterID: character.id, remaining: this.GenerateRemaining(), ticket: String(this.ticket++) };
+    };
+    QueueModel.prototype.MakePlayerPosition = function () {
+        return { characterID: null, remaining: this.GenerateRemaining(), ticket: String(this.ticket++) };
     };
     return QueueModel;
 })();
@@ -1799,7 +1827,7 @@ var QueueView = (function () {
         speakerElement.show();
         textElement.show();
         repliesElement.show();
-        speakerElement.text(speaker.name);
+        speakerElement.text(speaker ? speaker.name : "");
         textElement.html(dialog.text);
         repliesElement.empty();
         for (var i = 0; i != dialog.replies.length; ++i) {

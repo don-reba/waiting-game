@@ -100,7 +100,7 @@ class QueueView implements IQueueView, IClientView
 		textElement.show();
 		repliesElement.show();
 
-		speakerElement.text(speaker.name);
+		speakerElement.text(speaker ? speaker.name : "");
 
 		textElement.html(dialog.text);
 

@@ -40,6 +40,8 @@ class QueueModel implements IQueueModel, IPersistent
 		timer.AddEvent(this.OnAdvance.bind(this), 40);
 		timer.AddEvent(this.OnKnock.bind(this),   37);
 
+		player.Awkward.Add(this.OnAwkward.bind(this));
+
 		this.ticket = 1;
 
 		this.queue = [];
@@ -71,13 +73,18 @@ class QueueModel implements IQueueModel, IPersistent
 
 	AdvanceDialog(ref : string) : void
 	{
+		if (ref)
+			this.player.ResetComposure();
+		else
+			this.player.ClearComposure();
+
 		var finishedLastMansDialog = !ref && this.queue[0].characterID == this.speakerID
 		var waitingToAdvance = !this.head || this.head.remaining <= 0;
 		if (finishedLastMansDialog && waitingToAdvance)
 			this.AdvanceQueue();
 
 		this.dialogID = ref;
-		if (!this.dialogID)
+		if (!ref)
 			this.speakerID = null;
 		this.DialogChanged.Call();
 
@@ -148,6 +155,7 @@ class QueueModel implements IQueueModel, IPersistent
 
 		var hasNotMet = this.player.HasNotMet(speaker);
 
+		this.player.ResetComposure();
 		this.player.IntroduceTo(speaker);
 		this.dialogManager.ActivateDialog(this.dialogID);
 
@@ -160,18 +168,18 @@ class QueueModel implements IQueueModel, IPersistent
 	FromPersistentString(str : string) : void
 	{
 		var state = <QueueModelState>JSON.parse(str);
-		this.queue      = state.queue;
-		this.head  = state.head;
-		this.ticket     = state.ticket;
-		this.dialogID   = state.dialogID;
-		this.speakerID  = state.speakerID;
+		this.queue     = state.queue;
+		this.head      = state.head;
+		this.ticket    = state.ticket;
+		this.dialogID  = state.dialogID;
+		this.speakerID = state.speakerID;
 	}
 
 	ToPersistentString() : string
 	{
 		var state : QueueModelState =
 			{ queue     : this.queue
-			, head : this.head
+			, head      : this.head
 			, ticket    : this.ticket
 			, dialogID  : this.dialogID
 			, speakerID : this.speakerID
@@ -197,6 +205,15 @@ class QueueModel implements IQueueModel, IPersistent
 		}
 	}
 
+	private OnAwkward() : void
+	{
+		if (!this.speakerID)
+			return;
+		this.speakerID = "";
+		this.dialogID  = "StdPterodactyl";
+		this.DialogChanged.Call();
+	}
+
 	private OnKnock() : void
 	{
 		if (this.queue.length < this.maxLength && Math.random() < 0.4)
@@ -207,49 +224,6 @@ class QueueModel implements IQueueModel, IPersistent
 	}
 
 	// private implementation
-
-	private MakeStockPosition() : QueuePosition
-	{
-		var character;
-		do
-		{
-			character = this.characterManager.GetRandomCharacter();
-		} while (this.InQueue(character));
-
-		var remaining = 2 + Util.Random(8);
-		var ticket    = String(this.ticket++);
-		return <QueuePosition>
-			{ characterID : character.id
-			, remaining   : remaining
-			, ticket      : ticket
-			};
-	}
-
-	private MakePlayerPosition() : QueuePosition
-	{
-		var remaining = 2 + Util.Random(8);
-		var ticket    = String(this.ticket++);
-		return <QueuePosition>
-			{ characterID : null
-			, remaining   : remaining
-			, ticket      : ticket
-			};
-	}
-
-	private HoldLast() : void
-	{
-		var holdDialogID = this.characterManager.GetDialogID(this.speakerID, DialogType.QueueEscape);
-		if (this.dialogID != holdDialogID)
-		{
-			this.dialogID = holdDialogID;
-			this.DialogChanged.Call();
-		}
-	}
-
-	private InQueue(c : ICharacter) : boolean
-	{
-		return this.queue.some(p => { return p.characterID && p.characterID === c.id });
-	}
 
 	private AdvanceQueue() : void
 	{
@@ -267,5 +241,51 @@ class QueueModel implements IQueueModel, IPersistent
 			this.head = null;
 		}
 		this.CurrentTicketChanged.Call();
+	}
+
+	private GenerateRemaining() : number
+	{
+		var min = 4;
+		var max = 16;
+		return min + Util.Random(max - min);
+	}
+
+	private HoldLast() : void
+	{
+		var holdDialogID = this.characterManager.GetDialogID(this.speakerID, DialogType.QueueEscape);
+		if (this.dialogID != holdDialogID)
+		{
+			this.dialogID = holdDialogID;
+			this.DialogChanged.Call();
+		}
+	}
+
+	private InQueue(c : ICharacter) : boolean
+	{
+		return this.queue.some(p => { return p.characterID && p.characterID === c.id });
+	}
+
+	private MakeStockPosition() : QueuePosition
+	{
+		var character;
+		do
+		{
+			character = this.characterManager.GetRandomCharacter();
+		} while (this.InQueue(character));
+
+		return <QueuePosition>
+			{ characterID : character.id
+			, remaining   : this.GenerateRemaining()
+			, ticket      : String(this.ticket++)
+			};
+	}
+
+	private MakePlayerPosition() : QueuePosition
+	{
+		return <QueuePosition>
+			{ characterID : null
+			, remaining   : this.GenerateRemaining()
+			, ticket      : String(this.ticket++)
+			};
 	}
 }

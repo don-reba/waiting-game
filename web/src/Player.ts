@@ -10,6 +10,7 @@ class PlayerState
 	moustache : Moustache;
 	money     : number;
 	rate      : number;
+	composure : number;
 	hasMet    : string[];
 	friends   : string[];
 	items     : Item[];
@@ -21,10 +22,12 @@ class Player implements IPersistent
 	private moustache : Moustache = Moustache.None;
 	private money     : number    = 0;
 	private rate      : number    = 0.5;
+	private composure : number    = 0;
 	private hasMet    : string[]  = [];
 	private friends   : string[]  = [];
 	private items     : Item[]    = [];
 
+	Awkward          = new Signal();
 	HatChanged       = new Signal();
 	MoustacheChanged = new Signal();
 	MoneyChanged     = new Signal();
@@ -32,7 +35,7 @@ class Player implements IPersistent
 
 	constructor(timer : Timer)
 	{
-		timer.AddEvent(this.OnPay.bind(this), 10);
+		timer.AddEvent(this.OnSecond.bind(this), 10);
 	}
 
 	AddItem(item : Item) : void
@@ -45,6 +48,11 @@ class Player implements IPersistent
 	{
 		if (this.friends.indexOf(character.id) < 0)
 			this.friends.push(character.id);
+	}
+
+	ClearComposure() : void
+	{
+		this.composure = 0;
 	}
 
 	GetFriendIDs() : string[]
@@ -100,6 +108,11 @@ class Player implements IPersistent
 		return this.friends.indexOf(character.id) >= 0;
 	}
 
+	ResetComposure() : void
+	{
+		this.composure = 30;
+	}
+
 	SetHat(hat : Hat) : void
 	{
 		this.hat = hat;
@@ -127,6 +140,7 @@ class Player implements IPersistent
 		this.moustache = state.moustache;
 		this.money     = state.money;
 		this.rate      = state.rate;
+		this.composure = state.composure;
 		this.hasMet    = state.hasMet;
 		this.friends   = state.friends;
 		this.items     = state.items;
@@ -139,6 +153,7 @@ class Player implements IPersistent
 			, moustache : this.moustache
 			, money     : this.money
 			, rate      : this.rate
+			, composure : this.composure
 			, hasMet    : this.hasMet
 			, friends   : this.friends
 			, items     : this.items
@@ -148,9 +163,16 @@ class Player implements IPersistent
 
 	// private implementation
 
-	private OnPay() : void
+	private OnSecond() : void
 	{
 		this.money += this.rate;
 		this.MoneyChanged.Call();
+
+		if (this.composure > 0)
+		{
+			--this.composure;
+			if (this.composure == 0)
+				this.Awkward.Call();
+		}
 	}
 }
