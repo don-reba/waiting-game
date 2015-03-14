@@ -4,7 +4,8 @@
 
 class StoreModel implements IStoreModel
 {
-	private stock : Item;
+	private items       : [Item, boolean][];
+	private changedItem : [Item, boolean];
 
 	constructor(private player : Player)
 	{
@@ -13,7 +14,18 @@ class StoreModel implements IStoreModel
 
 	// IStoreModel implementation
 
-	Purchased = new Signal();
+	ItemStatusChanged = new Signal();
+	Purchased         = new Signal();
+
+	Deactivate() : void
+	{
+		this.items = null;
+	}
+
+	GetChangedItem() : [Item, boolean]
+	{
+		return this.changedItem;
+	}
 
 	GetItems() : [Item, boolean][]
 	{
@@ -47,6 +59,7 @@ class StoreModel implements IStoreModel
 				items.push(this.GetSaleInfo(Item.Monopoly, money));
 		}
 
+		this.items = items;
 		return items;
 	}
 
@@ -68,10 +81,6 @@ class StoreModel implements IStoreModel
 		this.Purchased.Call();
 	}
 
-	UpdateStock() : void
-	{
-	}
-
 	// private implementation
 
 	private ApplyItem(item : Item)
@@ -91,5 +100,20 @@ class StoreModel implements IStoreModel
 
 	private OnMoneyChanged() : void
 	{
+		if (!this.items)
+			return;
+		for (var i = 0; i != this.items.length; ++i)
+		{
+			var item = this.items[i];
+
+			var price   = Item.GetInfo(item[0]).price;
+			var money   = this.player.GetMoney();
+			var enabled = price <= money;
+			if (enabled == item[1])
+				continue;
+			this.changedItem = [item[0], enabled];
+			this.items[i] = this.changedItem;
+			this.ItemStatusChanged.Call();
+		}
 	}
 }

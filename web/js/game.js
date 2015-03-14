@@ -1232,7 +1232,8 @@ var InvitesMenuModel = (function () {
 /// <reference path="ICharacter.ts" />
 /// <reference path="IDialog.ts"    />
 /// <reference path="Signal.ts" />
-/// <reference path="Item.ts" />
+/// <reference path="Item.ts"   />
+/// <reference path="Signal.ts" />
 /// <reference path="Item.ts" />
 /// <reference path="IMainModel.ts"  />
 /// <reference path="IPersistent.ts" />
@@ -1948,9 +1949,16 @@ var StoreModel = (function () {
     function StoreModel(player) {
         this.player = player;
         // IStoreModel implementation
+        this.ItemStatusChanged = new Signal();
         this.Purchased = new Signal();
         player.MoneyChanged.Add(this.OnMoneyChanged.bind(this));
     }
+    StoreModel.prototype.Deactivate = function () {
+        this.items = null;
+    };
+    StoreModel.prototype.GetChangedItem = function () {
+        return this.changedItem;
+    };
     StoreModel.prototype.GetItems = function () {
         var money = this.player.GetMoney();
         var items = [];
@@ -1972,6 +1980,7 @@ var StoreModel = (function () {
             if (!this.player.HasItem(5 /* Monopoly */))
                 items.push(this.GetSaleInfo(5 /* Monopoly */, money));
         }
+        this.items = items;
         return items;
     };
     StoreModel.prototype.GetSaleInfo = function (item, money) {
@@ -1988,8 +1997,6 @@ var StoreModel = (function () {
         this.ApplyItem(item);
         this.Purchased.Call();
     };
-    StoreModel.prototype.UpdateStock = function () {
-    };
     // private implementation
     StoreModel.prototype.ApplyItem = function (item) {
         switch (item) {
@@ -2004,6 +2011,19 @@ var StoreModel = (function () {
         }
     };
     StoreModel.prototype.OnMoneyChanged = function () {
+        if (!this.items)
+            return;
+        for (var i = 0; i != this.items.length; ++i) {
+            var item = this.items[i];
+            var price = Item.GetInfo(item[0]).price;
+            var money = this.player.GetMoney();
+            var enabled = price <= money;
+            if (enabled == item[1])
+                continue;
+            this.changedItem = [item[0], enabled];
+            this.items[i] = this.changedItem;
+            this.ItemStatusChanged.Call();
+        }
     };
     return StoreModel;
 })();
@@ -2015,22 +2035,30 @@ var StorePresenter = (function () {
         this.mainModel = mainModel;
         this.storeModel = storeModel;
         this.storeView = storeView;
+        storeModel.ItemStatusChanged.Add(this.OnItemStatusChanged.bind(this));
         storeModel.Purchased.Add(this.OnPurchased.bind(this));
         storeView.GoToHome.Add(this.OnGoToHome.bind(this));
+        storeView.Hidden.Add(this.OnHidden.bind(this));
         storeView.ItemSelected.Add(this.OnItemSelected.bind(this));
         storeView.Shown.Add(this.OnShown.bind(this));
     }
     StorePresenter.prototype.OnGoToHome = function () {
         this.mainModel.SetView(0 /* Home */);
     };
+    StorePresenter.prototype.OnHidden = function () {
+        this.storeModel.Deactivate();
+    };
     StorePresenter.prototype.OnItemSelected = function () {
         this.storeModel.Purchase(this.storeView.GetSelectedItem());
+    };
+    StorePresenter.prototype.OnItemStatusChanged = function () {
+        var item = this.storeModel.GetChangedItem();
+        this.storeView.SetItemStatus(item[0], item[1]);
     };
     StorePresenter.prototype.OnPurchased = function () {
         this.storeView.SetItems(this.storeModel.GetItems());
     };
     StorePresenter.prototype.OnShown = function () {
-        this.storeModel.UpdateStock();
         this.storeView.SetItems(this.storeModel.GetItems());
     };
     return StorePresenter;
@@ -2041,6 +2069,7 @@ var StoreView = (function () {
     function StoreView() {
         // IStoreView implementation
         this.GoToHome = new Signal();
+        this.Hidden = new Signal();
         this.ItemSelected = new Signal();
         this.Shown = new Signal();
     }
@@ -2054,12 +2083,13 @@ var StoreView = (function () {
                 this.selectedItem = e.data;
                 this.ItemSelected.Call();
             };
-            var info = Item.GetInfo(items[i][0]);
+            var item = items[i][0];
+            var info = Item.GetInfo(item);
             var enabled = items[i][1];
             var button = $("<li>" + info.name + "<br/>" + info.description + "<br/>" + info.price.toLocaleString() + " руб.</li>");
+            button.addClass(Item[item]);
             if (enabled) {
-                button.click(items[i][0], OnClick.bind(this));
-                button.addClass("enabled");
+                button.click(item, OnClick.bind(this));
                 button.addClass("fg-clickable");
             }
             else {
@@ -2072,11 +2102,19 @@ var StoreView = (function () {
             row.append(buttons[i]);
         $("#store-items").empty().append(row);
     };
+    StoreView.prototype.SetItemStatus = function (item, isEnabled) {
+        var button = $("#store-items ." + Item[item]);
+        if (isEnabled)
+            button.removeClass("disabled");
+        else
+            button.addClass("disabled");
+    };
     // IClientView implementation
     StoreView.prototype.GetType = function () {
         return 2 /* Store */;
     };
     StoreView.prototype.Hide = function () {
+        this.Hidden.Call();
     };
     StoreView.prototype.Show = function (e) {
         var _this = this;

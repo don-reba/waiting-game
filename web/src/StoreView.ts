@@ -8,6 +8,7 @@ class StoreView implements IStoreView, IClientView
 	// IStoreView implementation
 
 	GoToHome     = new Signal();
+	Hidden       = new Signal();
 	ItemSelected = new Signal();
 	Shown        = new Signal();
 
@@ -26,15 +27,17 @@ class StoreView implements IStoreView, IClientView
 				this.selectedItem = e.data;
 				this.ItemSelected.Call();
 			}
-			var info    = Item.GetInfo(items[i][0]);
+
+			var item    = items[i][0];
+			var info    = Item.GetInfo(item);
 			var enabled = items[i][1];
 
 			var button = $("<li>" + info.name + "<br/>" + info.description + "<br/>" +  info.price.toLocaleString() + " руб.</li>");
+			button.addClass(Item[item]);
 
 			if (enabled)
 			{
-				button.click(items[i][0], OnClick.bind(this));
-				button.addClass("enabled");
+				button.click(item, OnClick.bind(this));
 				button.addClass("fg-clickable");
 			}
 			else
@@ -52,6 +55,15 @@ class StoreView implements IStoreView, IClientView
 		$("#store-items").empty().append(row);
 	}
 
+	SetItemStatus(item : Item, isEnabled : boolean) : void
+	{
+		var button = $("#store-items ." + Item[item]);
+		if (isEnabled)
+			button.removeClass("disabled");
+		else
+			button.addClass("disabled");
+	}
+
 	// IClientView implementation
 
 	GetType() : ClientViewType
@@ -61,6 +73,7 @@ class StoreView implements IStoreView, IClientView
 
 	Hide() : void
 	{
+		this.Hidden.Call();
 	}
 
 	Show(e : JQuery) : void

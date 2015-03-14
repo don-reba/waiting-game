@@ -1,12 +1,16 @@
-/// <reference path="Item.ts" />
+/// <reference path="Item.ts"   />
+/// <reference path="Signal.ts" />
 
 interface IStoreModel
 {
-	Purchased : Signal;
+	ItemStatusChanged : Signal;
+	Purchased         : Signal;
+
+	Deactivate() : void;
+
+	GetChangedItem() : [Item, boolean];
 
 	GetItems() : [Item, boolean][];
 
 	Purchase(item : Item) : void;
-
-	UpdateStock() : void;
 }
