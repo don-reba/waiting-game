@@ -410,19 +410,13 @@ aside {
 	width           : 100%;
 	height          : 100%;
 }
-#store-body {
-	height : 100%;
-}
-#store-body > div {
-	position : relative;
-	height   : 100%;
-	overflow : auto;
-}
 #store-items {
+	background : url("../svg/holly.svg") 0 0 / 100% 100%;
 	display         : flex;
 	flex-flow       : row wrap;
 	justify-content : center;
 	list-style      : none;
+	padding         : 2em;
 	position        : absolute;
 
 	top      : 0;
