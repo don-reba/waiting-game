@@ -164,7 +164,7 @@ class HomeView implements IHomeView, IClientView
 			return;
 		}
 
-		speakerElement.text(speaker.name);
+		speakerElement.text(speaker ? speaker.name : "");
 
 		textElement.html(dialog.text);
 

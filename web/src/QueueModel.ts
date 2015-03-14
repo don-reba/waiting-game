@@ -206,9 +206,20 @@ class QueueModel implements IQueueModel, IPersistent
 	{
 		if (!this.speakerID)
 			return;
+
 		this.speakerID = "";
 		this.dialogID  = "StdPterodactyl";
 		this.DialogChanged.Call();
+
+		for (var i = 0; i != this.queue.length; ++i)
+		{
+			if (this.queue[i].characterID)
+				continue;
+			this.queue.splice(i, 1);
+			this.PeopleChanged.Call();
+			this.PlayerTicketChanged.Call();
+			break;
+		}
 	}
 
 	private OnKnock() : void

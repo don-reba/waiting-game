@@ -65,6 +65,8 @@ class HomeModel implements IHomeModel, IPersistent
 		timer.AddEvent(this.OnAnimate.bind(this), 2);
 		timer.AddEvent(this.OnKnock.bind(this), 25);
 
+		player.Awkward.Add(this.OnAwkward.bind(this));
+
 		this.canvas = [];
 		for (var y = 0; y != this.ny; ++y)
 			this.canvas.push(new Array<string>(this.nx));
@@ -261,6 +263,21 @@ class HomeModel implements IHomeModel, IPersistent
 		}
 
 		this.GuestsChanged.Call();
+	}
+
+	private OnAwkward() : void
+	{
+		if (!this.speakerID)
+			return;
+
+		this.speakerID = "";
+		this.dialogID  = "StdPterodactyl";
+		this.DialogChanged.Call();
+
+		this.guests   = [];
+		this.activity = Activity.None;
+		this.GuestsChanged.Call();
+		this.StateChanged.Call();
 	}
 
 	private OnKnock() : void

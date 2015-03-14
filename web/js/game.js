@@ -530,6 +530,7 @@ var HomeModel = (function () {
         this.StateChanged = new Signal();
         timer.AddEvent(this.OnAnimate.bind(this), 2);
         timer.AddEvent(this.OnKnock.bind(this), 25);
+        player.Awkward.Add(this.OnAwkward.bind(this));
         this.canvas = [];
         for (var y = 0; y != this.ny; ++y)
             this.canvas.push(new Array(this.nx));
@@ -650,6 +651,17 @@ var HomeModel = (function () {
             }
         }
         this.GuestsChanged.Call();
+    };
+    HomeModel.prototype.OnAwkward = function () {
+        if (!this.speakerID)
+            return;
+        this.speakerID = "";
+        this.dialogID = "StdPterodactyl";
+        this.DialogChanged.Call();
+        this.guests = [];
+        this.activity = 0 /* None */;
+        this.GuestsChanged.Call();
+        this.StateChanged.Call();
     };
     HomeModel.prototype.OnKnock = function () {
         if (this.atEntrance)
@@ -1042,7 +1054,7 @@ var HomeView = (function () {
             $("#home-dialog").hide();
             return;
         }
-        speakerElement.text(speaker.name);
+        speakerElement.text(speaker ? speaker.name : "");
         textElement.html(dialog.text);
         repliesElement.empty();
         for (var i = 0; i != dialog.replies.length; ++i) {
@@ -1668,6 +1680,14 @@ var QueueModel = (function () {
         this.speakerID = "";
         this.dialogID = "StdPterodactyl";
         this.DialogChanged.Call();
+        for (var i = 0; i != this.queue.length; ++i) {
+            if (this.queue[i].characterID)
+                continue;
+            this.queue.splice(i, 1);
+            this.PeopleChanged.Call();
+            this.PlayerTicketChanged.Call();
+            break;
+        }
     };
     QueueModel.prototype.OnKnock = function () {
         if (this.queue.length < this.maxLength && Math.random() < 0.4) {
