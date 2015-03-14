@@ -13,6 +13,7 @@ class MainPresenter
 		mainModel.MoustacheChanged.Add(this.OnMoustacheChanged.bind(this));
 		mainModel.ViewChanged.Add(this.OnViewChanged.bind(this));
 
+		mainView.AboutRequested.Add(this.OnAboutRequested.bind(this));
 		mainView.ResetRequested.Add(this.OnResetRequested.bind(this));
 	}
 
@@ -22,6 +23,11 @@ class MainPresenter
 		this.mainView.SetMoney(this.mainModel.GetMoney());
 		this.mainView.SetMoustache(this.mainModel.GetMoustache());
 		this.mainView.SetClientView(this.mainModel.GetView());
+	}
+
+	private OnAboutRequested() : void
+	{
+		this.mainModel.OpenAbout();
 	}
 
 	private OnHatChanged() : void

@@ -8,11 +8,14 @@ class MainView implements IMainView
 	{
 		$("#reset-game").click(() => { this.ResetRequested.Call() });
 
+		$("#about-game").click(() => { this.AboutRequested.Call() });
+
 		$("#about").click(() => { $("#about-menu").toggle() });
 	}
 
 	// IMainView implementation
 
+	AboutRequested = new Signal();
 	ResetRequested = new Signal();
 
 	SetClientView(viewType : ClientViewType): void

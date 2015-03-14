@@ -4,6 +4,7 @@
 
 interface IMainView
 {
+	AboutRequested : Signal;
 	ResetRequested : Signal;
 
 	SetClientView(view : ClientViewType) : void;

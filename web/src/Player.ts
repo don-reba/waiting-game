@@ -110,7 +110,7 @@ class Player implements IPersistent
 
 	ResetComposure() : void
 	{
-		this.composure = 30;
+		this.composure = 40;
 	}
 
 	SetHat(hat : Hat) : void

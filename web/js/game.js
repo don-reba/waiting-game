@@ -136,7 +136,7 @@ var Player = (function () {
         return this.friends.indexOf(character.id) >= 0;
     };
     Player.prototype.ResetComposure = function () {
-        this.composure = 30;
+        this.composure = 40;
     };
     Player.prototype.SetHat = function (hat) {
         this.hat = hat;
@@ -1283,6 +1283,9 @@ var MainModel = (function () {
     MainModel.prototype.GetView = function () {
         return this.view;
     };
+    MainModel.prototype.OpenAbout = function () {
+        window.location.href = "about.html";
+    };
     MainModel.prototype.Reset = function () {
         localStorage.clear();
         location.reload();
@@ -1321,6 +1324,7 @@ var MainPresenter = (function () {
         mainModel.MoneyChanged.Add(this.OnMoneyChanged.bind(this));
         mainModel.MoustacheChanged.Add(this.OnMoustacheChanged.bind(this));
         mainModel.ViewChanged.Add(this.OnViewChanged.bind(this));
+        mainView.AboutRequested.Add(this.OnAboutRequested.bind(this));
         mainView.ResetRequested.Add(this.OnResetRequested.bind(this));
     }
     MainPresenter.prototype.LightsCameraAction = function () {
@@ -1328,6 +1332,9 @@ var MainPresenter = (function () {
         this.mainView.SetMoney(this.mainModel.GetMoney());
         this.mainView.SetMoustache(this.mainModel.GetMoustache());
         this.mainView.SetClientView(this.mainModel.GetView());
+    };
+    MainPresenter.prototype.OnAboutRequested = function () {
+        this.mainModel.OpenAbout();
     };
     MainPresenter.prototype.OnHatChanged = function () {
         this.mainView.SetHat(this.mainModel.GetHat());
@@ -1352,9 +1359,13 @@ var MainView = (function () {
         var _this = this;
         this.clientViews = clientViews;
         // IMainView implementation
+        this.AboutRequested = new Signal();
         this.ResetRequested = new Signal();
         $("#reset-game").click(function () {
             _this.ResetRequested.Call();
+        });
+        $("#about-game").click(function () {
+            _this.AboutRequested.Call();
         });
         $("#about").click(function () {
             $("#about-menu").toggle();

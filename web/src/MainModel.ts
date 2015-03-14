@@ -48,6 +48,11 @@ class MainModel implements IMainModel, IPersistent
 		return this.view;
 	}
 
+	OpenAbout() : void
+	{
+		window.location.href = "about.html";
+	}
+
 	Reset() : void
 	{
 		localStorage.clear();
