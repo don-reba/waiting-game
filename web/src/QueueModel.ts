@@ -71,33 +71,6 @@ class QueueModel implements IQueueModel, IPersistent
 	PeopleChanged        = new Signal();
 	PlayerTicketChanged  = new Signal();
 
-	AdvanceDialog(ref : string) : void
-	{
-		if (ref)
-			this.player.ResetComposure();
-		else
-			this.player.ClearComposure();
-
-		var finishedLastMansDialog = !ref && this.queue[0].characterID == this.speakerID
-		var waitingToAdvance = !this.head || this.head.remaining <= 0;
-		if (finishedLastMansDialog && waitingToAdvance)
-			this.AdvanceQueue();
-
-		this.dialogID = ref;
-		if (!ref)
-			this.speakerID = null;
-		this.DialogChanged.Call();
-
-		this.dialogManager.ActivateDialog(this.dialogID);
-	}
-
-	EndDialog() : void
-	{
-		this.dialogID  = null;
-		this.speakerID = null;
-		this.DialogChanged.Call();
-	}
-
 	EnterQueue() : void
 	{
 		if (this.queue.every(p => { return p.characterID != null }))
@@ -146,6 +119,30 @@ class QueueModel implements IQueueModel, IPersistent
 		return this.characterManager.GetCharacter(this.speakerID);
 	}
 
+	SetDialog(ref : string) : void
+	{
+		if (ref)
+		{
+			this.player.ResetComposure();
+
+			this.dialogID = ref;
+
+			this.dialogManager.ActivateDialog(this.dialogID);
+		}
+		else
+		{
+			this.player.ClearComposure();
+
+			var finishedLastMansDialog = this.queue[0].characterID == this.speakerID;
+			var waitingToAdvance = !this.head || this.head.remaining <= 0;
+			if (finishedLastMansDialog && waitingToAdvance)
+				this.AdvanceQueue();
+
+			this.dialogID = this.speakerID = null;
+		}
+		this.DialogChanged.Call();
+	}
+
 	StartDialog(speaker : ICharacter) : void
 	{
 		this.speakerID = speaker.id;
@@ -153,14 +150,14 @@ class QueueModel implements IQueueModel, IPersistent
 
 		this.DialogChanged.Call();
 
-		var hasNotMet = this.player.HasNotMet(speaker);
+		if (this.player.HasNotMet(speaker))
+		{
+			this.player.IntroduceTo(speaker);
+			this.PeopleChanged.Call();
+		}
 
 		this.player.ResetComposure();
-		this.player.IntroduceTo(speaker);
 		this.dialogManager.ActivateDialog(this.dialogID);
-
-		if (hasNotMet)
-			this.PeopleChanged.Call();
 	}
 
 	// IPersistent implementation

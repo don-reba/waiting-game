@@ -42,7 +42,7 @@ class QueuePresenter
 
 	private OnHidden() : void
 	{
-		this.queueModel.EndDialog();
+		this.queueModel.SetDialog(null);
 	}
 
 	private OnPeopleChanged() : void
@@ -70,6 +70,6 @@ class QueuePresenter
 
 	private OnReplyClicked() : void
 	{
-		this.queueModel.AdvanceDialog(this.queueView.GetSelectedReply());
+		this.queueModel.SetDialog(this.queueView.GetSelectedReply());
 	}
 }

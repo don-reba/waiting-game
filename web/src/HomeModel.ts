@@ -76,14 +76,6 @@ class HomeModel implements IHomeModel, IPersistent
 	GuestsChanged = new Signal();
 	StateChanged  = new Signal();
 
-	AdvanceDialog(ref : string) : void
-	{
-		this.dialogID = ref;
-		if (!this.dialogID)
-			this.speakerID = null;
-		this.DialogChanged.Call();
-	}
-
 	AreGuestsArriving() : boolean
 	{
 		return this.waitingGuests.length > 0;
@@ -212,6 +204,26 @@ class HomeModel implements IHomeModel, IPersistent
 	{
 		this.speakerID = speaker.id;
 		this.dialogID  = this.characterManager.GetDialogID(speaker.id, DialogType.HomeConversation);
+		this.player.ResetComposure();
+		this.DialogChanged.Call();
+	}
+
+	SetDialog(ref : string) : void
+	{
+		if (ref)
+		{
+			this.player.ResetComposure();
+
+			this.dialogID = ref;
+
+			this.dialogManager.ActivateDialog(this.dialogID);
+		}
+		else
+		{
+			this.player.ClearComposure();
+
+			this.dialogID = this.speakerID = null;
+		}
 		this.DialogChanged.Call();
 	}
 

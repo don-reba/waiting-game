@@ -534,12 +534,6 @@ var HomeModel = (function () {
         for (var y = 0; y != this.ny; ++y)
             this.canvas.push(new Array(this.nx));
     }
-    HomeModel.prototype.AdvanceDialog = function (ref) {
-        this.dialogID = ref;
-        if (!this.dialogID)
-            this.speakerID = null;
-        this.DialogChanged.Call();
-    };
     HomeModel.prototype.AreGuestsArriving = function () {
         return this.waitingGuests.length > 0;
     };
@@ -615,6 +609,19 @@ var HomeModel = (function () {
     HomeModel.prototype.StartDialog = function (speaker) {
         this.speakerID = speaker.id;
         this.dialogID = this.characterManager.GetDialogID(speaker.id, 3 /* HomeConversation */);
+        this.player.ResetComposure();
+        this.DialogChanged.Call();
+    };
+    HomeModel.prototype.SetDialog = function (ref) {
+        if (ref) {
+            this.player.ResetComposure();
+            this.dialogID = ref;
+            this.dialogManager.ActivateDialog(this.dialogID);
+        }
+        else {
+            this.player.ClearComposure();
+            this.dialogID = this.speakerID = null;
+        }
         this.DialogChanged.Call();
     };
     // event handlers
@@ -855,7 +862,7 @@ var HomePresenter = (function () {
         this.homeView.SetCanvas(this.homeModel.GetCanvas());
     };
     HomePresenter.prototype.OnReplyClicked = function () {
-        this.homeModel.AdvanceDialog(this.homeView.GetSelectedReply());
+        this.homeModel.SetDialog(this.homeView.GetSelectedReply());
     };
     HomePresenter.prototype.OnShown = function () {
         this.homeView.SetCanvas(this.homeModel.GetCanvas());
@@ -1567,26 +1574,6 @@ var QueueModel = (function () {
             return;
         }
     };
-    QueueModel.prototype.AdvanceDialog = function (ref) {
-        if (ref)
-            this.player.ResetComposure();
-        else
-            this.player.ClearComposure();
-        var finishedLastMansDialog = !ref && this.queue[0].characterID == this.speakerID;
-        var waitingToAdvance = !this.head || this.head.remaining <= 0;
-        if (finishedLastMansDialog && waitingToAdvance)
-            this.AdvanceQueue();
-        this.dialogID = ref;
-        if (!ref)
-            this.speakerID = null;
-        this.DialogChanged.Call();
-        this.dialogManager.ActivateDialog(this.dialogID);
-    };
-    QueueModel.prototype.EndDialog = function () {
-        this.dialogID = null;
-        this.speakerID = null;
-        this.DialogChanged.Call();
-    };
     QueueModel.prototype.EnterQueue = function () {
         if (this.queue.every(function (p) {
             return p.characterID != null;
@@ -1623,16 +1610,32 @@ var QueueModel = (function () {
     QueueModel.prototype.GetSpeaker = function () {
         return this.characterManager.GetCharacter(this.speakerID);
     };
+    QueueModel.prototype.SetDialog = function (ref) {
+        if (ref) {
+            this.player.ResetComposure();
+            this.dialogID = ref;
+            this.dialogManager.ActivateDialog(this.dialogID);
+        }
+        else {
+            this.player.ClearComposure();
+            var finishedLastMansDialog = this.queue[0].characterID == this.speakerID;
+            var waitingToAdvance = !this.head || this.head.remaining <= 0;
+            if (finishedLastMansDialog && waitingToAdvance)
+                this.AdvanceQueue();
+            this.dialogID = this.speakerID = null;
+        }
+        this.DialogChanged.Call();
+    };
     QueueModel.prototype.StartDialog = function (speaker) {
         this.speakerID = speaker.id;
         this.dialogID = this.characterManager.GetDialogID(speaker.id, 1 /* QueueConversation */);
         this.DialogChanged.Call();
-        var hasNotMet = this.player.HasNotMet(speaker);
-        this.player.ResetComposure();
-        this.player.IntroduceTo(speaker);
-        this.dialogManager.ActivateDialog(this.dialogID);
-        if (hasNotMet)
+        if (this.player.HasNotMet(speaker)) {
+            this.player.IntroduceTo(speaker);
             this.PeopleChanged.Call();
+        }
+        this.player.ResetComposure();
+        this.dialogManager.ActivateDialog(this.dialogID);
     };
     // IPersistent implementation
     QueueModel.prototype.FromPersistentString = function (str) {
@@ -1746,7 +1749,7 @@ var QueuePresenter = (function () {
         this.mainModel.SetView(0 /* Home */);
     };
     QueuePresenter.prototype.OnHidden = function () {
-        this.queueModel.EndDialog();
+        this.queueModel.SetDialog(null);
     };
     QueuePresenter.prototype.OnPeopleChanged = function () {
         this.queueView.SetCharacters(this.queueModel.GetCharacters());
@@ -1764,7 +1767,7 @@ var QueuePresenter = (function () {
         this.queueView.SetDialog(this.queueModel.GetSpeaker(), this.queueModel.GetDialog());
     };
     QueuePresenter.prototype.OnReplyClicked = function () {
-        this.queueModel.AdvanceDialog(this.queueView.GetSelectedReply());
+        this.queueModel.SetDialog(this.queueView.GetSelectedReply());
     };
     return QueuePresenter;
 })();

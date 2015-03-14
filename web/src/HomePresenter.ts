@@ -133,7 +133,7 @@ class HomePresenter
 
 	private OnReplyClicked() : void
 	{
-		this.homeModel.AdvanceDialog(this.homeView.GetSelectedReply());
+		this.homeModel.SetDialog(this.homeView.GetSelectedReply());
 	}
 
 	private OnShown() : void

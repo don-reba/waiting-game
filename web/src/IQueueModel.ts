@@ -8,10 +8,6 @@ interface IQueueModel
 	PeopleChanged        : Signal;
 	PlayerTicketChanged  : Signal;
 
-	AdvanceDialog(ref : string) : void;
-
-	EndDialog() : void;
-
 	EnterQueue() : void;
 
 	GetCharacters() : ICharacter[];
@@ -23,6 +19,8 @@ interface IQueueModel
 	GetPlayerTicket() : string;
 
 	GetSpeaker() : ICharacter;
+
+	SetDialog(ref : string) : void;
 
 	StartDialog(speaker : ICharacter) : void;
 }

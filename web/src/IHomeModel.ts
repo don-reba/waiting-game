@@ -9,8 +9,6 @@ interface IHomeModel
 	GuestsChanged : Signal;
 	StateChanged  : Signal;
 
-	AdvanceDialog(ref : string) : void;
-
 	AreGuestsArriving() : boolean;
 
 	AreGuestsIn() : boolean;
@@ -30,6 +28,8 @@ interface IHomeModel
 	LetTheGuestIn() : void;
 
 	SetActivity(activity : Activity) : void;
+
+	SetDialog(ref : string) : void;
 
 	StartDialog(speaker : ICharacter) : void;
 }
