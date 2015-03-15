@@ -11,6 +11,7 @@ interface IHomeView
 	GoToQueue            : Signal;
 	GoToStore            : Signal;
 	GuestClicked         : Signal;
+	Hidden               : Signal;
 	InvitesButtonClicked : Signal;
 	InvitesClicked       : Signal;
 	ReplyClicked         : Signal;

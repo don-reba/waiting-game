@@ -17,6 +17,7 @@ class HomeView implements IHomeView, IClientView
 	GoToQueue            = new Signal();
 	GoToStore            = new Signal();
 	GuestClicked         = new Signal();
+	Hidden               = new Signal();
 	InvitesButtonClicked = new Signal();
 	InvitesClicked       = new Signal();
 	ReplyClicked         = new Signal();
@@ -283,6 +284,7 @@ class HomeView implements IHomeView, IClientView
 
 	Hide() : void
 	{
+		this.Hidden.Call();
 	}
 
 	Show(e : JQuery) : void

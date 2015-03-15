@@ -819,6 +819,7 @@ var HomePresenter = (function () {
         homeView.GoToQueue.Add(this.OnGoToQueue.bind(this));
         homeView.GoToStore.Add(this.OnGoToStore.bind(this));
         homeView.GuestClicked.Add(this.OnGuestClicked.bind(this));
+        homeView.Hidden.Add(this.OnHidden.bind(this));
         homeView.InvitesButtonClicked.Add(this.OnInvitesButtonClicked.bind(this));
         homeView.InviteClicked.Add(this.OnInviteClicked.bind(this));
         homeView.InvitesClicked.Add(this.OnInvitesClicked.bind(this));
@@ -884,6 +885,10 @@ var HomePresenter = (function () {
     };
     HomePresenter.prototype.OnGuestsChanged = function () {
         this.homeView.SetCanvas(this.homeModel.GetCanvas());
+    };
+    HomePresenter.prototype.OnHidden = function () {
+        this.activitiesModel.SetVisibility(false);
+        this.invitesModel.SetVisibility(false);
     };
     HomePresenter.prototype.OnReplyClicked = function () {
         this.homeModel.SetDialog(this.homeView.GetSelectedReply());
@@ -967,6 +972,7 @@ var HomeView = (function () {
         this.GoToQueue = new Signal();
         this.GoToStore = new Signal();
         this.GuestClicked = new Signal();
+        this.Hidden = new Signal();
         this.InvitesButtonClicked = new Signal();
         this.InvitesClicked = new Signal();
         this.ReplyClicked = new Signal();
@@ -1147,6 +1153,7 @@ var HomeView = (function () {
         return 0 /* Home */;
     };
     HomeView.prototype.Hide = function () {
+        this.Hidden.Call();
     };
     HomeView.prototype.Show = function (e) {
         var _this = this;
