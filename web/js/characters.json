@@ -86,6 +86,7 @@
 		, { "dialog" : "KostikFiller1Intro",      "requires" : [ "KostikFiller1Pending" ] }
 		, { "dialog" : "KostikFiller2Intro",      "requires" : [ "KostikFiller2Pending" ] }
 		, { "dialog" : "KostikMarriageIntro",     "requires" : [ "KostikMarried" ] }
+		, { "dialog" : "KostikPlaceholder" }
 		]
 	, "queueEscape" :
 		[ { "dialog" : "KostikQueueEscape" } ]
