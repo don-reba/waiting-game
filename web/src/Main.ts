@@ -35,20 +35,20 @@ function MapCharacterNameFlags
 		var c = characters[i]
 
 		flags.SetCheck(c.id + "Intro", player.HasNotMet.bind(player, c));
-
 		flags.SetCheck(c.id + "Friendship", player.IsFriendsWith.bind(player, c));
 
 		flags.SetControl(c.id + "Friendship", player.Befriend.bind(player, c));
-
 		flags.SetControl(c.id + "ExitQueue", queueModel.Remove.bind(queueModel, c));
 	}
 }
 
-function MapPlayerStateFlags( flags : Flags, player : Player) : void
+function MapPlayerStateFlags(flags : Flags, player : Player) : void
 {
 	flags.SetCheck("MoustacheEquipped", () => { return player.GetMoustache() != Moustache.None });
 	flags.SetCheck("MoustacheAbsent",   () => { return player.GetMoustache() == Moustache.None });
 	flags.SetCheck("HatEquipped",       () => { return player.GetHat() != Hat.None });
+
+	flags.SetControl("ReceiveFakeMoustache", player.SetMoustache.bind(player, Moustache.Fake));
 }
 
 function Main(dialogs : IDialog[], characters : ICharacter[])

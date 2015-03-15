@@ -63,6 +63,7 @@ var Moustache;
     Moustache[Moustache["Pencil"] = 1] = "Pencil";
     Moustache[Moustache["French"] = 2] = "French";
     Moustache[Moustache["Handlebar"] = 3] = "Handlebar";
+    Moustache[Moustache["Fake"] = 4] = "Fake";
 })(Moustache || (Moustache = {}));
 /// <reference path="Item.ts"        />
 /// <reference path="ICharacter.ts"  />
@@ -81,6 +82,7 @@ var Player = (function () {
         this.money = 0;
         this.rate = 0.5;
         this.composure = 0;
+        this.glue = 0;
         this.hasMet = [];
         this.friends = [];
         this.items = [];
@@ -136,7 +138,7 @@ var Player = (function () {
         return this.friends.indexOf(character.id) >= 0;
     };
     Player.prototype.ResetComposure = function () {
-        this.composure = 40;
+        this.composure = 60;
     };
     Player.prototype.SetHat = function (hat) {
         this.hat = hat;
@@ -148,6 +150,8 @@ var Player = (function () {
     };
     Player.prototype.SetMoustache = function (moustache) {
         this.moustache = moustache;
+        if (moustache == 4 /* Fake */)
+            this.glue = 120;
         this.MoustacheChanged.Call();
     };
     // IPersistent implementation
@@ -158,12 +162,13 @@ var Player = (function () {
         this.money = state.money;
         this.rate = state.rate;
         this.composure = state.composure;
+        this.glue = state.glue;
         this.hasMet = state.hasMet;
         this.friends = state.friends;
         this.items = state.items;
     };
     Player.prototype.ToPersistentString = function () {
-        var state = { hat: this.hat, moustache: this.moustache, money: this.money, rate: this.rate, composure: this.composure, hasMet: this.hasMet, friends: this.friends, items: this.items };
+        var state = { hat: this.hat, moustache: this.moustache, money: this.money, rate: this.rate, composure: this.composure, glue: this.glue, hasMet: this.hasMet, friends: this.friends, items: this.items };
         return JSON.stringify(state);
     };
     // private implementation
@@ -174,6 +179,13 @@ var Player = (function () {
             --this.composure;
             if (this.composure == 0)
                 this.Awkward.Call();
+        }
+        if (this.glue > 0) {
+            --this.glue;
+            if (this.glue == 0) {
+                this.moustache = 0 /* None */;
+                this.MoustacheChanged.Call();
+            }
         }
     };
     return Player;
@@ -521,8 +533,8 @@ var HomeModel = (function () {
         this.positions = [];
         this.atEntrance = false;
         this.activity = 0 /* None */;
-        this.nx = 78;
-        this.ny = 23;
+        this.nx = 80;
+        this.ny = 25;
         this.speed = 3;
         // IHomeModel implementation
         this.DialogChanged = new Signal();
@@ -1438,6 +1450,9 @@ var MainView = (function () {
             case 3 /* Handlebar */:
                 text = "a";
                 break;
+            case 4 /* Fake */:
+                text = "u";
+                break;
         }
         var e = $("#moustache");
         if (text) {
@@ -2234,6 +2249,7 @@ function MapPlayerStateFlags(flags, player) {
     flags.SetCheck("HatEquipped", function () {
         return player.GetHat() != 0 /* None */;
     });
+    flags.SetControl("ReceiveFakeMoustache", player.SetMoustache.bind(player, 4 /* Fake */));
 }
 function Main(dialogs, characters) {
     var flags = new Flags();

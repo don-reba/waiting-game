@@ -73,6 +73,7 @@ class MainView implements IMainView
 			case Moustache.Pencil:    text = "u"; break;
 			case Moustache.French:    text = "r"; break;
 			case Moustache.Handlebar: text = "a"; break;
+			case Moustache.Fake:      text = "u"; break;
 		}
 		var e = $("#moustache");
 		if (text)

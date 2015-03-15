@@ -11,6 +11,7 @@ class PlayerState
 	money     : number;
 	rate      : number;
 	composure : number;
+	glue      : number;
 	hasMet    : string[];
 	friends   : string[];
 	items     : Item[];
@@ -23,6 +24,7 @@ class Player implements IPersistent
 	private money     : number    = 0;
 	private rate      : number    = 0.5;
 	private composure : number    = 0;
+	private glue      : number    = 0;
 	private hasMet    : string[]  = [];
 	private friends   : string[]  = [];
 	private items     : Item[]    = [];
@@ -110,7 +112,7 @@ class Player implements IPersistent
 
 	ResetComposure() : void
 	{
-		this.composure = 40;
+		this.composure = 60;
 	}
 
 	SetHat(hat : Hat) : void
@@ -128,6 +130,8 @@ class Player implements IPersistent
 	SetMoustache(moustache : Moustache) : void
 	{
 		this.moustache = moustache;
+		if (moustache == Moustache.Fake)
+			this.glue = 120;
 		this.MoustacheChanged.Call();
 	}
 
@@ -141,6 +145,7 @@ class Player implements IPersistent
 		this.money     = state.money;
 		this.rate      = state.rate;
 		this.composure = state.composure;
+		this.glue      = state.glue;
 		this.hasMet    = state.hasMet;
 		this.friends   = state.friends;
 		this.items     = state.items;
@@ -154,6 +159,7 @@ class Player implements IPersistent
 			, money     : this.money
 			, rate      : this.rate
 			, composure : this.composure
+			, glue      : this.glue
 			, hasMet    : this.hasMet
 			, friends   : this.friends
 			, items     : this.items
@@ -173,6 +179,16 @@ class Player implements IPersistent
 			--this.composure;
 			if (this.composure == 0)
 				this.Awkward.Call();
+		}
+
+		if (this.glue > 0)
+		{
+			--this.glue;
+			if (this.glue == 0)
+			{
+				this.moustache = Moustache.None;
+				this.MoustacheChanged.Call();
+			}
 		}
 	}
 }

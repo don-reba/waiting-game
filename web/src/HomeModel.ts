@@ -51,8 +51,8 @@ class HomeModel implements IHomeModel, IPersistent
 	private dialogID  : string;
 	private speakerID : string;
 
-	private nx    : number = 78;
-	private ny    : number = 23;
+	private nx    : number = 80;
+	private ny    : number = 25;
 	private speed : number = 3;
 
 	constructor

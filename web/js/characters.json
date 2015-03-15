@@ -22,8 +22,8 @@
 		, { "dialog" : "ShadyCatMachinationsReceiveIntro",         "requires" : [ "CatMachinationsDone" ] }
 		, { "dialog" : "ShadyFiller5Intro",                        "requires" : [ "VirginMachinations" ] }
 		, { "dialog" : "ShadyVirginMachinationsReceiveIntro",      "requires" : [ "VirginMachinationsDone" ] }
-		, { "dialog" : "ShadyPurchaseMoustacheIntro",              "requires" : [ "MoustacheAbsent" ] }
 		, { "dialog" : "ShadyFakeMoustacheWarrantyIntro",          "requires" : [ "MoustacheAbsent", "FakeMoustacheReceived" ] }
+		, { "dialog" : "ShadyPurchaseMoustacheIntro",              "requires" : [ "MoustacheAbsent" ] }
 		, { "dialog" : "ShadyPlaceholderIntro" }
 		]
 	, "queueEscape" :
