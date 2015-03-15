@@ -189,66 +189,6 @@
 	, "sets"   : [ "PanaceaMachinations" ]
 	, "clears" : [ "MoustacheMachinationsDone" ]
 	},
-	{ "id"   : "ShadyPurchaseMoustacheIntro"
-	, "text" : "Добрый день! Боюсь, что никто не говорил вам, но над вашей верхней губой — вселенская пустота! Выглядит крайне неэстетично. Не желаете ли приобрести усы «Карандаш»? Лицензионная продукция, отлично маскирует вселенскую пустоту."
-	, "replies" :
-		[ { "text" : "Вселенская пустота всё же лучше, чем бородавка! А сколько они стоят?", "ref" : "ShadyPurchaseMoustachePrice" }
-		, { "text" : "А гарантия на усы есть?", "ref" : "ShadyPurchaseMoustacheWarranty" }
-		, { "text" : "Нет, спасибо, я довольна своей внешностью.", "ref" : "ShadyPurchaseMoustacheRefuse" }
-		]
-	},
-	{ "id"   : "ShadyPurchaseMoustacheWarranty"
-	, "text" : "Два года гарантии! Однако, случаи поломки в результате небрежного обращения с усами не считаются гарантийными."
-	, "replies" :
-		[ { "text" : "Я буду их холить и лелеять! Но могу ли я их себе позволить?", "ref" : "ShadyPurchaseMoustachePrice" }
-		, { "text" : "Зачем усы, если нельзя их лихо закручивать и гневно дергать! Нет, спасибо.", "ref" : "ShadyPurchaseMoustacheRefuse" }
-		]
-	},
-	{ "id"   : "ShadyPurchaseMoustachePrice"
-	, "text" : "Цена смешная — всего N рублей! Вы же не сможете отказаться от такого безумно выгодного предложения!"
-	, "replies" :
-		[ { "text" : "Не смогу! Покупаю!", "ref" : "ShadyPurchaseMoustacheBuy" }
-		, { "text" : "Пока я не могу позволить себе такую покупку. Эй, не смейтесь! У меня неоплачиваемая работа!", "ref" : "ShadyPurchaseMoustacheRefuse" }
-		]
-	},
-	{ "id"   : "ShadyPurchaseMoustacheBuy"
-	, "text" : "Поздравляю! О, они вам невероятно идут. Могу я заинтересовать вас в продукции для ухода за усами? Например, усатая кружка! Вашим усам будет приятно пить из такой!"
-	, "replies" :
-		[ { "text" : "О, ПОТРЯСАЮЩЕ, УСАТАЯ КРУЖКА! Ох, нет, Лю, держи себя в руках, ты уже продала одну почку. До встречи!", "ref" : null }
-		, { "text" : "Нет, благодарю. В моём доме усы разрешено носить только мне! До свидания.", "ref" : null }
-		]
-	, "sets" : [ "ReceiveFakeMoustache" ]
-	},
-	{ "id"   : "ShadyPurchaseMoustacheRefuse"
-	, "text" : "Ваш отказ разбивает мне сердце! (Не хотите приобрести сверхнадёжный клей для ремонта сердец? Нет? Какая жестокость!) Оставьте меня в моей печали!"
-	, "replies" :
-		[ { "text" : "Ох, как я могла так с ним поступить! Скоплю денег и обязательно вернусь!", "ref" : null }
-		, { "text" : "И вовсе мне не нужны усы! Проживу без них!", "ref" : null }
-		]
-	},
-	{ "id"   : "ShadyFakeMoustacheWarrantyIntro"
-	, "text" : "Добрый день! К сожалению, распродажа намордников для рыбок уже закончилась."
-	, "replies" :
-		[ { "text" : "На самом деле я пришла по поводу гарантии на усы, которые вы мне продали. Они отклеились!", "ref" : "ShadyFakeMoustacheWarrantyWarranty" }
-		, { "text" : "Проклятье, как же я буду выгуливать рыбок? Постойте, у меня же нет рыбок. У меня есть гарантия на отклеившиеся усы!", "ref" : "ShadyFakeMoustacheWarrantyWarranty" }
-		]
-	},
-	{ "id"   : "ShadyFakeMoustacheWarrantyWarranty"
-	, "text" : "Использовали ли вы при установке усов одобренный производителем клей?"
-	, "replies" :
-		[ { "text" : "Вы не предупреждали ни про какой клей!", "ref" : "ShadyFakeMoustacheSorry" }
-		, { "text" : "Хм, я прилепила усы шоколадом.", "ref" : "ShadyFakeMoustacheSorry" }
-		]
-	},
-	{ "id"   : "ShadyFakeMoustacheSorry"
-	, "text" : "Извините, в таком случае поломка усов не является гарантийной. Но! Если купите новый комплект усов, я сделаю вам скидку на одобренный производителем клей! Кроме того, вы получите в подарок стикер на усы!"
-	, "replies" :
-		[ { "text" : "Нет уж, впредь буду устанавливать усы только у официальных дилеров.", "ref" : null }
-		, { "text" : "Вы солгали мне про гарантию! Как вы могли! Я доверяла вам, как никому в этой очереди!", "ref" : null }
-		, { "text" : "Ужасно, куда катится мир, если даже подпольному продавцу усов нельзя доверять. Пойду жаловаться малознакомым людям в интернете.", "ref" : null }
-		]
-	, "clears" : [ "ReceiveFakeMoustache" ]
-	},
 	{ "id"   : "ShadyFiller2Intro"
 	, "text" : "Рад видеть вас! Позвольте предложить вам пластинчатый доспех линейки “Адвокат”. Доспехи линейки “Адвокат” обеспечивают надёжную защиту от судебных преследований, в них вы будете чувствовать себя уверенно в правовом поле битвы!"
 	, "replies" :
@@ -445,6 +385,175 @@
 		, { "text" : "Теперь меня тревожит собственное желание наряжать котиков в платья. Схожу к психологу!", "ref" : null }
 		, { "text" : "Но… но ведь котики лучше девственниц! Ну и ладно, ну и как хотите, продам вашу дурацкую девственницу.", "ref" : null }
 		]
+	, "sets"   : [ "VirginMachinations", "VirginMachinationsPart1" ]
+	, "clears" : [ "CatMachinationsDone" ]
+	},
+	{ "id"   : "ShadyFiller5Intro"
+	, "text" : "Добрый день! Не согласитесь ли вы поработать подопытным?"
+	, "replies" :
+		[ { "text" : "Никогда не отказываюсь от работы! А что на мне будут испытывать?", "ref" : "ShadyFiller5TellMeMore" }
+		, { "text" : "Ставить эксперименты на клёвых обезьянках - бесчеловечно! Нет, постойте, я же не обезьянка.", "ref" : "ShadyFiller5TellMeMore" }
+		, { "text" : "Нет, звучит подозрительно. Вдруг вы бы стали испытывать на мне новые сорта брюссельской капусты? Прощайте.", "ref" : null }
+		]
+	},
+	{ "id"   : "ShadyFiller5TellMeMore"
+	, "text" : "Вам всего лишь нужно будет дегустировать новые сорта брюссельской капусты производства нашего партнёра - пищевого комбината “Валтасаров”."
+	, "replies" :
+		[ { "text" : "Хм, а они не выращивают брюссельскую капусту со вкусом блинов?", "ref" : "ShadyFiller5Pancakes" }
+		, { "text" : "Но насколько это опасно для здоровья? А для психического здоровья?", "ref" : "ShadyFiller5Health" }
+		, { "text" : "Нет уж, в цивилизованных странах брюссельскую капусту тестируют на детях! До свидания.", "ref" : null }
+		]
+	},
+	{ "id"   : "ShadyFiller5Pancakes"
+	, "text" : "Разумеется! “Валтасаров” предоставляет полный спект вкусов блинов! Капуста со вкусом блинов с норвежской форелью, с икрой, с мясом, с салом, с…"
+	, "replies" :
+		[ { "text" : "Нет, прекратите! Вы нарушаете блинную конвенцию! Блины с икрой запрещены!", "ref" : null }
+		, { "text" : "Форель - рыба! И это самое страшное обвинение. Я не желаю иметь с ней ничего общего, прощайте!", "ref" : null }
+		]
+	},
+	{ "id"   : "ShadyFiller5Health"
+	, "text" : "Совершенно безопасно! К тому же, брюссельская капуста - диетический продукт, на ней вы потеряете лишний вес!"
+	, "replies" :
+		[ { "text" : "Простите, но я специальной диете - безуспешно пытаюсь потолстеть.", "ref" : null }
+		, { "text" : "Но вес не бывает лишним! Вдруг меня перестанут обзывать толстой? И о чём тогда беседовать с людьми? Нет уж, спасибо.", "ref" : null }
+		]
+	},
+	{ "id"   : "ShadyVirginMachinationsReceiveIntro"
+	, "text" : "Ловко вы провернули операцию с девственницей! У меня для вас гонорар и хорошие новости."
+	, "replies" :
+		[ { "text" : "Клёво, гонорар!", "ref" : "ShadyVirginMachinationsReceiveCool" }
+		, { "text" : "Клёво, хорошие новости!", "ref" : "ShadyVirginMachinationsReceiveCool" }
+		, { "text" : "Клёво-клёво-клёво! А ещё, слова “клёво” нет в словаре синонимов.", "ref" : "ShadyVirginMachinationsReceiveCool" }
+		]
+	},
+	{ "id"   : "ShadyVirginMachinationsReceiveCool"
+	, "text" : "Так вот, благодаря вашей успешной работе, наш маленький работорговческий стартап куплен Facebook за миллиард долларов! Поздравляю!"
+	, "replies" :
+		[ { "text" : "Но… зачем фейсбуку работорговческий стартап?", "ref" : "ShadyVirginMachinationsReceiveWhy" }
+		, { "text" : "Ура, мы богаты! Хотя, это бы сломало игровую механику. В чём подвох?", "ref" : "ShadyVirginMachinationsReceiveRich" }
+		]
+	},
+	{ "id"   : "ShadyVirginMachinationsReceiveWhy"
+	, "text" : "Лучше не задавать лишних вопросов! Кстати, они просили обращаться, если мы придумаем способ торговли душами."
+	, "replies" :
+		[ { "text" : "Торговля оборудованием для ванных - шаг назад после работорговли! Но мы хотя бы богаты?", "ref" : "ShadyVirginMachinationsReceiveRich" }
+		, { "text" : "Хм, я знала одного чувачка, торговавшего душами. Он должен мне денег! Хотя, мы же теперь богачи.", "ref" : "ShadyVirginMachinationsReceiveRich" }
+		]
+	},
+	{ "id"   : "ShadyVirginMachinationsReceiveRich"
+	, "text" : "Да, кстати об этом. Я взял на себя смелость вложить вашу долю в акции Взрывающихся Котят, самый горячий стартап на рынке! Минуту, мне звонят. <i> Да? Какой ужас! До свидания. </i> У меня для вас плохие новости!"
+	, "replies" :
+		[ { "text" : "Клёво, плохие новости!", "ref" : "ShadyVirginMachinationsReceiveBadNews" }
+		, { "text" : "Клёво, для меня!", "ref" : "ShadyVirginMachinationsReceiveBadNews" }
+		, { "text" : "Нет! Вообще не клёво! Ненавижу вас!", "ref" : "ShadyVirginMachinationsReceiveBadNews" }
+		, { "text" : "Умер мой невероятно богатый дядя, которого я никогда не знала?", "ref" : "ShadyVirginMachinationsReceiveBadNews" }
+		]
+	},
+	{ "id"   : "ShadyVirginMachinationsReceiveBadNews"
+	, "text" : "Взрывающиеся Котята оказались настолько горячим стартапом, что перегрелись и… взорвались вместе со всеми акциями."
+	, "replies" :
+		[ { "text" : "Но… бедные котята!", "ref" : "ShadyVirginMachinationsReceiveDoNotDespair" }
+		, { "text" : "Но… мои деньги!", "ref" : "ShadyVirginMachinationsReceiveDoNotDespair" }
+		, { "text" : "Но… В сущности, я ожидала чего-то подобного.", "ref" : "ShadyVirginMachinationsReceiveDoNotDespair" }
+		]
+	},
+	{ "id"   : "ShadyVirginMachinationsReceiveDoNotDespair"
+	, "text" : "Но не отчаивайтесь! Наверняка у вас есть потрясающие бизнес-идеи?"
+	, "replies" :
+		[ { "text" : "Да! Бородатые футболки!", "ref" : "ShadyVirginMachinationsReceiveIdea" }
+		, { "text" : "Усатые кипятильники!", "ref" : "ShadyVirginMachinationsReceiveIdea" }
+		, { "text" : "Пеликаны-переводчики!", "ref" : "ShadyVirginMachinationsReceiveIdea" }
+		, { "text" : "Часы с утконосом! Нет, утконос с часами! Утконос-часовой!", "ref" : "ShadyVirginMachinationsReceiveIdea" }
+		, { "text" : "Взрывающиеся котята! Чёрт, уже было.", "ref" : "ShadyVirginMachinationsReceiveIdea" }
+		, { "text" : "Нет, я отчаялась. Разве что продавать отчаяние?", "ref" : "ShadyVirginMachinationsReceiveIdea" }
+		]
+	},
+	{ "id"   : "ShadyVirginMachinationsReceiveIdea"
+	, "text" : "Хм, не лучшая идея. Но вы придумаете что-нибудь ещё, я в вас верю! Ведь мы…"
+	, "replies" :
+		[ { "text" : "Хищники очереди! Р-р-р-р!", "ref" : null }
+		, { "text" : "Миллиардер и безработная девочка!", "ref" : null }
+		, { "text" : "Люди! Обобщения, их-ха!", "ref" : null }
+		]
+	, "clears" : [ "VirginMachinationsDone" ]
+	},
+	{ "id"   : "ShadyPurchaseMoustacheIntro"
+	, "text" : "Добрый день! Боюсь, что никто не говорил вам, но над вашей верхней губой — вселенская пустота! Выглядит крайне неэстетично. Не желаете ли приобрести усы «Карандаш»? Лицензионная продукция, отлично маскирует вселенскую пустоту."
+	, "replies" :
+		[ { "text" : "Вселенская пустота всё же лучше, чем бородавка! А сколько они стоят?", "ref" : "ShadyPurchaseMoustachePrice" }
+		, { "text" : "А гарантия на усы есть?", "ref" : "ShadyPurchaseMoustacheWarranty" }
+		, { "text" : "Нет, спасибо, я довольна своей внешностью.", "ref" : "ShadyPurchaseMoustacheRefuse" }
+		]
+	},
+	{ "id"   : "ShadyPurchaseMoustacheWarranty"
+	, "text" : "Два года гарантии! Однако, случаи поломки в результате небрежного обращения с усами не считаются гарантийными."
+	, "replies" :
+		[ { "text" : "Я буду их холить и лелеять! Но могу ли я их себе позволить?", "ref" : "ShadyPurchaseMoustachePrice" }
+		, { "text" : "Зачем усы, если нельзя их лихо закручивать и гневно дергать! Нет, спасибо.", "ref" : "ShadyPurchaseMoustacheRefuse" }
+		]
+	},
+	{ "id"   : "ShadyPurchaseMoustachePrice"
+	, "text" : "Цена смешная — всего N рублей! Вы же не сможете отказаться от такого безумно выгодного предложения!"
+	, "replies" :
+		[ { "text" : "Не смогу! Покупаю!", "ref" : "ShadyPurchaseMoustacheBuy" }
+		, { "text" : "Пока я не могу позволить себе такую покупку. Эй, не смейтесь! У меня неоплачиваемая работа!", "ref" : "ShadyPurchaseMoustacheRefuse" }
+		]
+	},
+	{ "id"   : "ShadyPurchaseMoustacheBuy"
+	, "text" : "Поздравляю! О, они вам невероятно идут. Могу я заинтересовать вас в продукции для ухода за усами? Например, усатая кружка! Вашим усам будет приятно пить из такой!"
+	, "replies" :
+		[ { "text" : "О, ПОТРЯСАЮЩЕ, УСАТАЯ КРУЖКА! Ох, нет, Лю, держи себя в руках, ты уже продала одну почку. До встречи!", "ref" : null }
+		, { "text" : "Нет, благодарю. В моём доме усы разрешено носить только мне! До свидания.", "ref" : null }
+		]
+	, "sets" : [ "ReceiveFakeMoustache", "FakeMoustacheReceived" ]
+	},
+	{ "id"   : "ShadyPurchaseMoustacheRefuse"
+	, "text" : "Ваш отказ разбивает мне сердце! (Не хотите приобрести сверхнадёжный клей для ремонта сердец? Нет? Какая жестокость!) Оставьте меня в моей печали!"
+	, "replies" :
+		[ { "text" : "Ох, как я могла так с ним поступить! Скоплю денег и обязательно вернусь!", "ref" : null }
+		, { "text" : "И вовсе мне не нужны усы! Проживу без них!", "ref" : null }
+		]
+	},
+	{ "id"   : "ShadyFakeMoustacheWarrantyIntro"
+	, "text" : "Добрый день! К сожалению, распродажа намордников для рыбок уже закончилась."
+	, "replies" :
+		[ { "text" : "На самом деле я пришла по поводу гарантии на усы, которые вы мне продали. Они отклеились!", "ref" : "ShadyFakeMoustacheWarrantyWarranty" }
+		, { "text" : "Проклятье, как же я буду выгуливать рыбок? Постойте, у меня же нет рыбок. У меня есть гарантия на отклеившиеся усы!", "ref" : "ShadyFakeMoustacheWarrantyWarranty" }
+		]
+	},
+	{ "id"   : "ShadyFakeMoustacheWarrantyWarranty"
+	, "text" : "Использовали ли вы при установке усов одобренный производителем клей?"
+	, "replies" :
+		[ { "text" : "Вы не предупреждали ни про какой клей!", "ref" : "ShadyFakeMoustacheSorry" }
+		, { "text" : "Хм, я прилепила усы шоколадом.", "ref" : "ShadyFakeMoustacheSorry" }
+		]
+	},
+	{ "id"   : "ShadyFakeMoustacheSorry"
+	, "text" : "Извините, в таком случае поломка усов не является гарантийной. Но! Если купите новый комплект усов, я сделаю вам скидку на одобренный производителем клей! Кроме того, вы получите в подарок стикер на усы!"
+	, "replies" :
+		[ { "text" : "Нет уж, впредь буду устанавливать усы только у официальных дилеров.", "ref" : null }
+		, { "text" : "Вы солгали мне про гарантию! Как вы могли! Я доверяла вам, как никому в этой очереди!", "ref" : null }
+		, { "text" : "Ужасно, куда катится мир, если даже подпольному продавцу усов нельзя доверять. Пойду жаловаться малознакомым людям в интернете.", "ref" : null }
+		]
+	, "clears" : [ "FakeMoustacheReceived" ]
+	},
+	{ "id"   : "ShadyPlaceholderIntro"
+	, "text" : "Придумали новый способ совершенно законного обогащения? Слушаю вас!"
+	, "replies" :
+		[ { "text" : "Продажа неловкости! Весёлые полёты на гигантском птеродактиле!", "ref" : "ShadyPlaceholderIdea" }
+		, { "text" : "Услуги по укрощению детей!", "ref" : "ShadyPlaceholderIdea" }
+		, { "text" : "Самоготовящиеся блины! Техническую сторону нужно обдумать, но главное - идея.", "ref" : "ShadyPlaceholderIdea" }
+		, { "text" : "Давайте просто рисовать деньги в пэинте?", "ref" : "ShadyPlaceholderIdea" }
+		]
+	},
+	{ "id"   : "ShadyPlaceholderIdea"
+	, "text" : "Хм, нет, подумайте ещё!"
+	, "replies" :
+		[ { "text" : "Я подумаю об этом завтра!", "ref" : null }
+		, { "text" : "Но я уже прошла Дум!", "ref" : null }
+		, { "text" : "Говорят, от этого бывает рак мозга.", "ref" : null }
+		]
+	, "clears" : [ "VirginQuestPending", "VirginMachinationsDone" ]
 	},
 	{ "id"   : "ShadyQueueEscapeIntro"
 	, "text" : "Простите, подошла моя очередь. Оставайтесь на линии, ваш звонок важен для нас!"
@@ -1343,8 +1452,8 @@
 		[ { "text" : "Да, конечно, не съест… АХАХАХАХА! Прости, поперхнулась.", "ref" : null }
 		, { "text" : "Можешь прийти на свидание в маске, чтобы не отпугнуть его уродством.", "ref" : null }
 		]
-	, "sets"   : [ "VirginMachinations2" ]
-	, "clears" : [ "VirginMachinations" ]
+	, "sets"   : [ "VirginMachinationsPart1Done" ]
+	, "clears" : [ "VirginMachinationsPart1" ]
 	},
 	{ "id"   : "AnnyQueueEscape"
 	, "text" : "Моя очередь подошла. Ещё увидимся) Чмоки! Пока-пока, подруженька!"
@@ -2663,9 +2772,172 @@
 	{ "id"   : "MonsterDescriptionIntro"
 	, "text" : "<aside>Пугающий клубок щупалец, глаз, пастей, клювов и… кажется, это зонт, но вы не уверены.</aside>"
 	, "replies" :
-		[ { "text" : "Зонты клёвые! Познакомиться!", "ref" : null }
+		[ { "text" : "Зонты клёвые! Познакомиться!", "ref" : "MonsterIntroductionIntro" }
 		, { "text" : "Этот монстр напоминает вашу двоюродную тётю, страшную зануду. Пройти мимо!", "ref" : null }
 		]
+	, "sets" : [ "MonsterIntroductionPending" ]
+	},
+	{ "id"   : "MonsterIntroductionIntro"
+	, "text" : "Добрый день, чудесная погода, не правда ли?"
+	, "replies" :
+		[ { "text" : "Да, погода замечательная.", "ref" : "MonsterIntroductionWeather" }
+		, { "text" : "Со следующей недели обещают похолодание.", "ref" : "MonsterIntroductionWeather" }
+		, { "text" : "Не хочу показаться невежливой, но ВЫ МОНСТР, ААА!", "ref" : "MonsterIntroductionRude" }
+		]
+	},
+	{ "id"   : "MonsterIntroductionWeather"
+	, "text" : "Скоро осень. Вы любите осень?"
+	, "replies" :
+		[ { "text" : "Да…", "ref" : "MonsterIntroductionSeasons" }
+		, { "text" : "Предпочитаю лето.", "ref" : "MonsterIntroductionSeasons" }
+		, { "text" : "Мне, право, неловко, но вам никто не говорил, что вы чудовище из ночных кошмаров?", "ref" : "MonsterIntroductionRude" }
+		]
+	},
+	{ "id"   : "MonsterIntroductionSeasons"
+	, "text" : "А за осенью придёт весна…"
+	, "replies" :
+		[ { "text" : "Действительно…", "ref" : "MonsterIntroductionSpring" }
+		, { "text" : "Набухнут почки, запоют птички…", "ref" : "MonsterIntroductionSpring" }
+		, { "text" : "Давайте сменим тему? Например, поговорим о хтонических чудовищах. То есть о вас!", "ref" : "MonsterIntroductionRude" }
+		]
+	},
+	{ "id"   : "MonsterIntroductionSpring"
+	, "text" : "Вы ни о чём не хотите меня спросить? Или поделиться наблюдением по поводу… моей внешности?"
+	, "replies" :
+		[ { "text" : "Никак нет.", "ref" : "MonsterIntroductionPolite" }
+		, { "text" : "Ваш зонт очень… нейтрален.", "ref" : "MonsterIntroductionPolite" }
+		, { "text" : "Как хорошо, что вы сами заговорили об этом! Так вот. Вы похожи на помесь осьминога с утконосом!", "ref" : "MonsterIntroductionRude" }
+		]
+	},
+	{ "id"   : "MonsterIntroductionPolite"
+	, "text" : "Спасибо. Вы отличный собеседник. До свидания."
+	, "replies" :
+		[ { "text" : "До встречи.", "ref" : null }
+		, { "text" : "Хм, я интеллигентная! Внезапно!", "ref" : null }
+		]
+	, "clears" : [ "MonsterIntroductionPending" ]
+	},
+	{ "id"   : "MonsterIntroductionRude"
+	, "text" : "Хм, вы заметили, какая жалость. Теперь вы убежите в панике и больше никогда не заговорите со мной?"
+	, "replies" :
+		[ { "text" : "Да! ААА ОГРОМНЫЙ МОНСТР ХОЧЕТ МЕНЯ СОЖРАТЬ!", "ref" : "MonsterIntroductionScaredLiu" }
+		, { "text" : "Обычно в таких случаях меня уносит гигантский птеродактиль, но он что-то не торопится, так что давайте познакомимся!", "ref" : "MonsterIntroductionAcquaint" }
+		, { "text" : "Нет, что вы, почти все мои друзья - монстры.", "ref" : "MonsterIntroductionAcquaint" }
+		]
+	},
+	{ "id"   : "MonsterIntroductionScaredLiu"
+	, "text" : "Ах, история всей моей жизни. Что ж, прощайте."
+	, "replies" :
+		[ { "text" : "<aside> Вы убегаете. Вы грубая. </aside>", "ref" : null }
+		, { "text" : "<aside> И трусиха! </aside>", "ref" : null }
+		]
+	, "sets"   : [ "LiuScared" ]
+	, "clears" : [ "MonsterIntroductionPending" ]
+	},
+	{ "id"   : "MonsterIntroductionAcquaint"
+	, "text" : "Реджинальд, очень приятно."
+	, "replies" :
+		[ { "text" : "Какое совпадение, мы тёзки!", "ref" : "MonsterIntroductionAcquainted" }
+		, { "text" : "Жаль, что не Лёша, но Реджинальд - тоже клёвое имя.", "ref" : "MonsterIntroductionAcquainted" }
+		, { "text" : "Приятно познакомиться, я Лю, первая своего имени, королева печенек, конфет и свежих блинов.", "ref" : "MonsterIntroductionAcquainted" }
+		]
+	},
+	{ "id"   : "MonsterIntroductionAcquainted"
+	, "text" : "Рад знакомству. До встречи?"
+	, "replies" :
+		[ { "text" : "Да! Спасибо, что не сожрали меня.", "ref" : null }
+		, { "text" : "Пока, Реджи. Можно я буду звать вас Реджи? Впрочем, буду в любом случае.", "ref" : null }
+		, { "text" : "До свидания! Ах, если бы люди были столь же вежливы, как монстры.", "ref" : null }
+		]
+	, "clears" : [ "MonsterIntroductionPending" ]
+	},
+	{ "id"   : "MonsterScaredLiuIntro"
+	, "text" : "Вы вернулись. Пришли вновь ужаснуться моему облику? Что ж, как желаете."
+	, "replies" :
+		[ { "text" : "АААА! ГОВОРЯЩИЙ МОНСТР, СПАСАЙТЕСЬ!", "ref" : null }
+		, { "text" : "Извините, я была с вами груба. Примите мои извинения. А давайте познакомимся?", "ref" : "MonsterScaredLiuAcquaint" }
+		, { "text" : "Да, простите, я подумала, что могу вынести ваш жуткий облик, но ошиблась. Прощайте.", "ref" : null }
+		]
+	},
+	{ "id"   : "MonsterScaredLiuAcquaint"
+	, "text" : "Реджинальд, очень приятно."
+	, "replies" :
+		[ { "text" : "Какое совпадение, мы тёзки!", "ref" : "MonsterScaredLiuAcquainted" }
+		, { "text" : "Жаль, что не Лёша, но Реджинальд - тоже клёвое имя.", "ref" : "MonsterScaredLiuAcquainted" }
+		, { "text" : "Приятно познакомиться, я Лю, первая своего имени, королева печенек, конфет и свежих блинов.", "ref" : "MonsterScaredLiuAcquainted" }
+		]
+	},
+	{ "id"   : "MonsterScaredLiuAcquainted"
+	, "text" : "Рад знакомству. До встречи?"
+	, "replies" :
+		[ { "text" : "Да! Спасибо, что не сожрали меня.", "ref" : null }
+		, { "text" : "Пока, Реджи. Можно я буду звать вас Реджи? Впрочем, буду в любом случае.", "ref" : null }
+		, { "text" : "До свидания! Ах, если бы люди были столь же вежливы, как монстры.", "ref" : null }
+		]
+	, "clears" : [ "LiuIsScared" ]
+	},
+	{ "id"   : "MonsterVirginMachinationsIntro"
+	, "text" : "Добрый день. Я могу вам чем-то помочь?"
+	, "replies" :
+		[ { "text" : "Сегодня Я могу помочь ВАМ! Оу, наконец-то научилась выделять слова голосом.", "ref" : "MonsterVirginMachinationsHelp" }
+		, { "text" : "Да! Познакомьте меня со своей жертвенной девственницей!", "ref" : "MonsterVirginMachinationsVirgin" }
+		, { "text" : "Нет. Никто не может помочь мне. Пойду плакать в темноте", "ref" : null }
+		]
+	},
+	{ "id"   : "MonsterVirginMachinationsHelp"
+	, "text" : "Очень любезно с вашей стороны, но я пока не нуждаюсь…"
+	, "replies" :
+		[ { "text" : "Глупости! Неужели вам не надоело, что окружающие показывают на вас пальцами?", "ref" : "MonsterVirginMachinationsAnnoyed" }
+		, { "text" : "И смеются у вас за спиной?", "ref" : "MonsterVirginMachinationsAnnoyed" }
+		, { "text" : "И рассказывают о вас страшные сказки детям?", "ref" : "MonsterVirginMachinationsAnnoyed" }
+		, { "text" : "И мемы о вас заполонили интернет?", "ref" : "MonsterVirginMachinationsAnnoyed" }
+		]
+	},
+	{ "id"   : "MonsterVirginMachinationsAnnoyed"
+	, "text" : "Но что поделать, если люди не могут принять мой внешний вид?"
+	, "replies" :
+		[ { "text" : "Оу, вы подумали, что дело в вашем облике? Вовсе нет! Окружающих возмущает отсутствие при вас жертвенной девственницы!", "ref" : "MonsterVirginMachinationsPreposterous" }
+		, { "text" : "Жертвенная спутница отвлекла бы внимание наблюдателей на себя!", "ref" : "MonsterVirginMachinationsPreposterous" }
+		]
+	},
+	{ "id"   : "MonsterVirginMachinationsVirgin"
+	, "text" : "Я отрицаю институт жертвенных девиц по этическим соображениям. Ни родителям, ни общественному мнению, ни вам не склонить меня к поеданию несчастных созданий."
+	, "replies" :
+		[ { "text" : "Но моя знакомая девица неизлечимо больна! Эвтаназия на её родине запрещена, быть съеденной вами - её единственный шанс на избавление от мук!", "ref" : "MonsterVirginMachinationsIll" }
+		, { "text" : "Почему бы не пойти на хитрость? Возьмёте девицу в пасть (в какую захотите), люди подумают, что вы её съели, а потом выплюнете её где-нибудь.", "ref" : "MonsterVirginMachinationsEw" }
+		]
+	},
+	{ "id"   : "MonsterVirginMachinationsIll"
+	, "text" : "Филантропия не чужда мне, но у меня пищевая аллергия на девственниц!"
+	, "replies" :
+		[ { "text" : "Жертвенность - долг интеллигенции! Наверняка вас откачают. К тому же, всё могло быть хуже, вы могли бы страдать аллергией на пушистых котиков.", "ref" : "MonsterVirginMachinationsTrue" }
+		, { "text" : "Спасти бедную девочку от смертельных страданий - ваш шанс изменить представления людей о хтонических чудищах!", "ref" : "MonsterVirginMachinationsTrue" }
+		]
+	},
+	{ "id"   : "MonsterVirginMachinationsTrue"
+	, "text" : "Да, вы правы, это мой долг, как бы патетически это ни звучало."
+	, "replies" :
+		[ { "text" : "Надеюсь, вы не возражаете выплатить мне скромную сумму за посреднечество? Нет? Замечательно! Видите вон ту девочку в платье? Нет, это не смайлик, а гримаса боли. Съешьте же её скорее!", "ref" : null }
+		]
+	, "sets"   : [ "VirginMachinationsDone" ]
+	, "clears" : [ "VirginMacinationsPart2", "VirginMachinations" ]
+	},
+	{ "id"   : "MonsterVirginMachinationsEw"
+	, "text" : "Это бы успокоило моих родителей, но, право, даже как-то неловко…"
+	, "replies" :
+		[ { "text" : "Бросьте, она берёт за это деньги! Точнее, беру я. Коплю на вельветовую шляпу.", "ref" : "MonsterVirginMachinationsNoProblem" }
+		, { "text" : "Чепуха, эта девица давно искала способ симулировать собственную смерть, так что вы поможете друг другу.", "ref" : "MonsterVirginMachinationsNoProblem" }
+		]
+	},
+	{ "id"   : "MonsterVirginMachinationsNoProblem"
+	, "text" : "Что же, если дело обстоит так. Вот ваш гонорар за посредничество. И… как мне действовать? Просто подойти и заглотить её? Это как-то неучтиво."
+	, "replies" :
+		[ { "text" : "Глупости, жертвенные девицы любят напористых монстров! Действуйте!", "ref" : null }
+		, { "text" : "Вы могли бы сводить её в кино и слопать на самом интересном месте.", "ref" : null }
+		, { "text" : "Родители не беседовали с вами о птичках и пчёлках? Хм. Ешьте и птичек, и пчёлок! Кто тут чудовище, вы или я? Вперёд!", "ref" : null }
+		]
+	, "sets"   : [ "VirginMachinationsDone" ]
+	, "clears" : [ "VirginMacinationsPart2", "VirginMachinations" ]
 	},
 	{ "id"   : "GlassEyeDescriptionIntro"
 	, "text" : "<aside>Странного вида тип с мерцающим стеклянным глазом и неухоженной бородой.</aside>"

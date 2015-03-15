@@ -14,14 +14,17 @@
 		, { "dialog" : "ShadyMoustacheMachinationsIntro",          "requires" : [ "MoustacheMachinationsPending" ] }
 		, { "dialog" : "ShadyFiller1Intro",                        "requires" : [ "MoustacheMachinations" ] }
 		, { "dialog" : "ShadyMoustacheMachinationsReceiveIntro",   "requires" : [ "MoustacheMachinationsDone" ] }
-		, { "dialog" : "ShadyPurchaseMoustacheIntro",              "requires" : [ "MoustacheAbsent" ] }
-		, { "dialog" : "ShadyFakeMoustacheWarrantyIntro",          "requires" : [ "MoustacheAbsent", "ReceiveFakeMoustache" ] }
 		, { "dialog" : "ShadyFiller2Intro",                        "requires" : [ "PanaceaMachinations" ] }
 		, { "dialog" : "ShadyPanaceaMachinationReceiveIntro",      "requires" : [ "PanaceaMachinationsDone" ] }
 		, { "dialog" : "ShadyFiller3Intro",                        "requires" : [ "InspirationMachinations" ] }
 		, { "dialog" : "ShadyInspriationMachinationsReceiveIntro", "requires" : [ "InspirationMachinationsDone" ] }
 		, { "dialog" : "ShadyFiller4Intro",                        "requires" : [ "CatMachinations" ] }
 		, { "dialog" : "ShadyCatMachinationsReceiveIntro",         "requires" : [ "CatMachinationsDone" ] }
+		, { "dialog" : "ShadyFiller5Intro",                        "requires" : [ "VirginMachinations" ] }
+		, { "dialog" : "ShadyVirginMachinationsReceiveIntro",      "requires" : [ "VirginMachinationsDone" ] }
+		, { "dialog" : "ShadyPurchaseMoustacheIntro",              "requires" : [ "MoustacheAbsent" ] }
+		, { "dialog" : "ShadyFakeMoustacheWarrantyIntro",          "requires" : [ "MoustacheAbsent", "FakeMoustacheReceived" ] }
+		, { "dialog" : "ShadyPlaceholderIntro" }
 		]
 	, "queueEscape" :
 		[ { "dialog" : "ShadyQueueEscapeIntro" } ]
@@ -70,7 +73,7 @@
 		, { "dialog" : "AnnyVillainQuestIntro", "requires" : [ "VillainAnnyQuest" ] }
 		, { "dialog" : "AnnyFiller1Intro",      "requires" : [ "AnnyFiller1Pending" ] }
 		, { "dialog" : "AnnyMakingUpIntro",     "requires" : [ "MakeUpWithAnny" ] }
-		, { "dialog" : "VirginMachinations",    "requires" : [ "VirginMachinations" ] }
+		, { "dialog" : "VirginMachinations",    "requires" : [ "VirginMachinationsPart1" ] }
 		]
 	, "queueEscape" :
 		[ { "dialog" : "AnnyQueueEscape" } ]
@@ -149,7 +152,10 @@
 	{ "id"    : "Monster"
 	, "name"  : "Хтоническое Чудовище"
 	, "queueConversation" :
-		[ { "dialog" : "MonsterDescriptionIntro",      "requires" : [ "MonsterIntro"] }
+		[ { "dialog" : "MonsterDescriptionIntro",        "requires" : [ "MonsterIntro"] }
+		, { "dialog" : "MonsterIntroductionIntro",       "requires" : [ "MonsterIntroductionPending"] }
+		, { "dialog" : "MonsterScaredLiuIntro",          "requires" : [ "LiuIsScared"] }
+		, { "dialog" : "MonsterVirginMachinationsIntro", "requires" : [ "VirginMacinationsPart2"] }
 		]
 	},
 	{ "id"    : "GlassEye"
