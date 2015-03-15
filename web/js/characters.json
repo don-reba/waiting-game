@@ -72,12 +72,13 @@
 	{ "id"    : "Anny"
 	, "name"  : "Настенька"
 	, "queueConversation" :
-		[ { "dialog" : "AnnyDescriptionIntro",  "requires" : [ "AnnyIntro" ] }
-		, { "dialog" : "AnnyIntroductionIntro", "requires" : [ "AnnyIntroductionPending" ] }
-		, { "dialog" : "AnnyVillainQuestIntro", "requires" : [ "VillainAnnyQuest" ] }
-		, { "dialog" : "AnnyFiller1Intro",      "requires" : [ "AnnyFiller1Pending" ] }
-		, { "dialog" : "AnnyMakingUpIntro",     "requires" : [ "MakeUpWithAnny" ] }
-		, { "dialog" : "VirginMachinations",    "requires" : [ "VirginMachinationsPart1" ] }
+		[ { "dialog" : "AnnyDescriptionIntro",        "requires" : [ "AnnyIntro" ] }
+		, { "dialog" : "AnnyIntroductionIntro",       "requires" : [ "AnnyIntroductionPending" ] }
+		, { "dialog" : "AnnyVillainQuestIntro",       "requires" : [ "VillainAnnyQuest" ] }
+		, { "dialog" : "AnnyFiller1Intro",            "requires" : [ "AnnyFiller1Pending" ] }
+		, { "dialog" : "AnnyMakingUpIntro",           "requires" : [ "MakeUpWithAnny" ] }
+		, { "dialog" : "AnnyVirginMachinationsIntro", "requires" : [ "VirginMachinationsPart1" ] }
+		, { "dialog" : "AnnyMonster",                 "requires" : [ "AnnyMarriage" ] }
 		]
 	, "queueEscape" :
 		[ { "dialog" : "AnnyQueueEscape" } ]
@@ -105,9 +106,10 @@
 		, { "dialog" : "PatientIntroductionIntro",       "requires" : [ "PatientIntroductionPending" ] }
 		, { "dialog" : "PatientPanaceaIntro",            "requires" : [ "PanaceaMachinations" ] }
 		, { "dialog" : "PatientPanaceaConsequenceIntro", "requires" : [ "PanaceaSold" ] }
-		, { "dialog" : "PatientFiller1Intro",            "requires" : [ "PatientFiller1Pending" ] }
 		, { "dialog" : "PatientFillerMoustacheIntro",    "requires" : [ "PatientMoustacheFillerPending", "MoustacheEquipped" ] }
 		, { "dialog" : "PatientFillerHatIntro",          "requires" : [ "PatientHatFillerPending", "HatEquipped" ] }
+		, { "dialog" : "PatientFiller1Intro",            "requires" : [ "PatientFiller1Pending" ] }
+		, { "dialog" : "PatientFiller2Intro",            "requires" : [ "PatientFiller2Pending" ] }
 		]
 	, "queueEscape" :
 		[ { "dialog" : "PatientQueueEscape" } ]
@@ -157,10 +159,11 @@
 	{ "id"    : "Monster"
 	, "name"  : "Хтоническое Чудовище"
 	, "queueConversation" :
-		[ { "dialog" : "MonsterDescriptionIntro",        "requires" : [ "MonsterIntro"] }
-		, { "dialog" : "MonsterIntroductionIntro",       "requires" : [ "MonsterIntroductionPending"] }
-		, { "dialog" : "MonsterScaredLiuIntro",          "requires" : [ "LiuIsScared"] }
-		, { "dialog" : "MonsterVirginMachinationsIntro", "requires" : [ "VirginMacinationsPart2"] }
+		[ { "dialog" : "MonsterDescriptionIntro",          "requires" : [ "MonsterIntro"] }
+		, { "dialog" : "MonsterIntroductionIntro",         "requires" : [ "MonsterIntroductionPending"] }
+		, { "dialog" : "MonsterScaredLiuIntro",            "requires" : [ "LiuIsScared"] }
+		, { "dialog" : "MonsterVirginMachinationsIntro",   "requires" : [ "VirginMacinationsPart2"] }
+		, { "dialog" : "MonsterVirginMachinationsPMIntro", "requires" : [ "VirginPostMortem"] }
 		]
 	},
 	{ "id"    : "GlassEye"
