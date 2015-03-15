@@ -2158,30 +2158,37 @@ var StoreView = (function () {
         return this.selectedItem;
     };
     StoreView.prototype.SetItems = function (items) {
-        var buttons = [];
-        for (var i = 0; i != items.length; ++i) {
-            var OnClick = function (e) {
-                this.selectedItem = e.data;
-                this.ItemSelected.Call();
-            };
-            var item = items[i][0];
-            var info = Item.GetInfo(item);
-            var enabled = items[i][1];
-            var button = $("<li>" + info.name + "<br/>" + info.description + "<br/>" + info.price.toLocaleString() + " руб.</li>");
-            button.addClass(Item[item]);
-            if (enabled) {
-                button.click(item, OnClick.bind(this));
-                button.addClass("fg-clickable");
-            }
-            else {
-                button.addClass("disabled");
-            }
-            buttons.push(button);
+        var container = $("#store-items");
+        container.empty();
+        if (items.length == 0) {
+            container.addClass("empty");
+            container.text("Что вы здесь делаете? В стране кризис!");
         }
-        var row = $("<tr>");
-        for (var i = 0; i != buttons.length; ++i)
-            row.append(buttons[i]);
-        $("#store-items").empty().append(row);
+        else {
+            var buttons = [];
+            for (var i = 0; i != items.length; ++i) {
+                var OnClick = function (e) {
+                    this.selectedItem = e.data;
+                    this.ItemSelected.Call();
+                };
+                var item = items[i][0];
+                var info = Item.GetInfo(item);
+                var enabled = items[i][1];
+                var button = $("<li>" + info.name + "<br/>" + info.description + "<br/>" + info.price.toLocaleString() + " руб.</li>");
+                button.addClass(Item[item]);
+                if (enabled) {
+                    button.click(item, OnClick.bind(this));
+                    button.addClass("fg-clickable");
+                }
+                else {
+                    button.addClass("disabled");
+                }
+                buttons.push(button);
+            }
+            container.removeClass("empty");
+            for (var i = 0; i != buttons.length; ++i)
+                container.append(buttons[i]);
+        }
     };
     StoreView.prototype.SetItemStatus = function (item, isEnabled) {
         var button = $("#store-items ." + Item[item]);
