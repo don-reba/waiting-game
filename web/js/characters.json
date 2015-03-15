@@ -39,7 +39,7 @@
 	, "name"  : "Усач"
 	, "queueConversation" :
 		[ { "dialog" : "MrMoustacheDescriptionIntro",           "requires" : [ "MrMoustacheIntro" ] }
-		, { "dialog" : "MrMoustacheNoMoustacheIntro",           "requires" : [ "MrMoustacheIntroductionPending" ] }
+		, { "dialog" : "MrMoustacheNoMoustacheIntro",           "requires" : [ "MoustacheAbsent" ] }
 		, { "dialog" : "MrMoustacheIntroductionIntro",          "requires" : [ "MrMoustacheIntroductionPending", "MoustacheEquipped" ] }
 		, { "dialog" : "MrMoustacheFiller1Intro",               "requires" : [ "MrMoustacheFiller1Pending" ] }
 		, { "dialog" : "MrMoustacheFiller2Intro",               "requires" : [ "MrMoustacheFiller2Pending" ] }

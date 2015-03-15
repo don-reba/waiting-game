@@ -257,7 +257,7 @@ class QueueModel implements IQueueModel, IPersistent
 	private GenerateRemaining() : number
 	{
 		var min = 4;
-		var max = 16;
+		var max = 12;
 		return min + Util.Random(max - min);
 	}
 

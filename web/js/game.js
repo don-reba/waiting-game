@@ -377,7 +377,7 @@ var CharacterManager = (function () {
 var CompactJson;
 (function (CompactJson) {
     function Stringify(obj, options) {
-        if (options === void 0) { options = { indent: "  ", maxLength: 80 }; }
+        if (options === void 0) { options = { indent: "  ", maxLength: 90 }; }
         var indent = options.indent;
         var maxLength = options.maxLength;
         return (function _stringify(obj, currentIndent, reserved) {
@@ -412,9 +412,8 @@ var CompactJson;
                     Object.keys(obj).forEach(function (key, index, array) {
                         var keyPart = JSON.stringify(key) + ": ";
                         var value = _stringify(obj[key], nextIndent, keyPart.length + comma(array, index));
-                        if (value !== undefined) {
+                        if (value !== undefined)
                             items.push(keyPart + value);
-                        }
                     });
                     delimiters = "{}";
                 }
@@ -1734,7 +1733,7 @@ var QueueModel = (function () {
     };
     QueueModel.prototype.GenerateRemaining = function () {
         var min = 4;
-        var max = 16;
+        var max = 12;
         return min + Util.Random(max - min);
     };
     QueueModel.prototype.GetPosition = function (character) {

@@ -9,7 +9,7 @@ module CompactJson
 		maxLength : number;
 	}
 
-	export function Stringify(obj : Object, options : StringifyOptions = { indent : "  ", maxLength : 80 }) {
+	export function Stringify(obj : Object, options : StringifyOptions = { indent : "  ", maxLength : 90 }) {
 
 		var indent    = options.indent
 		var maxLength = options.maxLength
@@ -52,11 +52,9 @@ module CompactJson
 				} else {
 					Object.keys(obj).forEach(function(key, index, array) {
 						var keyPart = JSON.stringify(key) + ": "
-						var value = _stringify(obj[key], nextIndent,
-								       keyPart.length + comma(array, index))
-								       if (value !== undefined) {
-									       items.push(keyPart + value)
-								       }
+						var value = _stringify(obj[key], nextIndent, keyPart.length + comma(array, index));
+						if (value !== undefined)
+							items.push(keyPart + value);
 					})
 					delimiters = "{}"
 				}

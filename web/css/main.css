@@ -255,13 +255,13 @@ aside {
 }
 #dev-contents table {
 	border-collapse : separate;
-	border-spacing  : 0.5em;
+	border-spacing  : 0.4em;
 	vertical-align  : top;
 }
 #dev-contents table td {
 	border-collapse : separate;
-	border-spacing  : 0.5em;
 	vertical-align  : top;
+	font-size       : 0.9em;
 }
 #dev-contents td.key {
 	font-weight : bold;
