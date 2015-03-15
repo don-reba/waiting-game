@@ -59,6 +59,8 @@ class StoreModel implements IStoreModel
 				items.push(this.GetSaleInfo(Item.Monopoly, money));
 		}
 
+		items.sort(this.CompareByPrice);
+
 		this.items = items;
 		return items;
 	}
@@ -96,6 +98,11 @@ class StoreModel implements IStoreModel
 			default:
 				this.player.AddItem(item);
 		}
+	}
+
+	private CompareByPrice(a : [Item, boolean], b : [Item, boolean]) : number
+	{
+		return Item.GetInfo(a[0]).price - Item.GetInfo(b[0]).price;
 	}
 
 	private OnMoneyChanged() : void

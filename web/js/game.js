@@ -2057,6 +2057,7 @@ var StoreModel = (function () {
             if (!this.player.HasItem(5 /* Monopoly */))
                 items.push(this.GetSaleInfo(5 /* Monopoly */, money));
         }
+        items.sort(this.CompareByPrice);
         this.items = items;
         return items;
     };
@@ -2086,6 +2087,9 @@ var StoreModel = (function () {
             default:
                 this.player.AddItem(item);
         }
+    };
+    StoreModel.prototype.CompareByPrice = function (a, b) {
+        return Item.GetInfo(a[0]).price - Item.GetInfo(b[0]).price;
     };
     StoreModel.prototype.OnMoneyChanged = function () {
         if (!this.items)
