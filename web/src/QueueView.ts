@@ -24,7 +24,7 @@ class QueueView implements IQueueView, IClientView
 		return this.selectedCharacter;
 	}
 
-	SetCharacters(characters : ICharacter[]) : void
+	SetCharacters(characters : [ICharacter, boolean][]) : void
 	{
 		var OnClick = function(e)
 		{
@@ -37,10 +37,11 @@ class QueueView implements IQueueView, IClientView
 
 		for (var i = 0; i != characters.length; ++i)
 		{
+			var character = characters[i][0];
+			var enabled   = characters[i][1];
+
 			// goes up to 1.0 in increments of 0.1
 			var scale = (5 + i) / 10;
-
-			var character = characters[i];
 
 			var button = $("<div class='queue-person'>");
 			button.css("transform", "scale(" + String(scale) + ")");
@@ -49,14 +50,17 @@ class QueueView implements IQueueView, IClientView
 			if (character)
 			{
 				button.text(character.name);
-				var name = $("<p>");
 				button.addClass("queue-character");
-				button.click(character, OnClick.bind(this));
 			}
 			else
 			{
 				button.text("\\o/");
 				button.addClass("queue-player");
+			}
+			if (enabled)
+			{
+				button.addClass("enabled");
+				button.click(character, OnClick.bind(this));
 			}
 
 			people.append(button);

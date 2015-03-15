@@ -8,6 +8,7 @@ class QueuePosition
 {
 	characterID : string;
 	remaining   : number;
+	spokenTo    : boolean;
 	ticket      : string;
 }
 
@@ -43,10 +44,8 @@ class QueueModel implements IQueueModel, IPersistent
 		player.Awkward.Add(this.OnAwkward.bind(this));
 
 		this.ticket = 1;
-
-		this.queue = [];
-
-		this.head = this.MakeStockPosition();
+		this.queue  = [];
+		this.head   = this.MakeStockPosition();
 
 		for (var i = 0; i != this.maxLength; ++i)
 			this.queue.push(this.MakeStockPosition());
@@ -77,18 +76,15 @@ class QueueModel implements IQueueModel, IPersistent
 			this.queue.push(this.MakePlayerPosition());
 	}
 
-	GetCharacters() : ICharacter[]
+	GetCharacters() : [ICharacter, boolean][]
 	{
-		var characters : ICharacter[] = [];
+		var characters = [];
 		for (var i = 0; i != this.queue.length; ++i)
 		{
 			var c = this.characterManager.GetCharacter(this.queue[i].characterID);
 			if (c && this.player.HasNotMet(c))
-				characters.push({ id : c.id, name : "\\o/" });
-			else if (!c)
-				characters.push(null);
-			else
-				characters.push(c);
+				c = { id : c.id, name : "\\o/" };
+			characters.push([c, c == null || !this.SpokenTo(c)]);
 		}
 		return characters;
 	}
@@ -149,6 +145,11 @@ class QueueModel implements IQueueModel, IPersistent
 		this.dialogID  = this.characterManager.GetDialogID(speaker.id, DialogType.QueueConversation);
 
 		this.DialogChanged.Call();
+
+		this.GetPosition(speaker).spokenTo = true;
+
+		this.PeopleChanged.Call();
+
 
 		if (this.player.HasNotMet(speaker))
 		{
@@ -226,7 +227,9 @@ class QueueModel implements IQueueModel, IPersistent
 	{
 		if (this.queue.length < this.maxLength && Math.random() < 0.4)
 		{
-			this.queue.push(this.MakeStockPosition());
+			var p = this.MakeStockPosition();
+			this.queue.push(p);
+
 			this.PeopleChanged.Call();
 		}
 	}
@@ -258,6 +261,17 @@ class QueueModel implements IQueueModel, IPersistent
 		return min + Util.Random(max - min);
 	}
 
+	private GetPosition(character : ICharacter) : QueuePosition
+	{
+		var id = character ? character.id : null;
+		for (var i = 0; i != this.queue.length; ++i)
+		{
+			var p = this.queue[i];
+			if (p.characterID == id)
+				return p;
+		}
+	}
+
 	private HoldLast() : void
 	{
 		var holdDialogID = this.characterManager.GetDialogID(this.speakerID, DialogType.QueueEscape);
@@ -284,6 +298,7 @@ class QueueModel implements IQueueModel, IPersistent
 		return <QueuePosition>
 			{ characterID : character.id
 			, remaining   : this.GenerateRemaining()
+			, spokenTo    : false
 			, ticket      : String(this.ticket++)
 			};
 	}
@@ -293,7 +308,19 @@ class QueueModel implements IQueueModel, IPersistent
 		return <QueuePosition>
 			{ characterID : null
 			, remaining   : this.GenerateRemaining()
+			, spokenTo    : false
 			, ticket      : String(this.ticket++)
 			};
+	}
+
+	private SpokenTo(character : ICharacter) : boolean
+	{
+		for (var i = 0; i != this.queue.length; ++i)
+		{
+			var p = this.queue[i];
+			if (p.characterID == character.id)
+				return p.spokenTo;
+		}
+		return false;
 	}
 }

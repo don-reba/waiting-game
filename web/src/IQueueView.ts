@@ -13,7 +13,7 @@ interface IQueueView
 
 	GetSpeaker() : ICharacter;
 
-	SetCharacters(characters : ICharacter[]) : void;
+	SetCharacters(characters : [ICharacter, boolean][]) : void;
 
 	SetCurrentTicket(ticket : string) : void;
 

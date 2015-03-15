@@ -10,7 +10,7 @@ interface IQueueModel
 
 	EnterQueue() : void;
 
-	GetCharacters() : ICharacter[];
+	GetCharacters() : [ICharacter, boolean][];
 
 	GetCurrentTicket() : string;
 

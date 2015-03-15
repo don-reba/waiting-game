@@ -1524,7 +1524,7 @@ var Timer = (function () {
 var PersistentState = (function () {
     function PersistentState(items, timer) {
         this.items = items;
-        this.version = "13";
+        this.version = "14";
         timer.AddEvent(this.Save.bind(this), 20);
     }
     // get the state string from each item and store it in local storage
@@ -1619,11 +1619,8 @@ var QueueModel = (function () {
         for (var i = 0; i != this.queue.length; ++i) {
             var c = this.characterManager.GetCharacter(this.queue[i].characterID);
             if (c && this.player.HasNotMet(c))
-                characters.push({ id: c.id, name: "\\o/" });
-            else if (!c)
-                characters.push(null);
-            else
-                characters.push(c);
+                c = { id: c.id, name: "\\o/" };
+            characters.push([c, c == null || !this.SpokenTo(c)]);
         }
         return characters;
     };
@@ -1664,6 +1661,8 @@ var QueueModel = (function () {
         this.speakerID = speaker.id;
         this.dialogID = this.characterManager.GetDialogID(speaker.id, 1 /* QueueConversation */);
         this.DialogChanged.Call();
+        this.GetPosition(speaker).spokenTo = true;
+        this.PeopleChanged.Call();
         if (this.player.HasNotMet(speaker)) {
             this.player.IntroduceTo(speaker);
             this.PeopleChanged.Call();
@@ -1713,7 +1712,8 @@ var QueueModel = (function () {
     };
     QueueModel.prototype.OnKnock = function () {
         if (this.queue.length < this.maxLength && Math.random() < 0.4) {
-            this.queue.push(this.MakeStockPosition());
+            var p = this.MakeStockPosition();
+            this.queue.push(p);
             this.PeopleChanged.Call();
         }
     };
@@ -1737,6 +1737,14 @@ var QueueModel = (function () {
         var max = 16;
         return min + Util.Random(max - min);
     };
+    QueueModel.prototype.GetPosition = function (character) {
+        var id = character ? character.id : null;
+        for (var i = 0; i != this.queue.length; ++i) {
+            var p = this.queue[i];
+            if (p.characterID == id)
+                return p;
+        }
+    };
     QueueModel.prototype.HoldLast = function () {
         var holdDialogID = this.characterManager.GetDialogID(this.speakerID, 0 /* QueueEscape */);
         if (this.dialogID != holdDialogID) {
@@ -1754,10 +1762,18 @@ var QueueModel = (function () {
         do {
             character = this.characterManager.GetRandomCharacter();
         } while (this.InQueue(character));
-        return { characterID: character.id, remaining: this.GenerateRemaining(), ticket: String(this.ticket++) };
+        return { characterID: character.id, remaining: this.GenerateRemaining(), spokenTo: false, ticket: String(this.ticket++) };
     };
     QueueModel.prototype.MakePlayerPosition = function () {
-        return { characterID: null, remaining: this.GenerateRemaining(), ticket: String(this.ticket++) };
+        return { characterID: null, remaining: this.GenerateRemaining(), spokenTo: false, ticket: String(this.ticket++) };
+    };
+    QueueModel.prototype.SpokenTo = function (character) {
+        for (var i = 0; i != this.queue.length; ++i) {
+            var p = this.queue[i];
+            if (p.characterID == character.id)
+                return p.spokenTo;
+        }
+        return false;
     };
     return QueueModel;
 })();
@@ -1838,21 +1854,24 @@ var QueueView = (function () {
         var people = $("#queue-people");
         people.empty();
         for (var i = 0; i != characters.length; ++i) {
+            var character = characters[i][0];
+            var enabled = characters[i][1];
             // goes up to 1.0 in increments of 0.1
             var scale = (5 + i) / 10;
-            var character = characters[i];
             var button = $("<div class='queue-person'>");
             button.css("transform", "scale(" + String(scale) + ")");
             button.css("margin-top", String(1.5 * scale) + "em");
             if (character) {
                 button.text(character.name);
-                var name = $("<p>");
                 button.addClass("queue-character");
-                button.click(character, OnClick.bind(this));
             }
             else {
                 button.text("\\o/");
                 button.addClass("queue-player");
+            }
+            if (enabled) {
+                button.addClass("enabled");
+                button.click(character, OnClick.bind(this));
             }
             people.append(button);
         }

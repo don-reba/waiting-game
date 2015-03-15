@@ -371,10 +371,10 @@ aside {
 	height      : 1.1em;
 	line-height : 1.1em;
 }
-.queue-character {
+.queue-character.enabled {
 	cursor : pointer;
 }
-.queue-character:hover {
+.queue-character.enabled:hover {
 	text-decoration : underline;
 }
 .queue-player {
