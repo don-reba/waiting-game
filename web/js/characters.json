@@ -61,6 +61,10 @@
 		, { "dialog" : "PoetInspirationMachinationsIntro", "requires" : [ "InspirationMachinations" ] }
 		, { "dialog" : "PoetFiller1Intro",                 "requires" : [ "PoetFiller1Pending" ] }
 		, { "dialog" : "PoetFiller2Intro",                 "requires" : [ "PoetFiller2Pending" ] }
+		, { "dialog" : "PoetFiller3Intro",                 "requires" : [ "PoetFiller3Pending" ] }
+		, { "dialog" : "PoetFiller4Intro",                 "requires" : [ "PoetFiller4Pending" ] }
+		, { "dialog" : "PoetPoetryIntro",                  "requires" : [ "PoetPoetryPlaceholder" ] }
+		, { "dialog" : "PoetLawIntro",                     "requires" : [ "PoetLawPlaceholder" ] }
 		]
 	, "queueEscape" :
 		[ { "dialog" : "PoetQueueEscape" } ]
@@ -86,7 +90,7 @@
 		, { "dialog" : "KostikFiller1Intro",      "requires" : [ "KostikFiller1Pending" ] }
 		, { "dialog" : "KostikFiller2Intro",      "requires" : [ "KostikFiller2Pending" ] }
 		, { "dialog" : "KostikMarriageIntro",     "requires" : [ "KostikMarried" ] }
-		, { "dialog" : "KostikPlaceholder" }
+		, { "dialog" : "KostikPlaceholderIntro" }
 		]
 	, "queueEscape" :
 		[ { "dialog" : "KostikQueueEscape" } ]
@@ -117,9 +121,9 @@
 		, { "dialog" : "VillainDoomsdayQuestIntro",        "requires" : [ "VillainQuestPending" ] }
 		, { "dialog" : "VillainDoomsdayQuestFillerIntro",  "requires" : [ "DoomsdayQuest" ] }
 		, { "dialog" : "VillainDoomsdayQuestReceiveIntro", "requires" : [ "DoomsdayQuestReport" ] }
-		, { "dialog" : "VillainRobochefQuestIntro",        "requires" : [ "VillainRobochefQuestPending" ] }
-		, { "dialog" : "VillainRobochefQuestFillerIntro",  "requires" : [ "VillainRobochefQuest" ] }
-		, { "dialog" : "VillainRobochefQuestReceiveIntro", "requires" : [ "VillainRobochefQuestReport" ] }
+		, { "dialog" : "VillainRobochefQuestIntro",        "requires" : [ "MicrochipQuestPending" ] }
+		, { "dialog" : "VillainRobochefQuestFillerIntro",  "requires" : [ "MicrochipQuest" ] }
+		, { "dialog" : "VillainRobochefQuestReceiveIntro", "requires" : [ "MicrochipQuestReport" ] }
 		, { "dialog" : "VillainAnnyQuestIntro",            "requires" : [ "VillainAnnyQuestPending" ] }
 		, { "dialog" : "VillainAnnyQuestFillerIntro",      "requires" : [ "VillainAnnyQuest" ] }
 		, { "dialog" : "VillainAnnyQuestReceiveIntro",     "requires" : [ "VillainAnnyQuestReport" ] }
@@ -139,7 +143,7 @@
 		, { "dialog" : "RobochefFiller1Intro",          "requires" : [ "RobochefFiller1Pending"] }
 		, { "dialog" : "RobochefFiller2Intro",          "requires" : [ "RobochefFiller2Pending"] }
 		, { "dialog" : "RobochefFiller3Intro",          "requires" : [ "RobochefFiller3Pending"] }
-		, { "dialog" : "RobochefStandardIntro" }
+		, { "dialog" : "RobochefPlaceholderIntro" }
 		]
 	, "queueEscape" :
 		[ { "dialog" : "RobochefEscape1" }
