@@ -1688,7 +1688,7 @@ var QueueModel = (function () {
         if (head && head.remaining > 0)
             --head.remaining;
         if (!head || head.remaining <= 0) {
-            if (this.speakerID && this.queue.length > 0 && this.queue[0].characterID == this.speakerID)
+            if (this.speakerID && this.queue[0].characterID == this.speakerID)
                 this.HoldLast();
             else
                 this.AdvanceQueue();
@@ -1720,6 +1720,7 @@ var QueueModel = (function () {
     QueueModel.prototype.AdvanceQueue = function () {
         if (this.queue.length > 0) {
             this.head = this.queue[0];
+            this.head.spokenTo = false;
             this.queue.shift();
             this.CurrentTicketChanged.Call();
             this.PeopleChanged.Call();
@@ -1745,9 +1746,13 @@ var QueueModel = (function () {
         }
     };
     QueueModel.prototype.HoldLast = function () {
+        if (this.head.spokenTo)
+            return;
+        this.head.spokenTo = true;
         var holdDialogID = this.characterManager.GetDialogID(this.speakerID, 0 /* QueueEscape */);
         if (this.dialogID != holdDialogID) {
             this.dialogID = holdDialogID;
+            this.dialogManager.ActivateDialog(this.dialogID);
             this.DialogChanged.Call();
         }
     };

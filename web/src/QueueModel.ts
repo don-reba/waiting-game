@@ -196,7 +196,7 @@ class QueueModel implements IQueueModel, IPersistent
 
 		if (!head || head.remaining <= 0)
 		{
-			if (this.speakerID && this.queue.length > 0 && this.queue[0].characterID == this.speakerID)
+			if (this.speakerID && this.queue[0].characterID == this.speakerID)
 				this.HoldLast();
 			else
 				this.AdvanceQueue();
@@ -241,6 +241,7 @@ class QueueModel implements IQueueModel, IPersistent
 		if (this.queue.length > 0)
 		{
 			this.head = this.queue[0];
+			this.head.spokenTo = false;
 			this.queue.shift();
 			this.CurrentTicketChanged.Call();
 			this.PeopleChanged.Call();
@@ -274,10 +275,15 @@ class QueueModel implements IQueueModel, IPersistent
 
 	private HoldLast() : void
 	{
+		if (this.head.spokenTo)
+			return;
+		this.head.spokenTo = true;
+
 		var holdDialogID = this.characterManager.GetDialogID(this.speakerID, DialogType.QueueEscape);
 		if (this.dialogID != holdDialogID)
 		{
 			this.dialogID = holdDialogID;
+			this.dialogManager.ActivateDialog(this.dialogID);
 			this.DialogChanged.Call();
 		}
 	}

@@ -148,9 +148,9 @@
 		, { "dialog" : "RobochefPlaceholderIntro" }
 		]
 	, "queueEscape" :
-		[ { "dialog" : "RobochefEscape1" }
-		, { "dialog" : "RobochefEscape2", "requires" : [ "RobochefEscape2Pending" ] }
+		[ { "dialog" : "RobochefEscape2", "requires" : [ "RobochefEscape2Pending" ] }
 		, { "dialog" : "RobochefEscape3", "requires" : [ "RobochefEscape3Pending" ] }
+		, { "dialog" : "RobochefEscape1" }
 		]
 	},
 	{ "id"    : "Prototype"
