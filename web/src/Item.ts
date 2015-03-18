@@ -7,13 +7,12 @@ class ItemInfo
 }
 
 enum Item
-{ PencilMoustache = 0
-, Tophat          = 1
-, TV              = 2
-, Table           = 3
-, Community       = 4
-, Monopoly        = 5
-, Stove           = 6
+{ Tophat          = 0
+, TV              = 1
+, Table           = 2
+, Community       = 3
+, Monopoly        = 4
+, Stove           = 5
 }
 
 class StagedItem
@@ -56,42 +55,53 @@ module Item
 {
 	var items : ItemInfo[] =
 	[
-		{ name        : "Усы «Карандаш»"
-		, description : "Мужественность со скидкой."
-		, price       : 1000
-		, rateBonus   : 0.5
-		}, // 0
-		{ name        : "Шляпа «Цилиндр»"
-		, description : "Выбор успешного человека."
+		{ name        : "Шляпа"
+		, description : "Цилиндр"
 		, price       : 10000
-		, rateBonus   : 10
-		}, // 1
+		, rateBonus   : 20
+		}, // 0
 		{ name        : "Телевизор"
 		, description : "С тёплым ламповым звуком."
 		, price       : 100000
 		, rateBonus   : 10
-		}, // 2
+		}, // 1
 		{ name        : "Кофейный столик"
 		, description : "Для приёма гостей."
 		, price       : 50000
 		, rateBonus   : 10
-		}, // 3
+		}, // 2
 		{ name        : "«Комьюнити»"
 		, description : "Испанский 101."
 		, price       : 20000
 		, rateBonus   : 5
-		}, // 4
+		}, // 3
 		{ name        : "«Монополия»"
 		, description : "Отличный способ разрушить дружбу."
 		, price       : 20000
 		, rateBonus   : 5
-		}, // 5
+		}, // 4
 		{ name        : "Кухонная плита"
 		, description : "+ 100 лучших блинных рецептов."
 		, price       : 200000
 		, rateBonus   : 10
-		}, // 6
+		}, // 5
 	];
+
+	export var Moustache = new StagedItem
+		( "Усы"
+		,
+			[ "Карандаш"
+			, "Зубная щётка"
+			, "Морж"
+			, "Фу Манчу"
+			, "Дали"
+			, "Венгерские"
+			, "Английские"
+			, "Шеврон"
+			, "Кручёные"
+			]
+		, 1000, 2, 5
+		);
 
 	export var Candy = new StagedItem
 		( "Конфеты"
@@ -123,7 +133,7 @@ module Item
 			, "Запеченые яблоки Люкс"
 			, "Шоколадка+"
 			]
-		, 50, 1.2, 1
+		, 50, 1.3, 1
 		);
 
 	export function GetInfo(item : Item) : ItemInfo

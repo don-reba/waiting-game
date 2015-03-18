@@ -65,20 +65,12 @@ class MainView implements IMainView
 		}
 	}
 
-	SetMoustache(moustache : Moustache) : void
+	SetMoustache(moustache : number) : void
 	{
-		var text;
-		switch (moustache)
-		{
-			case Moustache.Pencil:    text = "u"; break;
-			case Moustache.French:    text = "r"; break;
-			case Moustache.Handlebar: text = "a"; break;
-			case Moustache.Fake:      text = "u"; break;
-		}
 		var e = $("#moustache");
-		if (text)
+		if (moustache >= 0)
 		{
-			e.text(text);
+			e.text("nkytabdle".substring(moustache, moustache + 1));
 			e.show();
 		}
 		else

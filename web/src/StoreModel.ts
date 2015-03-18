@@ -1,7 +1,6 @@
 /// <reference path="Item.ts"        />
 /// <reference path="IPersistent.ts" />
 /// <reference path="IStoreModel.ts" />
-/// <reference path="Moustache.ts"   />
 /// <reference path="Player.ts"      />
 
 interface StoreModelState
@@ -40,16 +39,7 @@ class StoreModel implements IStoreModel, IPersistent
 	{
 		this.itemCache = [];
 
-		if (!this.player.GetMoustache())
-		{
-			this.AddStoreItem
-				( Item.PencilMoustache
-				, this.player.SetMoustache.bind
-					( this.player
-					, Moustache.Pencil
-					)
-				);
-		}
+		var money = this.player.GetMoney();
 
 		if (!this.player.GetHat())
 		{
@@ -118,12 +108,22 @@ class StoreModel implements IStoreModel, IPersistent
 			}
 		}
 
+		var moustache = Item.Moustache.GetInfo(this.player.GetMoustache() + 1);
+		if (moustache)
+		{
+			var item =
+				{ info    : moustache
+				, enabled : moustache.price <= money
+				, Apply   : () => { this.player.SetMoustache(this.player.GetMoustache() + 1) }
+				};
+			this.itemCache.push(item);
+		}
+
 		var candy = Item.Candy.GetInfo(this.candyLevel);
 		if (candy)
 		{
-			var money = this.player.GetMoney();
 			var item =
-				{ info : candy
+				{ info    : candy
 				, enabled : candy.price <= money
 				, Apply   : () => { ++this.candyLevel }
 				};

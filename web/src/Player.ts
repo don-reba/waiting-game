@@ -1,13 +1,12 @@
 /// <reference path="Item.ts"        />
 /// <reference path="ICharacter.ts"  />
 /// <reference path="IPersistent.ts" />
-/// <reference path="Moustache.ts"   />
 /// <reference path="Signal.ts"      />
 
 class PlayerState
 {
 	hat       : Hat;
-	moustache : Moustache;
+	moustache : number;
 	money     : number;
 	rate      : number;
 	composure : number;
@@ -20,9 +19,9 @@ class PlayerState
 class Player implements IPersistent
 {
 	private hat       : Hat       = Hat.None;
-	private moustache : Moustache = Moustache.None;
+	private moustache : number    = -1;
 	private money     : number    = 0;
-	private rate      : number    = 0.5;
+	private rate      : number    = 1;
 	private composure : number    = 0;
 	private glue      : number    = 0;
 	private hasMet    : string[]  = [];
@@ -76,7 +75,7 @@ class Player implements IPersistent
 		return this.money;
 	}
 
-	GetMoustache() : Moustache
+	GetMoustache() : number
 	{
 		return this.moustache;
 	}
@@ -132,10 +131,10 @@ class Player implements IPersistent
 		this.MoneyChanged.Call();
 	}
 
-	SetMoustache(moustache : Moustache) : void
+	SetMoustache(moustache : number, fake = false) : void
 	{
 		this.moustache = moustache;
-		if (moustache == Moustache.Fake)
+		if (fake)
 			this.glue = 120;
 		this.MoustacheChanged.Call();
 	}
@@ -191,7 +190,7 @@ class Player implements IPersistent
 			--this.glue;
 			if (this.glue == 0)
 			{
-				this.moustache = Moustache.None;
+				this.moustache = 0;
 				this.MoustacheChanged.Call();
 			}
 		}

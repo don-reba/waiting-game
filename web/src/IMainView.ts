@@ -1,5 +1,4 @@
 /// <reference path="Hat.ts"         />
-/// <reference path="Moustache.ts"   />
 /// <reference path="IClientView.ts" />
 
 interface IMainView
@@ -13,5 +12,5 @@ interface IMainView
 
 	SetMoney(money : string) : void;
 
-	SetMoustache(moustache : Moustache) : void;
+	SetMoustache(moustache : number) : void;
 }

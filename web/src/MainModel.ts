@@ -38,7 +38,7 @@ class MainModel implements IMainModel, IPersistent
 		return money.toLocaleString() + " руб. (" + rate.toLocaleString() + " руб./с)";
 	}
 
-	GetMoustache() : Moustache
+	GetMoustache() : number
 	{
 		return this.player.GetMoustache();
 	}

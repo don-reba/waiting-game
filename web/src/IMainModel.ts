@@ -1,5 +1,4 @@
 /// <reference path="Hat.ts"       />
-/// <reference path="Moustache.ts" />
 /// <reference path="Signal.ts"    />
 
 interface IMainModel
@@ -15,7 +14,7 @@ interface IMainModel
 
 	GetMoney() : string;
 
-	GetMoustache() : Moustache;
+	GetMoustache() : number;
 
 	OpenAbout() : void;
 

@@ -44,11 +44,11 @@ function MapCharacterNameFlags
 
 function MapPlayerStateFlags(flags : Flags, player : Player) : void
 {
-	flags.SetCheck("MoustacheEquipped", () => { return player.GetMoustache() != Moustache.None });
-	flags.SetCheck("MoustacheAbsent",   () => { return player.GetMoustache() == Moustache.None });
+	flags.SetCheck("MoustacheEquipped", () => { return player.GetMoustache() >= 0 });
+	flags.SetCheck("MoustacheAbsent",   () => { return player.GetMoustache() <  0 });
 	flags.SetCheck("HatEquipped",       () => { return player.GetHat() != Hat.None });
 
-	flags.SetControl("ReceiveFakeMoustache", player.SetMoustache.bind(player, Moustache.Fake));
+	flags.SetControl("ReceiveFakeMoustache", player.SetMoustache.bind(player, 1, true));
 }
 
 function Main(dialogs : IDialog[], characters : ICharacter[])
