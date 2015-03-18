@@ -31,7 +31,7 @@ class StorePresenter
 
 	private OnItemSelected() : void
 	{
-		this.storeModel.Purchase(this.storeView.GetSelectedItem());
+		this.storeModel.Purchase(this.storeView.GetSelectedIndex());
 	}
 
 	private OnItemStatusChanged() : void

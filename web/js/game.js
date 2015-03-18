@@ -41,17 +41,35 @@ var Item;
     Item[Item["Table"] = 3] = "Table";
     Item[Item["Community"] = 4] = "Community";
     Item[Item["Monopoly"] = 5] = "Monopoly";
+    Item[Item["Stove"] = 6] = "Stove";
 })(Item || (Item = {}));
+var StagedItem = (function () {
+    function StagedItem(name, descriptions, startingPrice, inflation, rateBonus) {
+        this.name = name;
+        this.descriptions = descriptions;
+        this.startingPrice = startingPrice;
+        this.inflation = inflation;
+        this.rateBonus = rateBonus;
+    }
+    StagedItem.prototype.GetInfo = function (level) {
+        if (level < 0 || level >= this.descriptions.length)
+            return undefined;
+        return { name: this.name, description: this.descriptions[level], price: this.startingPrice * Math.pow(this.inflation, level), rateBonus: this.rateBonus };
+    };
+    return StagedItem;
+})();
 var Item;
 (function (Item) {
     var items = [
-        { name: "Усы «Карандаш»", description: "Мужественность со скидкой.", price: 1000 },
-        { name: "Шляпа «Цилиндр»", description: "Выбор успешного человека.", price: 10000 },
-        { name: "Телевизор", description: "С тёплым ламповым звуком.", price: 100000 },
-        { name: "Кофейный столик", description: "Для приёма гостей.", price: 50000 },
-        { name: "«Комьюнити»", description: "Испанский 101.", price: 20000 },
-        { name: "«Монополия»", description: "Отличный способ разрушить дружбу.", price: 20000 },
+        { name: "Усы «Карандаш»", description: "Мужественность со скидкой.", price: 1000, rateBonus: 0.5 },
+        { name: "Шляпа «Цилиндр»", description: "Выбор успешного человека.", price: 10000, rateBonus: 10 },
+        { name: "Телевизор", description: "С тёплым ламповым звуком.", price: 100000, rateBonus: 10 },
+        { name: "Кофейный столик", description: "Для приёма гостей.", price: 50000, rateBonus: 10 },
+        { name: "«Комьюнити»", description: "Испанский 101.", price: 20000, rateBonus: 5 },
+        { name: "«Монополия»", description: "Отличный способ разрушить дружбу.", price: 20000, rateBonus: 5 },
+        { name: "Кухонная плита", description: "+ 100 лучших блинных рецептов.", price: 200000, rateBonus: 10 },
     ];
+    Item.Candy = new StagedItem("Конфеты", ["Трюфели", "Фундук «Петрович»", "Миндаль «Товарищ»", "Ириски", "Петербурженка", "Крыжовник в сахарной пудре", "Чайкины лапки", "Арахис в мармеладе", "Алёнушка", "Настенька", "со вкусом полуночных навтов", "со вкусом тюленья в одеяле", "со вкусом клёвых гостей", "со вкусом интересной работы", "M&M's без красных", "Бобы в шоколадной глазури", "Бобы в горьком шоколаде", "Бобы в белом шоколаде", "Бобы в молочном шоколаде", "Речные камешки", "Барбарис", "Марципановая картошка", "Дали", "Фрейд", "Запеченые яблоки Люкс", "Шоколадка+"], 50, 1.2, 1);
     function GetInfo(item) {
         return items[item];
     }
@@ -90,7 +108,6 @@ var Player = (function () {
         this.HatChanged = new Signal();
         this.MoustacheChanged = new Signal();
         this.MoneyChanged = new Signal();
-        this.RateChanged = new Signal();
         timer.AddEvent(this.OnSecond.bind(this), 10);
     }
     Player.prototype.AddItem = function (item) {
@@ -128,6 +145,10 @@ var Player = (function () {
     // complexity: linear
     Player.prototype.HasNotMet = function (character) {
         return this.hasMet.indexOf(character.id) < 0;
+    };
+    Player.prototype.IncrementRate = function (increment) {
+        this.rate += increment;
+        this.MoneyChanged.Call();
     };
     // complexity: linear
     Player.prototype.IntroduceTo = function (character) {
@@ -364,9 +385,12 @@ var CharacterManager = (function () {
     };
     // private implementation
     CharacterManager.prototype.ChooseConversation = function (conversations) {
+        var IsFlagSet = this.flags.IsSet.bind(this.flags);
         for (var i = 0; i != conversations.length; ++i) {
             var c = conversations[i];
-            if (!c.requires || c.requires.every(this.flags.IsSet.bind(this.flags)))
+            var all = !c.requires || c.requires.every(IsFlagSet);
+            var any = !c.requiresAny || c.requiresAny.some(IsFlagSet);
+            if (all && any)
                 return c;
         }
     };
@@ -499,12 +523,14 @@ var HomeItem;
 (function (HomeItem) {
     HomeItem[HomeItem["TV"] = 0] = "TV";
     HomeItem[HomeItem["Table"] = 1] = "Table";
+    HomeItem[HomeItem["Stove"] = 2] = "Stove";
 })(HomeItem || (HomeItem = {}));
 var HomeItem;
 (function (HomeItem) {
     var info = [
         { graphic: ["  _________  ", "═════════════", "             ", "             ", "             ", "             ", "%   %   %   %"], x: 32, y: 0 },
-        { graphic: ["         %         ", "   ┌───────────┐   ", "   │  ╔═════╗  │   ", " % │  ║     ║  │ % ", "   │  ╚═════╝  │   ", "   └───────────┘   ", "         %         "], x: 29, y: 12 }
+        { graphic: ["        %        ", "  ┌─────▬─────┐  ", "  │  ╔═════╗  │  ", "% │▌ ║     ║ ▐│ %", "  │  ╚═════╝  │  ", "  └─────▬─────┘  ", "        %        "], x: 20, y: 14 },
+        { graphic: ["    ╓────┐", " %  ║○ ○ │", " %  ║○ ○ │", "    ╙────┘", "  %  %    "], x: 60, y: 8 },
     ];
     function GetInfo(item) {
         return info[item];
@@ -721,6 +747,8 @@ var HomeModel = (function () {
             items.push(0 /* TV */);
         if (this.player.HasItem(3 /* Table */))
             items.push(1 /* Table */);
+        if (this.player.HasItem(6 /* Stove */))
+            items.push(2 /* Stove */);
         return items;
     };
     HomeModel.prototype.IsDigit = function (n) {
@@ -1283,9 +1311,10 @@ var InvitesMenuModel = (function () {
 /// <reference path="ICharacter.ts" />
 /// <reference path="IDialog.ts"    />
 /// <reference path="Signal.ts" />
-/// <reference path="Item.ts"   />
-/// <reference path="Signal.ts" />
 /// <reference path="Item.ts" />
+/// <reference path="StoreItem.ts" />
+/// <reference path="Signal.ts"    />
+/// <reference path="StoreItem.ts" />
 /// <reference path="IMainModel.ts"  />
 /// <reference path="IPersistent.ts" />
 var MainModelState = (function () {
@@ -2049,90 +2078,104 @@ var SaveView = (function () {
     };
     return SaveView;
 })();
+/// <reference path="Item.ts"        />
+/// <reference path="IPersistent.ts" />
 /// <reference path="IStoreModel.ts" />
 /// <reference path="Moustache.ts"   />
 /// <reference path="Player.ts"      />
 var StoreModel = (function () {
     function StoreModel(player) {
         this.player = player;
+        this.candyLevel = 0;
         // IStoreModel implementation
         this.ItemStatusChanged = new Signal();
         this.Purchased = new Signal();
         player.MoneyChanged.Add(this.OnMoneyChanged.bind(this));
     }
     StoreModel.prototype.Deactivate = function () {
-        this.items = null;
+        this.itemCache = null;
     };
     StoreModel.prototype.GetChangedItem = function () {
         return this.changedItem;
     };
     StoreModel.prototype.GetItems = function () {
-        var money = this.player.GetMoney();
-        var items = [];
-        if (!this.player.GetMoustache())
-            items.push(this.GetSaleInfo(0 /* PencilMoustache */, money));
-        if (!this.player.GetHat())
-            items.push(this.GetSaleInfo(1 /* Tophat */, money));
+        var _this = this;
+        this.itemCache = [];
+        if (!this.player.GetMoustache()) {
+            this.AddStoreItem(0 /* PencilMoustache */, this.player.SetMoustache.bind(this.player, 1 /* Pencil */));
+        }
+        if (!this.player.GetHat()) {
+            this.AddStoreItem(1 /* Tophat */, this.player.SetHat.bind(this.player, 1 /* Tophat */));
+        }
+        if (!this.player.HasItem(6 /* Stove */)) {
+            this.AddStoreItem(6 /* Stove */, this.player.AddItem.bind(this.player, 6 /* Stove */));
+        }
         if (!this.player.HasItem(2 /* TV */)) {
-            items.push(this.GetSaleInfo(2 /* TV */, money));
+            this.AddStoreItem(2 /* TV */, this.player.AddItem.bind(this.player, 2 /* TV */));
         }
         else {
-            if (!this.player.HasItem(4 /* Community */))
-                items.push(this.GetSaleInfo(4 /* Community */, money));
+            if (!this.player.HasItem(4 /* Community */)) {
+                this.AddStoreItem(4 /* Community */, this.player.AddItem.bind(this.player, 4 /* Community */));
+            }
         }
         if (!this.player.HasItem(3 /* Table */)) {
-            items.push(this.GetSaleInfo(3 /* Table */, money));
+            this.AddStoreItem(3 /* Table */, this.player.AddItem.bind(this.player, 3 /* Table */));
         }
         else {
-            if (!this.player.HasItem(5 /* Monopoly */))
-                items.push(this.GetSaleInfo(5 /* Monopoly */, money));
+            if (!this.player.HasItem(5 /* Monopoly */)) {
+                this.AddStoreItem(5 /* Monopoly */, this.player.AddItem.bind(this.player, 5 /* Monopoly */));
+            }
         }
-        items.sort(this.CompareByPrice);
-        this.items = items;
-        return items;
+        var candy = Item.Candy.GetInfo(this.candyLevel);
+        if (candy) {
+            var money = this.player.GetMoney();
+            var item = { info: candy, enabled: candy.price <= money, Apply: function () {
+                ++_this.candyLevel;
+            } };
+            this.itemCache.push(item);
+        }
+        this.itemCache.sort(this.CompareByPrice);
+        return this.itemCache;
     };
-    StoreModel.prototype.GetSaleInfo = function (item, money) {
-        var price = Item.GetInfo(item).price;
-        var enabled = price <= money;
-        return [item, enabled];
-    };
-    StoreModel.prototype.Purchase = function (item) {
-        var price = Item.GetInfo(item).price;
+    StoreModel.prototype.Purchase = function (index) {
+        var item = this.itemCache[index];
         var money = this.player.GetMoney();
-        if (money < price)
+        if (money < item.info.price)
             return;
-        this.player.SetMoney(money - price);
-        this.ApplyItem(item);
+        this.player.SetMoney(money - item.info.price);
+        this.player.IncrementRate(item.info.rateBonus);
+        item.Apply();
         this.Purchased.Call();
     };
-    // private implementation
-    StoreModel.prototype.ApplyItem = function (item) {
-        switch (item) {
-            case 0 /* PencilMoustache */:
-                this.player.SetMoustache(1 /* Pencil */);
-                break;
-            case 1 /* Tophat */:
-                this.player.SetHat(1 /* Tophat */);
-                break;
-            default:
-                this.player.AddItem(item);
-        }
+    // IPersistent implementation
+    StoreModel.prototype.FromPersistentString = function (str) {
+        var state = JSON.parse(str);
+        this.candyLevel = state.candyLevel;
     };
+    StoreModel.prototype.ToPersistentString = function () {
+        var state = { candyLevel: this.candyLevel };
+        return JSON.stringify(state);
+    };
+    // private implementation
     StoreModel.prototype.CompareByPrice = function (a, b) {
-        return Item.GetInfo(a[0]).price - Item.GetInfo(b[0]).price;
+        return a.info.price - b.info.price;
+    };
+    StoreModel.prototype.AddStoreItem = function (id, Apply) {
+        var info = Item.GetInfo(id);
+        var item = { id: id, info: info, enabled: info.price <= this.player.GetMoney(), Apply: Apply };
+        this.itemCache.push(item);
     };
     StoreModel.prototype.OnMoneyChanged = function () {
-        if (!this.items)
+        if (!this.itemCache)
             return;
-        for (var i = 0; i != this.items.length; ++i) {
-            var item = this.items[i];
-            var price = Item.GetInfo(item[0]).price;
+        for (var i = 0; i != this.itemCache.length; ++i) {
+            var item = this.itemCache[i];
             var money = this.player.GetMoney();
-            var enabled = price <= money;
-            if (enabled == item[1])
+            var enabled = item.info.price <= money;
+            if (enabled == item.enabled)
                 continue;
-            this.changedItem = [item[0], enabled];
-            this.items[i] = this.changedItem;
+            this.changedItem = [i, enabled];
+            this.itemCache[i].enabled = enabled;
             this.ItemStatusChanged.Call();
         }
     };
@@ -2160,7 +2203,7 @@ var StorePresenter = (function () {
         this.storeModel.Deactivate();
     };
     StorePresenter.prototype.OnItemSelected = function () {
-        this.storeModel.Purchase(this.storeView.GetSelectedItem());
+        this.storeModel.Purchase(this.storeView.GetSelectedIndex());
     };
     StorePresenter.prototype.OnItemStatusChanged = function () {
         var item = this.storeModel.GetChangedItem();
@@ -2184,8 +2227,8 @@ var StoreView = (function () {
         this.ItemSelected = new Signal();
         this.Shown = new Signal();
     }
-    StoreView.prototype.GetSelectedItem = function () {
-        return this.selectedItem;
+    StoreView.prototype.GetSelectedIndex = function () {
+        return this.selectedIndex;
     };
     StoreView.prototype.SetItems = function (items) {
         var container = $("#store-items");
@@ -2197,17 +2240,12 @@ var StoreView = (function () {
         else {
             var buttons = [];
             for (var i = 0; i != items.length; ++i) {
-                var OnClick = function (e) {
-                    this.selectedItem = e.data;
-                    this.ItemSelected.Call();
-                };
-                var item = items[i][0];
-                var info = Item.GetInfo(item);
-                var enabled = items[i][1];
-                var button = $("<li>" + info.name + "<br/>" + info.description + "<br/>" + info.price.toLocaleString() + " руб.</li>");
-                button.addClass(Item[item]);
-                if (enabled) {
-                    button.click(item, OnClick.bind(this));
+                var item = items[i];
+                var price = Math.ceil(item.info.price).toLocaleString();
+                var button = $("<li>" + item.info.name + "<br/>" + item.info.description + "<br/>" + price + " руб.</li>");
+                button.addClass("item" + i);
+                if (item.enabled) {
+                    button.click(i, this.OnItemClick.bind(this));
                     button.addClass("fg-clickable");
                 }
                 else {
@@ -2220,12 +2258,18 @@ var StoreView = (function () {
                 container.append(buttons[i]);
         }
     };
-    StoreView.prototype.SetItemStatus = function (item, isEnabled) {
-        var button = $("#store-items ." + Item[item]);
-        if (isEnabled)
+    StoreView.prototype.SetItemStatus = function (index, isEnabled) {
+        var button = $("#store-items .item" + index);
+        if (isEnabled) {
+            button.click(index, this.OnItemClick.bind(this));
+            button.addClass("fg-clickable");
             button.removeClass("disabled");
-        else
+        }
+        else {
+            button.prop("onclick", null);
+            button.removeClass("fg-clickable");
             button.addClass("disabled");
+        }
     };
     // IClientView implementation
     StoreView.prototype.GetType = function () {
@@ -2244,6 +2288,11 @@ var StoreView = (function () {
         $("#buttons").append(goHome);
         e.html("<ul id='store-items'>");
         this.Shown.Call();
+    };
+    // private implementation
+    StoreView.prototype.OnItemClick = function (e) {
+        this.selectedIndex = e.data;
+        this.ItemSelected.Call();
     };
     return StoreView;
 })();
@@ -2315,7 +2364,7 @@ function Main(dialogs, characters) {
     var queuePresenter = new QueuePresenter(mainModel, queueModel, queueView);
     var savePresenter = new SavePresenter(saveModel, saveView);
     var storePresenter = new StorePresenter(mainModel, storeModel, storeView);
-    var persistentItems = [["activitiesMenu", activitiesModel], ["invitesMenu", invitesModel], ["main", mainModel], ["home", homeModel], ["queue", queueModel], ["player", player], ["timer", timer], ["flags", flags]];
+    var persistentItems = [["activitiesMenu", activitiesModel], ["invitesMenu", invitesModel], ["home", homeModel], ["main", mainModel], ["player", player], ["queue", queueModel], ["store", storeModel], ["timer", timer], ["flags", flags]];
     var persistentState = new PersistentState(persistentItems, timer);
     MapCharacterNameFlags(flags, player, characterManager, queueModel);
     MapPlayerStateFlags(flags, player);

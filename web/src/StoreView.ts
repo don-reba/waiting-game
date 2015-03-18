@@ -3,7 +3,7 @@
 
 class StoreView implements IStoreView, IClientView
 {
-	selectedItem : Item;
+	selectedIndex : number;
 
 	// IStoreView implementation
 
@@ -12,14 +12,13 @@ class StoreView implements IStoreView, IClientView
 	ItemSelected = new Signal();
 	Shown        = new Signal();
 
-	GetSelectedItem() : Item
+	GetSelectedIndex() : number
 	{
-		return this.selectedItem;
+		return this.selectedIndex;
 	}
 
-	SetItems(items : [Item, boolean][]) : void
+	SetItems(items : StoreItem[]) : void
 	{
-
 		var container = $("#store-items");
 		container.empty();
 		if (items.length == 0)
@@ -32,22 +31,16 @@ class StoreView implements IStoreView, IClientView
 			var buttons = [];
 			for (var i = 0; i != items.length; ++i)
 			{
-				var OnClick = function(e)
+				var item = items[i];
+
+				var price = Math.ceil(item.info.price).toLocaleString();
+
+				var button = $("<li>" + item.info.name + "<br/>" + item.info.description + "<br/>" +  price + " руб.</li>");
+				button.addClass("item" + i);
+
+				if (item.enabled)
 				{
-					this.selectedItem = e.data;
-					this.ItemSelected.Call();
-				}
-
-				var item    = items[i][0];
-				var info    = Item.GetInfo(item);
-				var enabled = items[i][1];
-
-				var button = $("<li>" + info.name + "<br/>" + info.description + "<br/>" +  info.price.toLocaleString() + " руб.</li>");
-				button.addClass(Item[item]);
-
-				if (enabled)
-				{
-					button.click(item, OnClick.bind(this));
+					button.click(i, this.OnItemClick.bind(this));
 					button.addClass("fg-clickable");
 				}
 				else
@@ -63,13 +56,21 @@ class StoreView implements IStoreView, IClientView
 		}
 	}
 
-	SetItemStatus(item : Item, isEnabled : boolean) : void
+	SetItemStatus(index : number, isEnabled : boolean) : void
 	{
-		var button = $("#store-items ." + Item[item]);
+		var button = $("#store-items .item" + index);
 		if (isEnabled)
+		{
+			button.click(index, this.OnItemClick.bind(this));
+			button.addClass("fg-clickable");
 			button.removeClass("disabled");
+		}
 		else
+		{
+			button.prop("onclick", null);
+			button.removeClass("fg-clickable");
 			button.addClass("disabled");
+		}
 	}
 
 	// IClientView implementation
@@ -96,4 +97,13 @@ class StoreView implements IStoreView, IClientView
 
 		this.Shown.Call();
 	}
+
+	// private implementation
+
+	private OnItemClick(e) : void
+	{
+		this.selectedIndex = e.data;
+		this.ItemSelected.Call();
+	}
+
 }

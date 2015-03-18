@@ -82,10 +82,13 @@ class CharacterManager
 
 	ChooseConversation(conversations : IConversation[]) : IConversation
 	{
+		var IsFlagSet = this.flags.IsSet.bind(this.flags);
 		for (var i = 0; i != conversations.length; ++i)
 		{
 			var c = conversations[i];
-			if (!c.requires || c.requires.every(this.flags.IsSet.bind(this.flags)))
+			var all = !c.requires || c.requires.every(IsFlagSet);
+			var any = !c.requiresAny || c.requiresAny.some(IsFlagSet);
+			if (all && any)
 				return c;
 		}
 	}

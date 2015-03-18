@@ -8,6 +8,7 @@ class HomeItemInfo
 enum HomeItem
 { TV    = 0
 , Table = 1
+, Stove = 2
 }
 
 module HomeItem
@@ -26,16 +27,25 @@ module HomeItem
 		, x : 32, y : 0
 		},
 		{ graphic : // Tabletop
-			[ "         %         "
-			, "   ┌───────────┐   "
-			, "   │  ╔═════╗  │   "
-			, " % │  ║     ║  │ % "
-			, "   │  ╚═════╝  │   "
-			, "   └───────────┘   "
-			, "         %         "
+			[ "        %        "
+			, "  ┌─────▬─────┐  "
+			, "  │  ╔═════╗  │  "
+			, "% │▌ ║     ║ ▐│ %"
+			, "  │  ╚═════╝  │  "
+			, "  └─────▬─────┘  "
+			, "        %        "
 			]
-		, x : 29, y : 12
-		}
+		, x : 20, y : 14
+		},
+		{ graphic : // Stove
+			[ "    ╓────┐"
+			, " %  ║○ ○ │"
+			, " %  ║○ ○ │"
+			, "    ╙────┘"
+			, "  %  %    "
+			]
+		, x : 60, y : 8
+		},
 		];
 
 	export function GetInfo(item : HomeItem) : HomeItemInfo

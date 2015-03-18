@@ -1,11 +1,20 @@
+/// <reference path="Item.ts"        />
+/// <reference path="IPersistent.ts" />
 /// <reference path="IStoreModel.ts" />
 /// <reference path="Moustache.ts"   />
 /// <reference path="Player.ts"      />
 
-class StoreModel implements IStoreModel
+interface StoreModelState
 {
-	private items       : [Item, boolean][];
-	private changedItem : [Item, boolean];
+	candyLevel : number;
+}
+
+class StoreModel implements IStoreModel, IPersistent
+{
+	private candyLevel : number = 0;
+
+	private itemCache   : StoreItem[];
+	private changedItem : [number, boolean];
 
 	constructor(private player : Player)
 	{
@@ -19,107 +28,176 @@ class StoreModel implements IStoreModel
 
 	Deactivate() : void
 	{
-		this.items = null;
+		this.itemCache = null;
 	}
 
-	GetChangedItem() : [Item, boolean]
+	GetChangedItem() : [number, boolean]
 	{
 		return this.changedItem;
 	}
 
-	GetItems() : [Item, boolean][]
+	GetItems() : StoreItem[]
 	{
-		var money = this.player.GetMoney();
-
-		var items = [];
+		this.itemCache = [];
 
 		if (!this.player.GetMoustache())
-			items.push(this.GetSaleInfo(Item.PencilMoustache, money));
+		{
+			this.AddStoreItem
+				( Item.PencilMoustache
+				, this.player.SetMoustache.bind
+					( this.player
+					, Moustache.Pencil
+					)
+				);
+		}
 
 		if (!this.player.GetHat())
-			items.push(this.GetSaleInfo(Item.Tophat, money));
+		{
+			this.AddStoreItem
+				( Item.Tophat
+				, this.player.SetHat.bind
+					( this.player
+					, Hat.Tophat
+					)
+				);
+		}
+
+		if (!this.player.HasItem(Item.Stove))
+		{
+			this.AddStoreItem
+				( Item.Stove
+				, this.player.AddItem.bind
+					( this.player
+					, Item.Stove
+					)
+				);
+		}
 
 		if (!this.player.HasItem(Item.TV))
 		{
-			items.push(this.GetSaleInfo(Item.TV, money));
+			this.AddStoreItem
+				( Item.TV
+				, this.player.AddItem.bind(this.player, Item.TV)
+				);
 		}
 		else
 		{
 			if (!this.player.HasItem(Item.Community))
-				items.push(this.GetSaleInfo(Item.Community, money));
+			{
+				this.AddStoreItem
+					( Item.Community
+					, this.player.AddItem.bind
+						( this.player
+						, Item.Community
+						)
+					);
+			}
 		}
 
 		if (!this.player.HasItem(Item.Table))
 		{
-			items.push(this.GetSaleInfo(Item.Table, money));
+			this.AddStoreItem
+				( Item.Table
+				, this.player.AddItem.bind
+					( this.player
+					, Item.Table
+					)
+				);
 		}
 		else
 		{
 			if (!this.player.HasItem(Item.Monopoly))
-				items.push(this.GetSaleInfo(Item.Monopoly, money));
+			{
+				this.AddStoreItem
+					( Item.Monopoly
+					, this.player.AddItem.bind
+						( this.player
+						, Item.Monopoly
+						)
+					);
+			}
 		}
 
-		items.sort(this.CompareByPrice);
+		var candy = Item.Candy.GetInfo(this.candyLevel);
+		if (candy)
+		{
+			var money = this.player.GetMoney();
+			var item =
+				{ info : candy
+				, enabled : candy.price <= money
+				, Apply   : () => { ++this.candyLevel }
+				};
+			this.itemCache.push(item);
+		}
 
-		this.items = items;
-		return items;
+		this.itemCache.sort(this.CompareByPrice);
+		return this.itemCache;
 	}
 
-	GetSaleInfo(item : Item, money : number) : [Item, boolean]
+	Purchase(index : number) : void
 	{
-		var price   = Item.GetInfo(item).price;
-		var enabled = price <= money;
-		return [item, enabled];
-	}
-
-	Purchase(item : Item) : void
-	{
-		var price = Item.GetInfo(item).price;
+		var item = this.itemCache[index];
 		var money = this.player.GetMoney();
-		if (money < price)
+		if (money < item.info.price)
 			return;
-		this.player.SetMoney(money - price);
-		this.ApplyItem(item);
+		this.player.SetMoney(money - item.info.price);
+		this.player.IncrementRate(item.info.rateBonus);
+		item.Apply();
 		this.Purchased.Call();
+	}
+
+	// IPersistent implementation
+
+	FromPersistentString(str : string) : void
+	{
+		var state = <StoreModelState>JSON.parse(str);
+		this.candyLevel = state.candyLevel;
+	}
+
+	ToPersistentString() : string
+	{
+		var state : StoreModelState =
+			{ candyLevel : this.candyLevel
+			};
+		return JSON.stringify(state);
 	}
 
 	// private implementation
 
-	private ApplyItem(item : Item)
+	private CompareByPrice
+		( a : StoreItem
+		, b : StoreItem
+		) : number
 	{
-		switch (item)
-		{
-			case Item.PencilMoustache:
-				this.player.SetMoustache(Moustache.Pencil);
-				break;
-			case Item.Tophat:
-				this.player.SetHat(Hat.Tophat);
-				break;
-			default:
-				this.player.AddItem(item);
-		}
+		return a.info.price - b.info.price;
 	}
 
-	private CompareByPrice(a : [Item, boolean], b : [Item, boolean]) : number
+	private AddStoreItem(id : Item, Apply : () => void) : void
 	{
-		return Item.GetInfo(a[0]).price - Item.GetInfo(b[0]).price;
+		var info = Item.GetInfo(id);
+		var item =
+			{ id      : id
+			, info    : info
+			, enabled : info.price <= this.player.GetMoney()
+			, Apply   : Apply
+			};
+		this.itemCache.push(item);
 	}
 
 	private OnMoneyChanged() : void
 	{
-		if (!this.items)
+		if (!this.itemCache)
 			return;
-		for (var i = 0; i != this.items.length; ++i)
+		for (var i = 0; i != this.itemCache.length; ++i)
 		{
-			var item = this.items[i];
+			var item = this.itemCache[i];
 
-			var price   = Item.GetInfo(item[0]).price;
 			var money   = this.player.GetMoney();
-			var enabled = price <= money;
-			if (enabled == item[1])
+			var enabled = item.info.price <= money;
+			if (enabled == item.enabled)
 				continue;
-			this.changedItem = [item[0], enabled];
-			this.items[i] = this.changedItem;
+			this.changedItem = [i, enabled];
+			this.itemCache[i].enabled = enabled;
 			this.ItemStatusChanged.Call();
 		}
 	}

@@ -1,7 +1,8 @@
 interface IConversation
 {
-	dialog : string;
-	requires? : string[];
+	dialog       : string;
+	requires?    : string[];
+	requiresAny? : string[];
 }
 
 interface ICharacter

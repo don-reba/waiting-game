@@ -3067,6 +3067,7 @@
 		[ { "text" : "До встречи.", "ref" : null }
 		, { "text" : "Хм, я интеллигентная! Внезапно!", "ref" : null }
 		]
+	, "sets"   : [ "MonsterFriendship" ]
 	, "clears" : [ "MonsterIntroductionPending" ]
 	},
 	{ "id"   : "MonsterIntroductionRude"

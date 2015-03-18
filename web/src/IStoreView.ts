@@ -1,4 +1,4 @@
-/// <reference path="Item.ts" />
+/// <reference path="StoreItem.ts" />
 
 interface IStoreView
 {
@@ -7,9 +7,9 @@ interface IStoreView
 	ItemSelected : Signal;
 	Shown        : Signal;
 
-	GetSelectedItem() : Item;
+	GetSelectedIndex() : number;
 
-	SetItems(items : [Item, boolean][]) : void;
+	SetItems(items : StoreItem[]) : void;
 
 	SetItemStatus(item : Item, isEnabled : boolean) : void;
 }

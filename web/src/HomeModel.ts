@@ -354,6 +354,8 @@ class HomeModel implements IHomeModel, IPersistent
 			items.push(HomeItem.TV);
 		if (this.player.HasItem(Item.Table))
 			items.push(HomeItem.Table);
+		if (this.player.HasItem(Item.Stove))
+			items.push(HomeItem.Stove);
 		return items;
 	}
 

@@ -33,7 +33,6 @@ class Player implements IPersistent
 	HatChanged       = new Signal();
 	MoustacheChanged = new Signal();
 	MoneyChanged     = new Signal();
-	RateChanged      = new Signal();
 
 	constructor(timer : Timer)
 	{
@@ -96,6 +95,12 @@ class Player implements IPersistent
 	HasNotMet(character : ICharacter) : boolean
 	{
 		return this.hasMet.indexOf(character.id) < 0;
+	}
+
+	IncrementRate(increment : number) : void
+	{
+		this.rate += increment;
+		this.MoneyChanged.Call();
 	}
 
 	// complexity: linear
