@@ -5,7 +5,8 @@
 	{ "id"    : "QuietFriend"
 	, "name"  : "Молчаливый друг"
 	, "queueConversation" :
-		[ { "dialog" : "QuietFriendIntroductionIntro", "requires" : [ "QuietIntroductionPending" ] }
+		[ { "dialog" : "QuietFriendDescriptionIntro",  "requires" : [ "QuietFriendIntro" ] }
+		, { "dialog" : "QuietFriendIntroductionIntro", "requires" : [ "QuietIntroductionPending" ] }
 		, { "dialog" : "QuietFriendMaskIntro",         "requires" : [ "QuietMaskPending" ] }
 		, { "dialog" : "QuietFriendGuitarIntro",       "requires" : [ "QuietGuitarPending" ] }
 		, { "dialog" : "QuietFriendKillingIntro",      "requires" : [ "QuietKillingPending" ] }
