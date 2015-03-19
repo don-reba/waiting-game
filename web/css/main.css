@@ -27,6 +27,13 @@ aside {
 	color : #151515;
 	display : block;
 }
+em {
+	background-color : #7DB599;
+	display : block;
+	font-family : "Courier New";
+	letter-spacing : 0;
+	word-spacing   : 0;
+}
 .bg-color {
 	background-color : #E6E6E6;
 }
