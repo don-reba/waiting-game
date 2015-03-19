@@ -38,6 +38,16 @@ class CharacterManager
 		return null;
 	}
 
+	GetEndOfTheLineDialogID() : string
+	{
+		var conversations =
+			[ { dialog : "EndOfTheLineMatrixIntro", requires : [ "EndOfTheLineMatrixPending" ] }
+			, { dialog : "EndOfTheLineKittensIntro", requires : [ "EndOfTheLineKittensPending" ] }
+			, { dialog : "EndOfTheLineCrepesIntro" }
+			];
+		return this.ChooseConversation(conversations).dialog;
+	}
+
 	GetDialogID(characterID : string, dialogType : DialogType) : string
 	{
 		var conversations : IConversation[];

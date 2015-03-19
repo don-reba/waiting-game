@@ -131,7 +131,8 @@ class QueueModel implements IQueueModel, IPersistent
 
 			var finishedLastMansDialog = this.queue[0].characterID == this.speakerID;
 			var waitingToAdvance = !this.head || this.head.remaining <= 0;
-			if (finishedLastMansDialog && waitingToAdvance)
+			var endOfTheLine = this.head && !this.head.characterID;
+			if (endOfTheLine || finishedLastMansDialog && waitingToAdvance)
 				this.AdvanceQueue();
 
 			this.dialogID = this.speakerID = null;
@@ -141,15 +142,10 @@ class QueueModel implements IQueueModel, IPersistent
 
 	StartDialog(speaker : ICharacter) : void
 	{
-		this.speakerID = speaker.id;
-		this.dialogID  = this.characterManager.GetDialogID(speaker.id, DialogType.QueueConversation);
-
-		this.DialogChanged.Call();
+		this.ActivateDialog(speaker.id, this.characterManager.GetDialogID(speaker.id, DialogType.QueueConversation));
 
 		this.GetPosition(speaker).spokenTo = true;
-
 		this.PeopleChanged.Call();
-
 
 		if (this.player.HasNotMet(speaker))
 		{
@@ -158,7 +154,6 @@ class QueueModel implements IQueueModel, IPersistent
 		}
 
 		this.player.ResetComposure();
-		this.dialogManager.ActivateDialog(this.dialogID);
 	}
 
 	// IPersistent implementation
@@ -194,7 +189,10 @@ class QueueModel implements IQueueModel, IPersistent
 		if (head && head.remaining > 0)
 			--head.remaining;
 
-		if (!head || head.remaining <= 0)
+		var headExpired   = !head || head.remaining <= 0;
+		var playerTalking = head && !head.characterID && this.dialogID;
+
+		if (headExpired && !playerTalking)
 		{
 			if (this.speakerID && this.queue[0].characterID == this.speakerID)
 				this.HoldLast();
@@ -208,9 +206,7 @@ class QueueModel implements IQueueModel, IPersistent
 		if (!this.speakerID)
 			return;
 
-		this.speakerID = "";
-		this.dialogID  = "StdPterodactyl";
-		this.DialogChanged.Call();
+		this.ActivateDialog(null, "StdPterodactyl");
 
 		for (var i = 0; i != this.queue.length; ++i)
 		{
@@ -246,7 +242,10 @@ class QueueModel implements IQueueModel, IPersistent
 			this.CurrentTicketChanged.Call();
 			this.PeopleChanged.Call();
 			if (!this.head.characterID)
+			{
+				this.ActivateDialog(null, this.characterManager.GetEndOfTheLineDialogID());
 				this.PlayerTicketChanged.Call();
+			}
 		}
 		else
 		{
@@ -317,6 +316,14 @@ class QueueModel implements IQueueModel, IPersistent
 			, spokenTo    : false
 			, ticket      : String(this.ticket++)
 			};
+	}
+
+	private	ActivateDialog(speakerID : string, dialogID: string) : void
+	{
+		this.speakerID = speakerID;
+		this.dialogID  = dialogID;
+		this.dialogManager.ActivateDialog(dialogID);
+		this.DialogChanged.Call();
 	}
 
 	private SpokenTo(character : ICharacter) : boolean

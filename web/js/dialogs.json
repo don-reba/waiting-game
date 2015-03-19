@@ -193,8 +193,8 @@
 	, "text" : "<aside> Друг то ли очень захвачен гитарной игрой, то ли снова пытается игнорировать ваше существование. </aside>"
 	, "replies" :
 		[ { "text" : "Привет, друг! Привет! ПРИВЕТ! ПРИВЕ-Е-Е-ЕТ!", "ref" : "QuietFriendGuitarHello" }
-		, { "text" : "<i> Кажется, это удачный момент, чтобы продемонстрировать ваши вокальные таланты. Вы начинаете подпевать мелодии друга. </i>", "ref" : "QuietFriendGuitarSing" }
-		, { "text" : "<i> Дружески наступить ему на ногу, чтобы привлечь внимание. Сегодня вы надели сапоги со шпорами! Долгая история. </i>", "ref" : "QuietFriendGuitarHello" }
+		, { "text" : "<aside> Кажется, это удачный момент, чтобы продемонстрировать ваши вокальные таланты. Вы начинаете подпевать мелодии друга. </aside>", "ref" : "QuietFriendGuitarSing" }
+		, { "text" : "<aside> Дружески наступить ему на ногу, чтобы привлечь внимание. Сегодня вы надели сапоги со шпорами! Долгая история. </aside>", "ref" : "QuietFriendGuitarHello" }
 		]
 	},
 	{ "id"   : "QuietFriendGuitarHello"
@@ -237,7 +237,7 @@
 	, "replies" :
 		[ { "text" : "Безобразие! Вопиющее преступление против музыкального вкуса! Мы будем жаловаться!", "ref" : "QuietFriendGuitarJail" }
 		, { "text" : "Это всё из-за тебя, друг, ты фальшивил!", "ref" : "QuietFriendGuitarJail" }
-		, { "text" : "Полицейское государство! <em>LET’S RIOT!</em> — добавляет ваш друг.", "ref" : "QuietFriendGuitarJail" }
+		, { "text" : "Полицейское государство! <em>LET’S RIOT!</em> <aside>добавляет ваш друг.</aside>", "ref" : "QuietFriendGuitarJail" }
 		]
 	, "sets" : [ "QuietFriendExitQueue" ]
 	},
@@ -3763,5 +3763,89 @@
 		[ { "text" : "До свидания. Передавайте привет бороде!", "ref" : null }
 		, { "text" : "Да, к работорговцам! До встречи.", "ref" : null }
 		]
+	},
+	{ "id"   : "EndOfTheLineMatrixIntro"
+	, "text" : "Здравствуйте."
+	, "replies" :
+		[ { "text" : "Кто вы такой?", "ref" : "EndOfTheLineMatrixArchitect" } ]
+	, "sets"   : [ "EndOfTheLineKittensPending", "EndOfTheLineMatrixBonus" ]
+	, "clears" : [ "EndOfTheLineMatrixPending" ]
+	},
+	{ "id"   : "EndOfTheLineMatrixArchitect"
+	, "text" : "Я — главный архитектор. Я создал Очередь. Вот мы и встретились. У вас много вопросов. Проникновение в Очередь изменило ваше сознание, но вы по-прежнему человек. Следовательно, многие ответы вы поймёте, а многие другие нет. Скоро вы узнаете, что меньше всего относится к сути дела вопрос, который кажется вам наиболее уместным."
+	, "replies" :
+		[ { "text" : "А нельзя ли погладить вашу бороду?", "ref" : "EndOfTheLineMatrixExistence" }
+		, { "text" : "Зачем я здесь?", "ref" : "EndOfTheLineMatrixExistence" }
+		]
+	},
+	{ "id"   : "EndOfTheLineMatrixExistence"
+	, "text" : "Ваше существование возникло в результате того, что мне не удалось решить одно из уравнений в процессе программирования Очереди. Вы результат аномалии, которую, несмотря на все свои усилия, я не смог исправить, и которая нарушает всю прелесть математической гармонии. Мне не нужно было избегать проблем, связанных с вами, но все они были ожидаемы, поддавались контролю. Именно поэтому вы, в конце концов, и здесь."
+	, "replies" :
+		[ { "text" : "Вы не ответили на мой вопрос.", "ref" : "EndOfTheLineMatrixQueue" } ]
+	},
+	{ "id"   : "EndOfTheLineMatrixQueue"
+	, "text" : "Верно. Интересно. Вы сообразительнее остальных.<br>Очередь намного старше, чем вы думаете. Я предпочитаю лимитировать эпоху Очереди очередным системным сбоем. И в таком случае это уже шестая версия."
+	, "replies" :
+		[ { "text" : "Здесь может быть лишь два объяснения: или это от меня скрыли, или это никому не известно.", "ref" : "EndOfTheLineMatrixExactly" } ]
+	},
+	{ "id"   : "EndOfTheLineMatrixExactly"
+	, "text" : "Вот именно. Вы уже понимаете, что при системном сбое нестабильно решение самых элементарных уравнений."
+	, "replies" :
+		[ { "text" : "Выбор. У людей всегда есть выбор.", "ref" : "EndOfTheLineMatrixChoice" } ]
+	},
+	{ "id"   : "EndOfTheLineMatrixChoice"
+	, "text" : "Правильно. Даже в ходе нашей с вами беседы вы всегда можете развернуться и уйти домой, либо дождаться появления программы, специально созданной для разрешения затянувшихся неловких пауз."
+	, "replies" :
+		[ { "text" : "Гигантский птеродактиль.", "ref" : "EndOfTheLineMatrixOhPlease" } ]
+	},
+	{ "id"   : "EndOfTheLineMatrixOhPlease"
+	, "text" : "Умаляю. Суть этой программы в следующем…"
+	, "replies" :
+		[ { "text" : "Извините, что перебиваю, но вы слишком много говорите.", "ref" : "EndOfTheLineMatrixHey" } ]
+	},
+	{ "id"   : "EndOfTheLineMatrixHey"
+	, "text" : "Но…"
+	, "replies" :
+		[ { "text" : "Мне пришлось рано вставать, чтобы попасть в эту очередь и я уже засыпаю. До встречи!", "ref" : null } ]
+	},
+	{ "id"   : "EndOfTheLineKittensIntro"
+	, "text" : "Мяу!"
+	, "replies" :
+		[ { "text" : "Оу, какой милый котёнок. Давай я тебя поглажу.", "ref" : "EndOfTheLineKittensPurr" } ]
+	, "sets"   : [ "EndOfTheLineKittensBonus" ]
+	, "clears" : [ "EndOfTheLineKittensPending" ]
+	},
+	{ "id"   : "EndOfTheLineKittensPurr"
+	, "text" : "мррр"
+	, "replies" :
+		[ { "text" : "Пока, маленький.", "ref" : null }
+		, { "text" : "<aside>Погладить ещё.</aside>", "ref" : "EndOfTheLineKittensPurrr" }
+		]
+	},
+	{ "id"   : "EndOfTheLineKittensPurrr"
+	, "text" : "прр-пррр"
+	, "replies" :
+		[ { "text" : "Пока, маленький.", "ref" : null }
+		, { "text" : "<aside>Погладить ещё.</aside>", "ref" : "EndOfTheLineKittensPurr" }
+		]
+	},
+	{ "id"   : "EndOfTheLineCrepesIntro"
+	, "text" : "А вот и вы! Мы как раз приготовили для вас стопку блинов. Угощайтесь, пока не остыли."
+	, "replies" :
+		[ { "text" : "Ах, они словно сотканы из дырочек!", "ref" : "EndOfTheLineCrepesTopping" }
+		, { "text" : "И с хрустящей корочкой!", "ref" : "EndOfTheLineCrepesTopping" }
+		, { "text" : "Такие воздушные!", "ref" : "EndOfTheLineCrepesTopping" }
+		]
+	, "sets" : [ "EndOfTheLineMatrixPending", "EndOfTheLineCrepesBonus" ]
+	},
+	{ "id"   : "EndOfTheLineCrepesTopping"
+	, "text" : "У нас есть мёд, малиновое варенье с целыми ягодами, вишнёвое, апельсиновое, сгущёнка, шоколадный мусс, ванильный сахар…"
+	, "replies" :
+		[ { "text" : "Это лучший день моей жизни!", "ref" : "EndOfTheLineCrepesBye" } ]
+	},
+	{ "id"   : "EndOfTheLineCrepesBye"
+	, "text" : "Приходите ещё!"
+	, "replies" :
+		[ { "text" : "Однажды я за день прошла целых три очереди!", "ref" : null } ]
 	}
 ]

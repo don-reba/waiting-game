@@ -342,6 +342,10 @@ var CharacterManager = (function () {
             return this.map[id];
         return null;
     };
+    CharacterManager.prototype.GetEndOfTheLineDialogID = function () {
+        var conversations = [{ dialog: "EndOfTheLineMatrixIntro", requires: ["EndOfTheLineMatrixPending"] }, { dialog: "EndOfTheLineKittensIntro", requires: ["EndOfTheLineKittensPending"] }, { dialog: "EndOfTheLineCrepesIntro" }];
+        return this.ChooseConversation(conversations).dialog;
+    };
     CharacterManager.prototype.GetDialogID = function (characterID, dialogType) {
         var conversations;
         var defaultID;
@@ -1653,16 +1657,15 @@ var QueueModel = (function () {
             this.player.ClearComposure();
             var finishedLastMansDialog = this.queue[0].characterID == this.speakerID;
             var waitingToAdvance = !this.head || this.head.remaining <= 0;
-            if (finishedLastMansDialog && waitingToAdvance)
+            var endOfTheLine = this.head && !this.head.characterID;
+            if (endOfTheLine || finishedLastMansDialog && waitingToAdvance)
                 this.AdvanceQueue();
             this.dialogID = this.speakerID = null;
         }
         this.DialogChanged.Call();
     };
     QueueModel.prototype.StartDialog = function (speaker) {
-        this.speakerID = speaker.id;
-        this.dialogID = this.characterManager.GetDialogID(speaker.id, 1 /* QueueConversation */);
-        this.DialogChanged.Call();
+        this.ActivateDialog(speaker.id, this.characterManager.GetDialogID(speaker.id, 1 /* QueueConversation */));
         this.GetPosition(speaker).spokenTo = true;
         this.PeopleChanged.Call();
         if (this.player.HasNotMet(speaker)) {
@@ -1670,7 +1673,6 @@ var QueueModel = (function () {
             this.PeopleChanged.Call();
         }
         this.player.ResetComposure();
-        this.dialogManager.ActivateDialog(this.dialogID);
     };
     // IPersistent implementation
     QueueModel.prototype.FromPersistentString = function (str) {
@@ -1690,7 +1692,9 @@ var QueueModel = (function () {
         var head = this.head;
         if (head && head.remaining > 0)
             --head.remaining;
-        if (!head || head.remaining <= 0) {
+        var headExpired = !head || head.remaining <= 0;
+        var playerTalking = head && !head.characterID && this.dialogID;
+        if (headExpired && !playerTalking) {
             if (this.speakerID && this.queue[0].characterID == this.speakerID)
                 this.HoldLast();
             else
@@ -1700,9 +1704,7 @@ var QueueModel = (function () {
     QueueModel.prototype.OnAwkward = function () {
         if (!this.speakerID)
             return;
-        this.speakerID = "";
-        this.dialogID = "StdPterodactyl";
-        this.DialogChanged.Call();
+        this.ActivateDialog(null, "StdPterodactyl");
         for (var i = 0; i != this.queue.length; ++i) {
             if (this.queue[i].characterID)
                 continue;
@@ -1727,8 +1729,10 @@ var QueueModel = (function () {
             this.queue.shift();
             this.CurrentTicketChanged.Call();
             this.PeopleChanged.Call();
-            if (!this.head.characterID)
+            if (!this.head.characterID) {
+                this.ActivateDialog(null, this.characterManager.GetEndOfTheLineDialogID());
                 this.PlayerTicketChanged.Call();
+            }
         }
         else {
             this.head = null;
@@ -1773,6 +1777,12 @@ var QueueModel = (function () {
     };
     QueueModel.prototype.MakePlayerPosition = function () {
         return { characterID: null, remaining: this.GenerateRemaining(), spokenTo: false, ticket: String(this.ticket++) };
+    };
+    QueueModel.prototype.ActivateDialog = function (speakerID, dialogID) {
+        this.speakerID = speakerID;
+        this.dialogID = dialogID;
+        this.dialogManager.ActivateDialog(dialogID);
+        this.DialogChanged.Call();
     };
     QueueModel.prototype.SpokenTo = function (character) {
         for (var i = 0; i != this.queue.length; ++i) {
