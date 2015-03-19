@@ -35,13 +35,12 @@ var ItemInfo = (function () {
 })();
 var Item;
 (function (Item) {
-    Item[Item["PencilMoustache"] = 0] = "PencilMoustache";
-    Item[Item["Tophat"] = 1] = "Tophat";
-    Item[Item["TV"] = 2] = "TV";
-    Item[Item["Table"] = 3] = "Table";
-    Item[Item["Community"] = 4] = "Community";
-    Item[Item["Monopoly"] = 5] = "Monopoly";
-    Item[Item["Stove"] = 6] = "Stove";
+    Item[Item["Tophat"] = 0] = "Tophat";
+    Item[Item["TV"] = 1] = "TV";
+    Item[Item["Table"] = 2] = "Table";
+    Item[Item["Community"] = 3] = "Community";
+    Item[Item["Monopoly"] = 4] = "Monopoly";
+    Item[Item["Stove"] = 5] = "Stove";
 })(Item || (Item = {}));
 var StagedItem = (function () {
     function StagedItem(name, descriptions, startingPrice, inflation, rateBonus) {
@@ -61,32 +60,23 @@ var StagedItem = (function () {
 var Item;
 (function (Item) {
     var items = [
-        { name: "Усы «Карандаш»", description: "Мужественность со скидкой.", price: 1000, rateBonus: 0.5 },
-        { name: "Шляпа «Цилиндр»", description: "Выбор успешного человека.", price: 10000, rateBonus: 10 },
+        { name: "Шляпа", description: "Цилиндр", price: 10000, rateBonus: 20 },
         { name: "Телевизор", description: "С тёплым ламповым звуком.", price: 100000, rateBonus: 10 },
         { name: "Кофейный столик", description: "Для приёма гостей.", price: 50000, rateBonus: 10 },
         { name: "«Комьюнити»", description: "Испанский 101.", price: 20000, rateBonus: 5 },
         { name: "«Монополия»", description: "Отличный способ разрушить дружбу.", price: 20000, rateBonus: 5 },
         { name: "Кухонная плита", description: "+ 100 лучших блинных рецептов.", price: 200000, rateBonus: 10 },
     ];
-    Item.Candy = new StagedItem("Конфеты", ["Трюфели", "Фундук «Петрович»", "Миндаль «Товарищ»", "Ириски", "Петербурженка", "Крыжовник в сахарной пудре", "Чайкины лапки", "Арахис в мармеладе", "Алёнушка", "Настенька", "со вкусом полуночных навтов", "со вкусом тюленья в одеяле", "со вкусом клёвых гостей", "со вкусом интересной работы", "M&M's без красных", "Бобы в шоколадной глазури", "Бобы в горьком шоколаде", "Бобы в белом шоколаде", "Бобы в молочном шоколаде", "Речные камешки", "Барбарис", "Марципановая картошка", "Дали", "Фрейд", "Запеченые яблоки Люкс", "Шоколадка+"], 50, 1.2, 1);
+    Item.Moustache = new StagedItem("Усы", ["Карандаш", "Зубная щётка", "Морж", "Фу Манчу", "Дали", "Венгерские", "Английские", "Шеврон", "Кручёные"], 1000, 2, 5);
+    Item.Candy = new StagedItem("Конфеты", ["Трюфели", "Фундук «Петрович»", "Миндаль «Товарищ»", "Ириски", "Петербурженка", "Крыжовник в сахарной пудре", "Чайкины лапки", "Арахис в мармеладе", "Алёнушка", "Настенька", "со вкусом полуночных навтов", "со вкусом тюленья в одеяле", "со вкусом клёвых гостей", "со вкусом интересной работы", "M&M's без красных", "Бобы в шоколадной глазури", "Бобы в горьком шоколаде", "Бобы в белом шоколаде", "Бобы в молочном шоколаде", "Речные камешки", "Барбарис", "Марципановая картошка", "Моне", "Дали", "Ницше", "Фрейд", "Полудний Звон", "Запеченые яблоки Люкс", "Шоколадка им. Лёши", "Шоколадка+", "Шоколадка++", "Шоколадка+++", "Шоколадка++++", "Шоколадка+++", "Шоколадка++", "Шоколадка+", "Шоколадка", "Шоколадк", "Шоколад", "Шокола", "Шокол", "Шоко", "Шок", "Шо", "Ш"], 50, 1.3, 1);
     function GetInfo(item) {
         return items[item];
     }
     Item.GetInfo = GetInfo;
 })(Item || (Item = {}));
-var Moustache;
-(function (Moustache) {
-    Moustache[Moustache["None"] = 0] = "None";
-    Moustache[Moustache["Pencil"] = 1] = "Pencil";
-    Moustache[Moustache["French"] = 2] = "French";
-    Moustache[Moustache["Handlebar"] = 3] = "Handlebar";
-    Moustache[Moustache["Fake"] = 4] = "Fake";
-})(Moustache || (Moustache = {}));
 /// <reference path="Item.ts"        />
 /// <reference path="ICharacter.ts"  />
 /// <reference path="IPersistent.ts" />
-/// <reference path="Moustache.ts"   />
 /// <reference path="Signal.ts"      />
 var PlayerState = (function () {
     function PlayerState() {
@@ -96,9 +86,9 @@ var PlayerState = (function () {
 var Player = (function () {
     function Player(timer) {
         this.hat = 0 /* None */;
-        this.moustache = 0 /* None */;
+        this.moustache = -1;
         this.money = 0;
-        this.rate = 0.5;
+        this.rate = 1;
         this.composure = 0;
         this.glue = 0;
         this.hasMet = [];
@@ -169,9 +159,10 @@ var Player = (function () {
         this.money = money;
         this.MoneyChanged.Call();
     };
-    Player.prototype.SetMoustache = function (moustache) {
+    Player.prototype.SetMoustache = function (moustache, fake) {
+        if (fake === void 0) { fake = false; }
         this.moustache = moustache;
-        if (moustache == 4 /* Fake */)
+        if (fake)
             this.glue = 120;
         this.MoustacheChanged.Call();
     };
@@ -204,7 +195,7 @@ var Player = (function () {
         if (this.glue > 0) {
             --this.glue;
             if (this.glue == 0) {
-                this.moustache = 0 /* None */;
+                this.moustache = 0;
                 this.MoustacheChanged.Call();
             }
         }
@@ -223,17 +214,17 @@ var ActivitiesMenuModel = (function () {
     // IActivitiesMenuModel implementation
     ActivitiesMenuModel.prototype.GetActivities = function () {
         var activities = [];
-        if (this.player.HasItem(4 /* Community */))
+        if (this.player.HasItem(3 /* Community */))
             activities.push(2 /* Community */);
-        if (this.player.HasItem(5 /* Monopoly */))
+        if (this.player.HasItem(4 /* Monopoly */))
             activities.push(3 /* Monopoly */);
         activities.push(1 /* Stop */);
         return activities;
     };
     ActivitiesMenuModel.prototype.HasActivities = function () {
-        if (this.player.HasItem(4 /* Community */))
+        if (this.player.HasItem(3 /* Community */))
             return true;
-        if (this.player.HasItem(5 /* Monopoly */))
+        if (this.player.HasItem(4 /* Monopoly */))
             return true;
         return false;
     };
@@ -743,11 +734,11 @@ var HomeModel = (function () {
     };
     HomeModel.prototype.GetHomeItems = function () {
         var items = [];
-        if (this.player.HasItem(2 /* TV */))
+        if (this.player.HasItem(1 /* TV */))
             items.push(0 /* TV */);
-        if (this.player.HasItem(3 /* Table */))
+        if (this.player.HasItem(2 /* Table */))
             items.push(1 /* Table */);
-        if (this.player.HasItem(6 /* Stove */))
+        if (this.player.HasItem(5 /* Stove */))
             items.push(2 /* Stove */);
         return items;
     };
@@ -815,7 +806,6 @@ var HomeModel = (function () {
 /// <reference path="ICharacter.ts" />
 /// <reference path="Signal.ts"     />
 /// <reference path="Hat.ts"       />
-/// <reference path="Moustache.ts" />
 /// <reference path="Signal.ts"    />
 /// <reference path="ICharacter.ts" />
 /// <reference path="IDialog.ts"    />
@@ -1218,7 +1208,6 @@ var HomeView = (function () {
     return HomeView;
 })();
 /// <reference path="Hat.ts"         />
-/// <reference path="Moustache.ts"   />
 /// <reference path="IClientView.ts" />
 /// <reference path="IInvitesMenuModel.ts" />
 /// <reference path="IPersistent.ts"       />
@@ -1474,24 +1463,9 @@ var MainView = (function () {
         }
     };
     MainView.prototype.SetMoustache = function (moustache) {
-        var text;
-        switch (moustache) {
-            case 1 /* Pencil */:
-                text = "u";
-                break;
-            case 2 /* French */:
-                text = "r";
-                break;
-            case 3 /* Handlebar */:
-                text = "a";
-                break;
-            case 4 /* Fake */:
-                text = "u";
-                break;
-        }
         var e = $("#moustache");
-        if (text) {
-            e.text(text);
+        if (moustache >= 0) {
+            e.text("nkytabdle".substring(moustache, moustache + 1));
             e.show();
         }
         else {
@@ -1552,7 +1526,7 @@ var Timer = (function () {
 var PersistentState = (function () {
     function PersistentState(items, timer) {
         this.items = items;
-        this.version = "14";
+        this.version = "17";
         timer.AddEvent(this.Save.bind(this), 20);
     }
     // get the state string from each item and store it in local storage
@@ -2081,7 +2055,6 @@ var SaveView = (function () {
 /// <reference path="Item.ts"        />
 /// <reference path="IPersistent.ts" />
 /// <reference path="IStoreModel.ts" />
-/// <reference path="Moustache.ts"   />
 /// <reference path="Player.ts"      />
 var StoreModel = (function () {
     function StoreModel(player) {
@@ -2101,34 +2074,38 @@ var StoreModel = (function () {
     StoreModel.prototype.GetItems = function () {
         var _this = this;
         this.itemCache = [];
-        if (!this.player.GetMoustache()) {
-            this.AddStoreItem(0 /* PencilMoustache */, this.player.SetMoustache.bind(this.player, 1 /* Pencil */));
-        }
+        var money = this.player.GetMoney();
         if (!this.player.GetHat()) {
-            this.AddStoreItem(1 /* Tophat */, this.player.SetHat.bind(this.player, 1 /* Tophat */));
+            this.AddStoreItem(0 /* Tophat */, this.player.SetHat.bind(this.player, 1 /* Tophat */));
         }
-        if (!this.player.HasItem(6 /* Stove */)) {
-            this.AddStoreItem(6 /* Stove */, this.player.AddItem.bind(this.player, 6 /* Stove */));
+        if (!this.player.HasItem(5 /* Stove */)) {
+            this.AddStoreItem(5 /* Stove */, this.player.AddItem.bind(this.player, 5 /* Stove */));
         }
-        if (!this.player.HasItem(2 /* TV */)) {
-            this.AddStoreItem(2 /* TV */, this.player.AddItem.bind(this.player, 2 /* TV */));
-        }
-        else {
-            if (!this.player.HasItem(4 /* Community */)) {
-                this.AddStoreItem(4 /* Community */, this.player.AddItem.bind(this.player, 4 /* Community */));
-            }
-        }
-        if (!this.player.HasItem(3 /* Table */)) {
-            this.AddStoreItem(3 /* Table */, this.player.AddItem.bind(this.player, 3 /* Table */));
+        if (!this.player.HasItem(1 /* TV */)) {
+            this.AddStoreItem(1 /* TV */, this.player.AddItem.bind(this.player, 1 /* TV */));
         }
         else {
-            if (!this.player.HasItem(5 /* Monopoly */)) {
-                this.AddStoreItem(5 /* Monopoly */, this.player.AddItem.bind(this.player, 5 /* Monopoly */));
+            if (!this.player.HasItem(3 /* Community */)) {
+                this.AddStoreItem(3 /* Community */, this.player.AddItem.bind(this.player, 3 /* Community */));
             }
+        }
+        if (!this.player.HasItem(2 /* Table */)) {
+            this.AddStoreItem(2 /* Table */, this.player.AddItem.bind(this.player, 2 /* Table */));
+        }
+        else {
+            if (!this.player.HasItem(4 /* Monopoly */)) {
+                this.AddStoreItem(4 /* Monopoly */, this.player.AddItem.bind(this.player, 4 /* Monopoly */));
+            }
+        }
+        var moustache = Item.Moustache.GetInfo(this.player.GetMoustache() + 1);
+        if (moustache) {
+            var item = { info: moustache, enabled: moustache.price <= money, Apply: function () {
+                _this.player.SetMoustache(_this.player.GetMoustache() + 1);
+            } };
+            this.itemCache.push(item);
         }
         var candy = Item.Candy.GetInfo(this.candyLevel);
         if (candy) {
-            var money = this.player.GetMoney();
             var item = { info: candy, enabled: candy.price <= money, Apply: function () {
                 ++_this.candyLevel;
             } };
@@ -2331,15 +2308,15 @@ function MapCharacterNameFlags(flags, player, characterManager, queueModel) {
 }
 function MapPlayerStateFlags(flags, player) {
     flags.SetCheck("MoustacheEquipped", function () {
-        return player.GetMoustache() != 0 /* None */;
+        return player.GetMoustache() >= 0;
     });
     flags.SetCheck("MoustacheAbsent", function () {
-        return player.GetMoustache() == 0 /* None */;
+        return player.GetMoustache() < 0;
     });
     flags.SetCheck("HatEquipped", function () {
         return player.GetHat() != 0 /* None */;
     });
-    flags.SetControl("ReceiveFakeMoustache", player.SetMoustache.bind(player, 4 /* Fake */));
+    flags.SetControl("ReceiveFakeMoustache", player.SetMoustache.bind(player, 1, true));
 }
 function Main(dialogs, characters) {
     var flags = new Flags();

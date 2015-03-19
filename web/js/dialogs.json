@@ -31,6 +31,360 @@
 	, "replies" :
 		[ { "text" : "Спасибо, гигантский птеродактиль! Ты — мой лучший друг!", "ref" : null } ]
 	},
+	{ "id"   : "QuietFriendDescriptionIntro"
+	, "text" : "<aside> Человек в лыжной маске и шлеме, из глубин которого доносится покашливание, нервно крутит в руках планшет. </aside>"
+	, "replies" :
+		[ { "text" : "Познакомиться! У вас такое чувство, что вы станете друзьями.", "ref" : "QuietFriendIntroductionIntro" }
+		, { "text" : "Лучше не подходить, у него может быть туберкулёз.", "ref" : null }
+		]
+	, "sets" : [ "QuietIntroductionPending" ]
+	},
+	{ "id"   : "QuietFriendIntroductionIntro"
+	, "text" : "<aside> Когда вы подходите, незнакомец отворачивается, стараясь не встречаться с вами взглядом. </aside>"
+	, "replies" :
+		[ { "text" : "Привет! Эй, привет! Привет-привет! У меня припадок назойливости! Привет!", "ref" : "QuietFriendIntroductionHello" }
+		, { "text" : "Добрый день! А давайте знакомиться?", "ref" : "QuietFriendIntroductionHello" }
+		, { "text" : "Хм, вдруг этот тип обращает взглядом в камень? И под шлемом у него пышная шевелюра из змей! Лучше пойду.", "ref" : null }
+		]
+	},
+	{ "id"   : "QuietFriendIntroductionHello"
+	, "text" : "<aside> При звуке вашего голоса, незнакомец отпрыгивает, словно испугавшись. </aside>"
+	, "replies" :
+		[ { "text" : "Эй, не бойся, я милая! Я умею делать смайлик)))", "ref" : "QuietFriendIntroductionSmile" }
+		, { "text" : "Надо бы попробовать чем-нибудь прикормить его. Жаль, что с собой нет блинов.", "ref" : "QuietFriendIntroductionPancakes" }
+		]
+	},
+	{ "id"   : "QuietFriendIntroductionPancakes"
+	, "text" : "<aside> Незнакомец печает на планшете и демонстрирует вам текст: </aside> <em> Я умею готовить блины. </em>"
+	, "replies" :
+		[ { "text" : "О-о-о! Я внезапно испытываю к тебе невероятный дружеский порыв!", "ref" : "QuietFriendIntroductionFriendship" }
+		, { "text" : "А я умею их есть! Мы идеально дополняем друг друга!", "ref" : "QuietFriendIntroductionFriendship" }
+		, { "text" : "Мы будем неразлучными друзьями! Ты, я и блины!", "ref" : "QuietFriendIntroductionFriendship" }
+		]
+	},
+	{ "id"   : "QuietFriendIntroductionSmile"
+	, "text" : "<aside> Незнакомец печает на планшете и демонстрирует вам текст: </aside> <em> Ты толстая! Целых три подбородка. </em>"
+	, "replies" :
+		[ { "text" : "Я не толстая!", "ref" : "QuietFriendIntroductionNotFat" }
+		, { "text" : "Вообще не толстая!", "ref" : "QuietFriendIntroductionNotFat" }
+		, { "text" : "Неправда!", "ref" : "QuietFriendIntroductionNotFat" }
+		, { "text" : "Почему ты мне не веришь?!", "ref" : "QuietFriendIntroductionNotFat" }
+		]
+	},
+	{ "id"   : "QuietFriendIntroductionNotFat"
+	, "text" : "<em> Толстая! Толстая! </em>"
+	, "replies" :
+		[ { "text" : "Если мы станем друзьями и ты узнаешь меня ближе, то поймёшь, что я не толстая!", "ref" : "QuietFriendIntroductionFriendship" }
+		, { "text" : "С другой стороны, тебе хотя бы не всё равно. Это делает тебя моим другом!", "ref" : "QuietFriendIntroductionFriendship" }
+		, { "text" : "Хм, сильный аргумент! В таком случае, твоим лучшим другом станет толстуха!", "ref" : "QuietFriendIntroductionFriendship" }
+		]
+	},
+	{ "id"   : "QuietFriendIntroductionFriendship"
+	, "text" : "<em> Я не умею дружить! Почему-то никто никогда не соглашался дружить со мной. Дружба - это боль и разочарование. </em>"
+	, "replies" :
+		[ { "text" : "Ага, ты уловил суть концепции дружбы. Остальному я тебя научу!", "ref" : "QuietFriendIntroductionTeach" }
+		, { "text" : "И блины! Наша дружба будет скреплена блинами, это главное!", "ref" : "QuietFriendIntroductionTeach" }
+		, { "text" : "Возможно, потому, что ты обзываешь совершенно нетолстых людей толстыми. Это обидно! Но я обучу тебя правилам дружбы.", "ref" : "QuietFriendIntroductionTeach" }
+		, { "text" : "Тебе повезло, перед тобой - крупнейший (но не толстый) эксперт по дружбе! Социальность - моё второе имя!", "ref" : "QuietFriendIntroductionTeach" }
+		]
+	},
+	{ "id"   : "QuietFriendIntroductionTeach"
+	, "text" : "<aside> Ваш новый друг разражается жестоким приступом кашля. </aside> <em> Кажется, у меня аллергия на дружбу. </em>"
+	, "replies" :
+		[ { "text" : "Наоборот, дружба - лучшее лекарство! Мы тебя вылечим.", "ref" : null }
+		, { "text" : "А научи меня потом также громко кашлять. Громкий кашель вызывает уважение и повышает социальный статус. До новой встречи, друг!", "ref" : null }
+		, { "text" : "Не беда, лучше подумай о том, сколько удивительных дружеских приключений нам предстоит! Скорее бы! До встречи!", "ref" : null }
+		]
+	, "sets"   : [ "QuietFriendFriendship", "QuietMaskPending" ]
+	, "clears" : [ "QuietIntroductionPending" ]
+	},
+	{ "id"   : "QuietFriendMaskIntro"
+	, "text" : "<aside> Ваш новый друг старательно пытается сделать вид, что не заметил вас. </aside>"
+	, "replies" :
+		[ { "text" : "Привет, друг! Эй, друг! ДРУГ! ДР-У-У-У-УГ!", "ref" : "QuietFriendMaskHey" }
+		, { "text" : "Ну и ладно! Сделаю вид, что не заметила его первой.", "ref" : null }
+		]
+	},
+	{ "id"   : "QuietFriendMaskHey"
+	, "text" : "<aside> Ваш друг пытается притвориться берёзкой, но вскоре понимает, что просто так вы не уйдёте. </aside> <em> Хм. </em>"
+	, "replies" :
+		[ { "text" : "Хм.", "ref" : "QuietFriendMaskHm" }
+		, { "text" : "Так радостно тебя видеть, друг мой! Кстати, а сними маску, я хочу увидеть твою улыбку! :)", "ref" : "QuietFriendMaskMask" }
+		, { "text" : "Привет, дорогой друг! Ты не мог бы снять маску, хочу убедиться, что ты не робот.", "ref" : "QuietFriendMaskRobot" }
+		]
+	},
+	{ "id"   : "QuietFriendMaskHm"
+	, "text" : "<em> Хм… </em>"
+	, "replies" :
+		[ { "text" : "Хм.", "ref" : "QuietFriendMaskHmm" }
+		, { "text" : "Хмхм.", "ref" : "QuietFriendMaskHmm" }
+		, { "text" : "Хм?", "ref" : "QuietFriendMaskHmm" }
+		, { "text" : "Хм, нет! Лучше запихни под маску вебку и постримь! Люблю стримы лиц.", "ref" : "QuietFriendMaskMask" }
+		]
+	},
+	{ "id"   : "QuietFriendMaskHmm"
+	, "text" : "<em> Хм! </em>"
+	, "replies" :
+		[ { "text" : "Хмм…", "ref" : null }
+		, { "text" : "ХМ?! Хм хм хм! ХМ ХММ!", "ref" : null }
+		]
+	},
+	{ "id"   : "QuietFriendMaskHmmm"
+	, "text" : "<em> Хм хм. </em>"
+	, "replies" :
+		[ { "text" : "Как славно пообщались! Пока, друг!", "ref" : null }
+		, { "text" : "Приятно побеседовать с умным человеком.", "ref" : null }
+		, { "text" : "Нет, всё-таки я не разделяю твою точку зрения. До встречи.", "ref" : null }
+		, { "text" : "Хм-хм-хм!", "ref" : null }
+		]
+	, "sets"   : [ "QuietGuitarPending" ]
+	, "clears" : [ "QuietMaskPending" ]
+	},
+	{ "id"   : "QuietFriendMaskRobot"
+	, "text" : "<em> Я машина! </em>"
+	, "replies" :
+		[ { "text" : "Клёво, можно ходить с тобой за ручку и говорить, что я умею водить машину.", "ref" : "QuietFriendMaskPersonal" }
+		, { "text" : "А я самоидентифицируюсь как муравьед!", "ref" : "QuietFriendMaskPersonal" }
+		, { "text" : "Хочешь, я познакомлю тебя с моей посудомоечной машиной? Я зову её Инарой!", "ref" : "QuietFriendMaskPersonal" }
+		]
+	},
+	{ "id"   : "QuietFriendMaskPersonal"
+	, "text" : "<em> А-а-а! Личные детали! </em>"
+	, "replies" :
+		[ { "text" : "Да! Я доверила тебе тайны своей личной жизни, покажи же мне своё лицо!", "ref" : "QuietFriendMaskMask" }
+		, { "text" : "А если мы будет ролеплеить Люка и Дарта Вейдера, ты согласишься снять маску?", "ref" : "QuietFriendMaskMask" }
+		, { "text" : "Да, ужасно! Наверняка ты всем разболтаешь мои секреты. Понял? “Разболтаешь”? Ха-ха, я сегодня в ударе! До встречи.", "ref" : null }
+		]
+	},
+	{ "id"   : "QuietFriendMaskMask"
+	, "text" : "<em> Она не снимается! Зато защищает при столкновении с ёлками. </em>"
+	, "replies" :
+		[ { "text" : "Наверняка ты сталкиваешься с ёлками каждый день, маска же сужает поле зрения.", "ref" : "QuietFriendMaskFOV" }
+		, { "text" : "Пф, друзья не скрываются друг от друга! Наверняка тебе было бы неприятно, если бы я носила маску.", "ref" : "QuietFriendMaskElseMask" }
+		]
+	},
+	{ "id"   : "QuietFriendMaskFOV"
+	, "text" : "<em> У меня на шлеме камера, изображение проэцируется на сетчатку. Я МАШИНА! </em>"
+	, "replies" :
+		[ { "text" : "А из камеры вылетит птичка? Нет? Жаль. Ну ладно, до встречи.", "ref" : null }
+		, { "text" : "Круто! Было бы ужасно неудобно, если бы кто-то залепил камеру жевачкой. Радуйся, что друзья так не поступают, друг!", "ref" : null }
+		]
+	, "sets"   : [ "QuietGuitarPending" ]
+	, "clears" : [ "QuietMaskPending" ]
+	},
+	{ "id"   : "QuietFriendMaskElseMask"
+	, "text" : "<em> Наоборот. Ты же страшная. </em>"
+	, "replies" :
+		[ { "text" : "Правильно говорить “Ты же страшная, друг!”. Будем считать, что первый урок дружбы прошёл успешно.", "ref" : null }
+		, { "text" : "Да, бойся меня, друг!", "ref" : null }
+		, { "text" : "Хм, а ещё можно скрывать лицо котом. Я так постоянно делаю. Правда, потом собачки пытаются откусить мне лицо. Пока, дружище! ", "ref" : null }
+		]
+	, "sets"   : [ "QuietGuitarPending" ]
+	, "clears" : [ "QuietMaskPending" ]
+	},
+	{ "id"   : "QuietFriendGuitarIntro"
+	, "text" : "<aside> Ужасные звуки вынуждают вас зажать уши. Возможно, это рвётся теория струн или дерутся два механических кота. Но нет, вы замечаете, что это всего лишь ваш друг играет на гитаре. </aside>"
+	, "replies" :
+		[ { "text" : "Здорово! Можно сыграть дуэтом!", "ref" : "QuietFriendGuitarGuitar" }
+		, { "text" : "Нет, барабанные перепонки важнее дружбы! Уходим!", "ref" : null }
+		]
+	},
+	{ "id"   : "QuietFriendGuitarGuitar"
+	, "text" : "<aside> Друг то ли очень захвачен гитарной игрой, то ли снова пытается игнорировать ваше существование. </aside>"
+	, "replies" :
+		[ { "text" : "Привет, друг! Привет! ПРИВЕТ! ПРИВЕ-Е-Е-ЕТ!", "ref" : "QuietFriendGuitarHello" }
+		, { "text" : "<i> Кажется, это удачный момент, чтобы продемонстрировать ваши вокальные таланты. Вы начинаете подпевать мелодии друга. </i>", "ref" : "QuietFriendGuitarSing" }
+		, { "text" : "<i> Дружески наступить ему на ногу, чтобы привлечь внимание. Сегодня вы надели сапоги со шпорами! Долгая история. </i>", "ref" : "QuietFriendGuitarHello" }
+		]
+	},
+	{ "id"   : "QuietFriendGuitarHello"
+	, "text" : "<em> Опять ты… друг.  Эта мелодия убивает меня. Но я не чувствую боли, я машина! </em> <aside> Друг демонстрирует вам кровавые от игры на гитаре обрубки пальцев. </aside>"
+	, "replies" :
+		[ { "text" : "О нет, прекрати, ведь друзья разделяют боль друг друга! И сейчас мне ужасно больно!", "ref" : "QuietFriendGuitarPain" }
+		, { "text" : "Клёво, можно поклясться в вечной дружбе на крови!", "ref" : "QuietFriendGuitarOath" }
+		, { "text" : "Лучше спой же мне, друг", "ref" : "QuietFriendGuitarSong" }
+		]
+	},
+	{ "id"   : "QuietFriendGuitarPain"
+	, "text" : "<aside> Друг начинает играть ещё интенсивнее. Если бы не ваша нерушимая дружба, можно было подумать, будто он делает это, стараясь причинить боль вам. </aside>"
+	, "replies" :
+		[ { "text" : "На самом деле про друзей, чувствующих боль друг друга, я преувеличила. Давай отведу тебя в больницу.", "ref" : null }
+		, { "text" : "А-а-а, мои бедные пальчики! Пойду наложу на них блинный компресс.", "ref" : null }
+		]
+	, "sets"   : [ "QuietKillingPending" ]
+	, "clears" : [ "QuietGuitarPending" ]
+	},
+	{ "id"   : "QuietFriendGuitarOath"
+	, "text" : "<em> Могли бы использовать для этого чужую кровь. У меня есть запас в холодильнике. </em>"
+	, "replies" :
+		[ { "text" : "В нём же вроде твоя бывшая жена? Хм, у тебя вместительный холодильник! Напомни сходить к тебе в гости.", "ref" : null }
+		, { "text" : "А познакомь меня со своим холодильником? Холодильник может многое рассказать о своём хозяине! До встречи у холодильника!", "ref" : null }
+		]
+	, "sets"   : [ "QuietKillingPending" ]
+	, "clears" : [ "QuietGuitarPending" ]
+	},
+	{ "id"   : "QuietFriendGuitarSong"
+	, "text" : "<em> There was a man lived in the moon, lived in the moon, lived in the moon,<br>There was a man lived in the moon,<br>And his name was Aiken Drum! </em>"
+	, "replies" :
+		[ { "text" : "And his name was Aiken Drum! Ой, ты научил меня подпевать на английском! Спасибо, друг!", "ref" : null }
+		, { "text" : "Интересно, про кого это поётся в песне! Кто бы это мог быть… Пойду обдумаю вопрос, до встречи!", "ref" : null }
+		]
+	},
+	{ "id"   : "QuietFriendGuitarSing"
+	, "text" : "<aside> Настало время продемонстрировать мощь ваших голосовых связок и талант импровизатора! Кажется, соседи по очереди неспособны оценить дружеский дуэт по достоинству. Кто-то вызвал полицию, вам с другом предъявляют обвинения в хулиганстве. </aside>"
+	, "replies" :
+		[ { "text" : "Безобразие! Вопиющее преступление против музыкального вкуса! Мы будем жаловаться!", "ref" : "QuietFriendGuitarJail" }
+		, { "text" : "Это всё из-за тебя, друг, ты фальшивил!", "ref" : "QuietFriendGuitarJail" }
+		, { "text" : "Полицейское государство! <em>LET’S RIOT!</em> — добавляет ваш друг.", "ref" : "QuietFriendGuitarJail" }
+		]
+	, "sets" : [ "QuietFriendExitQueue" ]
+	},
+	{ "id"   : "QuietFriendGuitarJail"
+	, "text" : "<aside> Пятнадцать суток спустя, вас с другом выпускают из камеры. </aside> <em> Пятнадцать суток с тобой в одной камере, друг... Это был ад. </em>"
+	, "replies" :
+		[ { "text" : "А мне понравилось! Дружеское приключение сплотило нас!", "ref" : null }
+		, { "text" : "Прости, что побила тебя, когда ты пытался занять верхнюю койку, друг.", "ref" : null }
+		, { "text" : "И никто не удосужился принести нам торт с напильником!", "ref" : null }
+		]
+	, "sets"   : [ "QuietKillingPending" ]
+	, "clears" : [ "QuietGuitarPending" ]
+	},
+	{ "id"   : "QuietFriendKillingIntro"
+	, "text" : "<aside> Друг игнорирует вас, как ни в чём не бывало. Постоянство его поведения немного успокаивает. </aside>"
+	, "replies" :
+		[ { "text" : "Вам нужно обсудить с другом серьёзный вопрос.", "ref" : "QuietFriendKillingIssue" }
+		, { "text" : "Хотя, серьёзные разговоры - для неудачников.", "ref" : null }
+		]
+	},
+	{ "id"   : "QuietFriendKillingIssue"
+	, "text" : "<em> Привет, старый друг. Ужасно старый. </em>"
+	, "replies" :
+		[ { "text" : "Мы должны обсудить произошедшее прошлой ночью…", "ref" : "QuietFriendKillingNight" }
+		, { "text" : "Не делай вид, что ничего не произошло! Всё очень серьёзно!", "ref" : "QuietFriendKillingNight" }
+		, { "text" : "Я не старая! И, что важнее, ты омерзительно вёл себя вчера, друг.", "ref" : "QuietFriendKillingNight" }
+		]
+	},
+	{ "id"   : "QuietFriendKillingNight"
+	, "text" : "<em> Что не так, мне понравилось. Только очень хочется спать. </em>"
+	, "replies" :
+		[ { "text" : "“Что не так?”, да ты всю ночь убивал меня! В разных играх!", "ref" : "QuietFriendKillingKilling" }
+		, { "text" : "Друзья не убивают друзей! Это разрушает дружбу!", "ref" : "QuietFriendKillingKilling" }
+		, { "text" : "Ты мог бы умереть хотя бы разок сам, хотя бы из вежливости!", "ref" : "QuietFriendKillingKilling" }
+		]
+	},
+	{ "id"   : "QuietFriendKillingKilling"
+	, "text" : "<em> Если бы не я, тебя бы даже убить было некому! </em>"
+	, "replies" :
+		[ { "text" : "Оу, у нас первая дружеская ссора. Но я не могу на тебя сердиться, давай же скорее помиримся! Обнимашки?", "ref" : "QuietFriendKillingHugs" }
+		, { "text" : "Да из желающих убить меня выстраивается целая очередь! У меня отбоя от убийц нету", "ref" : "QuietFriendKillingConfrontational" }
+		, { "text" : "Впредь будем играть только в кооператив! Уж в коопе ты меня убить не сможешь.", "ref" : "QuietFriendKillingCoop" }
+		]
+	},
+	{ "id"   : "QuietFriendKillingHugs"
+	, "text" : "<em> Нет! НЕТ! НЕ-Е-Е-ЕТ! </em>"
+	, "replies" :
+		[ { "text" : "Да! ДА! ДА-А-А!", "ref" : null }
+		, { "text" : "Хм, да, обнимашки - это по-гейски. Пойду обниму прототипа.", "ref" : null }
+		, { "text" : "Я стисну тебя в объятьях со всей силой нашей дружбы! Эй, не теряй сознание, слабак.", "ref" : null }
+		]
+	, "sets"   : [ "QuietSleepyPending" ]
+	, "clears" : [ "QuietKillingPending" ]
+	},
+	{ "id"   : "QuietFriendKillingConfrontational"
+	, "text" : "<em> Хм. Давай убьём их всех? </em>"
+	, "replies" :
+		[ { "text" : "Вот теперь ты говоришь, как настоящий друг!", "ref" : null }
+		, { "text" : "Да! Ничто так не укрепляет дружбу, как совместные убийства.", "ref" : null }
+		, { "text" : "Будем приманивать их моей беззащитностью, а ты будешь выпрыгивать из засады и убивать!", "ref" : null }
+		]
+	, "sets"   : [ "QuietSleepyPending" ]
+	, "clears" : [ "QuietKillingPending" ]
+	},
+	{ "id"   : "QuietFriendKillingCoop"
+	, "text" : "<em> Да… Не смогу… БВАХАХАХАХАХА! </em>"
+	, "replies" :
+		[ { "text" : "Пф, и не лень тебе было печатать такой длинный зловещий смех.", "ref" : null }
+		, { "text" : "Сарказм? Хотя, таблички не было, значит, искренен!", "ref" : null }
+		, { "text" : "И случайно сжигать мою столицу тоже нельзя!", "ref" : null }
+		]
+	, "sets"   : [ "QuietSleepyPending" ]
+	, "clears" : [ "QuietKillingPending" ]
+	},
+	{ "id"   : "QuietFriendSleepyIntro"
+	, "text" : "<aside> Сперва кажется, что друг привычно игнорирует вас, но он даже не пытается отпрыгнуть, когда вы тянете его за рукав. </aside>"
+	, "replies" :
+		[ { "text" : "О нет, вдруг он умер!", "ref" : "QuietFriendSleepyDead" }
+		, { "text" : "Эй, кажется, это не ваш друг, а обычная берёзка.", "ref" : null }
+		]
+	},
+	{ "id"   : "QuietFriendSleepyDead"
+	, "text" : "<aside> Счёт может идти на секунды, вы обязаны вернуть друга к жизни! </aside>"
+	, "replies" :
+		[ { "text" : "ДРУГ! ДРУГ! ДР-У-У-У-У-УГ!", "ref" : "QuietFriendSleepyYell" }
+		, { "text" : "<aside> К счастью, вы всегда носите с собой усатый дефибриллятор. </aside>", "ref" : "QuietFriendSleepyShock" }
+		, { "text" : "<aside> Это ваш шанс украсить маску друга рисунком! У вас с собой верный фломастер.</aside>", "ref" : "QuietFriendSleepyDraw" }
+		, { "text" : "Нужно сделать другу искусственное дыхание! Нет, это омерзительно, пусть лучше умирает.", "ref" : null }
+		]
+	},
+	{ "id"   : "QuietFriendSleepyDraw"
+	, "text" : "<aside> Дайте волю вдохновению! Что именно вы хотели бы нарисовать? </aside>"
+	, "replies" :
+		[ { "text" : "Мистер Усы, смотрите, сейчас я нарисую вам братика!", "ref" : "QuietFriendSleepyDrawResult", "requires" : [ "MoustacheEquipped" ] }
+		, { "text" : "Бороду! Когда вы сомневаетесь, всегда рисуете бороды.", "ref" : "QuietFriendSleepyDrawResult" }
+		, { "text" : "Вы рисуете на маске мордочку енота. Вы всегда хотели дружить с милым енотом!", "ref" : "QuietFriendSleepyDrawResult" }
+		, { "text" : "Пентаграмму! Вы здорово разыграете друга, когда прямо на его лице откроется портал в ад.", "ref" : "QuietFriendSleepyHell" }
+		]
+	},
+	{ "id"   : "QuietFriendSleepyDrawResult"
+	, "text" : "<aside> Ваш друг внезапно пробуждается. Оказывается, он просто спал, а вовсе не умер. </aside> <em> Что такое? Спать бы. </em>"
+	, "replies" :
+		[ { "text" : "Абсолютно ничего! Просто немного улучшила тебя, друг. Теперь ты совершенство!", "ref" : null } ]
+	, "sets"   : [ "QuietCosplayPending" ]
+	, "clears" : [ "QuietSleepyPending" ]
+	},
+	{ "id"   : "QuietFriendSleepyHell"
+	, "text" : "<aside> Врата в ад открыты! Ваш триумф не омрачают даже полчища демонов, разрывающие вас на куски. </aside>"
+	, "replies" :
+		[ { "text" : "Загрузиться с последнего сохранения.", "ref" : "QuietFriendSleepyDead" }
+		]
+	},
+	{ "id"   : "QuietFriendSleepyYell"
+	, "text" : "<aside> Из-под маски доносится хрип. Кажется, друг возвращается к жизни! </aside>"
+	, "replies" :
+		[ { "text" : "Хм, что же может оживить его окончательно? Наверняка нужно ещё покричать!", "ref" : "QuietFriendSleepyWake" }
+		, { "text" : "Наверняка звонок другу в Скайпе поможет!", "ref" : "QuietFriendSleepyWake" }
+		, { "text" : "Массаж сердца! Вы как следует бьёте друга кулаком в сердце.", "ref" : "QuietFriendSleepyWake" }
+		]
+	},
+	{ "id"   : "QuietFriendSleepyWake"
+	, "text" : "<em> СПА-А-АТЬ! Зачем ты меня будишь, убирайся прочь… друг. </em>"
+	, "replies" :
+		[ { "text" : "Пф, и это благодарность за спасение твоей жизни! Никогда больше не стану тебя спасать!", "ref" : null }
+		, { "text" : "Оу. Ты спал. Неловкость. И вообще, это гигантский птеродактиль тебя разбудил!", "ref" : null }
+		, { "text" : "Хорошо, друг. Я уберусь прочь и никогда не вернусь, друг.", "ref" : null }
+		, { "text" : "И впрямь, всего четыре часа дня, зачем я уже проснулась. Пойду спать!", "ref" : null }
+		]
+	, "sets"   : [ "QuietCosplayPending" ]
+	, "clears" : [ "QuietSleepyPending" ]
+	},
+	{ "id"   : "QuietFriendSleepyShock"
+	, "text" : "<aside> Ваш друг подпрыгивает на месте и валится на землю, дымясь. </aside>"
+	, "replies" :
+		[ { "text" : "Сделать вид, что так и было! И вы тут вообще не при чём.", "ref" : "QuietFriendSleepySnore" }
+		, { "text" : "Ммм, жареный друг. Наверняка он восстанет, подобно фениксу, к следующей вашей встрече!", "ref" : "QuietFriendSleepySnore" }
+		, { "text" : "Вы не можете оставить его в таком состоянии! Массаж сердца обнимашками вернёт друга в жизни!", "ref" : "QuietFriendSleepyWake" }
+		]
+	},
+	{ "id"   : "QuietFriendSleepySnore"
+	, "text" : "<aside> Внезапно, друг захрапел. Кажется, всё это время он всего лишь спал. </aside>"
+	, "replies" :
+		[ { "text" : "И ему снятся сны о нашей прекрасной дружбе!", "ref" : null }
+		, { "text" : "Дружеский храп заразителен, пойду-ка и я спать.", "ref" : null }
+		, { "text" : "Пф, зря я старалась. С его стороны не умирать было невежливо!", "ref" : null }
+		]
+	, "sets"   : [ "QuietCosplayPending" ]
+	, "clears" : [ "QuietSleepyPending" ]
+	},
 	{ "id"   : "ShadyDescriptionIntro"
 	, "text" : "<aside>Человек с набриллиантиненными волосами и цветным галстуком широко улыбается вам.</aside>"
 	, "replies" :
