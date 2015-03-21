@@ -22,11 +22,20 @@ class ActivitiesMenuModel implements IActivitiesMenuModel, IPersistent
 	GetActivities() : Activity[]
 	{
 		var activities = [];
-		if (this.player.HasItem(Item.Community))
-			activities.push(Activity.Community);
-		if (this.player.HasItem(Item.Monopoly))
-			activities.push(Activity.Monopoly);
+
+		var AddItemActivity = function (item : Item, activity : Activity) : void
+		{
+			if (this.player.HasItem(item))
+				activities.push(activity);
+		}.bind(this)
+		AddItemActivity(Item.TV,        Activity.TV);
+		AddItemActivity(Item.Community, Activity.Community);
+		AddItemActivity(Item.Civ,       Activity.Civ);
+		AddItemActivity(Item.Monopoly,  Activity.Monopoly);
+		AddItemActivity(Item.Stove,     Activity.Cooking);
+
 		activities.push(Activity.Stop);
+
 		return activities;
 	}
 

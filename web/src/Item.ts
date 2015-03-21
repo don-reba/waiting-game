@@ -13,6 +13,7 @@ enum Item
 , Community       = 3
 , Monopoly        = 4
 , Stove           = 5
+, Civ             = 6
 }
 
 class StagedItem
@@ -85,6 +86,11 @@ module Item
 		, price       : 200000
 		, rateBonus   : 10
 		}, // 5
+		{ name        : "«Цивилизация»"
+		, description : "Ещё один ход."
+		, price       : 20000
+		, rateBonus   : 10
+		}, // 6
 	];
 
 	export var Moustache = new StagedItem

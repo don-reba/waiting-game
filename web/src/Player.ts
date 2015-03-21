@@ -119,6 +119,13 @@ class Player implements IPersistent
 		this.composure = 60;
 	}
 
+	RemoveItem(item : Item) : void
+	{
+		var i = this.items.indexOf(item);
+		if (i >= 0)
+			this.items.splice(i, 1);
+	}
+
 	SetHat(hat : Hat) : void
 	{
 		this.hat = hat;

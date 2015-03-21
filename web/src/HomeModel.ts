@@ -204,10 +204,8 @@ class HomeModel implements IHomeModel, IPersistent
 
 	StartDialog(speaker : ICharacter) : void
 	{
-		this.speakerID = speaker.id;
-		this.dialogID  = this.characterManager.GetDialogID(speaker.id, DialogType.HomeConversation);
+		this.ActivateDialog(speaker.id, this.characterManager.GetDialogID(speaker.id, DialogType.HomeConversation));
 		this.player.ResetComposure();
-		this.DialogChanged.Call();
 	}
 
 	SetDialog(ref : string) : void
@@ -270,9 +268,7 @@ class HomeModel implements IHomeModel, IPersistent
 		if (!this.speakerID)
 			return;
 
-		this.speakerID = "";
-		this.dialogID  = "StdPterodactyl";
-		this.DialogChanged.Call();
+		this.ActivateDialog(null, "StdPterodactyl");
 
 		this.guests   = [];
 		this.activity = Activity.None;
@@ -300,9 +296,7 @@ class HomeModel implements IHomeModel, IPersistent
 
 		this.GuestsChanged.Call();
 
-		this.speakerID = id;
-		this.dialogID  = this.characterManager.GetDialogID(id, DialogType.HomeArrival);
-		this.DialogChanged.Call();
+		this.ActivateDialog(id, this.characterManager.GetDialogID(id, DialogType.HomeArrival));
 	}
 
 	// IPersistent implementation
@@ -336,6 +330,14 @@ class HomeModel implements IHomeModel, IPersistent
 	}
 
 	// private implementation
+
+	private	ActivateDialog(speakerID : string, dialogID: string) : void
+	{
+		this.speakerID = speakerID;
+		this.dialogID  = dialogID;
+		this.dialogManager.ActivateDialog(dialogID);
+		this.DialogChanged.Call();
+	}
 
 	private Clear()
 	{
@@ -407,8 +409,11 @@ class HomeModel implements IHomeModel, IPersistent
 		var item = null;
 		switch (this.activity)
 		{
+		case Activity.TV:
 		case Activity.Community: item = HomeItem.TV;    break;
+		case Activity.Civ:
 		case Activity.Monopoly:  item = HomeItem.Table; break;
+		case Activity.Cooking:   item = HomeItem.Stove; break;
 		}
 
 		// get the free positions for this activity

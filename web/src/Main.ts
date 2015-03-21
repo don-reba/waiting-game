@@ -42,13 +42,23 @@ function MapCharacterNameFlags
 	}
 }
 
-function MapPlayerStateFlags(flags : Flags, player : Player) : void
+function MapPlayerFlags(flags : Flags, player : Player) : void
 {
 	flags.SetCheck("MoustacheEquipped", () => { return player.GetMoustache() >= 0 });
 	flags.SetCheck("MoustacheAbsent",   () => { return player.GetMoustache() <  0 });
 	flags.SetCheck("HatEquipped",       () => { return player.GetHat() != Hat.None });
 
 	flags.SetControl("ReceiveFakeMoustache", player.SetMoustache.bind(player, 1, true));
+	flags.SetControl("DestroyCiv", player.RemoveItem.bind(player, Item.Civ));
+}
+
+function MapActivityFlags(flags : Flags, homeModel : HomeModel)
+{
+	flags.SetCheck("ActivityWatchingTv",        () => { return homeModel.GetActivity() == Activity.TV        });
+	flags.SetCheck("ActivityWatchingCommunity", () => { return homeModel.GetActivity() == Activity.Community });
+	flags.SetCheck("ActivityPlayingMonopoly",   () => { return homeModel.GetActivity() == Activity.Monopoly  });
+	flags.SetCheck("ActivityPlayingCiv",        () => { return homeModel.GetActivity() == Activity.Civ       });
+	flags.SetCheck("ActivityCooking",           () => { return homeModel.GetActivity() == Activity.Cooking   });
 }
 
 function Main(dialogs : IDialog[], characters : ICharacter[])
@@ -97,7 +107,8 @@ function Main(dialogs : IDialog[], characters : ICharacter[])
 	var persistentState = new PersistentState(persistentItems, timer);
 
 	MapCharacterNameFlags(flags, player, characterManager, queueModel);
-	MapPlayerStateFlags(flags, player);
+	MapPlayerFlags(flags, player);
+	MapActivityFlags(flags, homeModel);
 
 	persistentState.Load();
 	savePresenter.Load();

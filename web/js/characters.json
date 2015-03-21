@@ -11,6 +11,8 @@
 		, { "dialog" : "QuietFriendGuitarIntro",       "requires" : [ "QuietGuitarPending" ] }
 		, { "dialog" : "QuietFriendKillingIntro",      "requires" : [ "QuietKillingPending" ] }
 		, { "dialog" : "QuietFriendSleepyIntro",       "requires" : [ "QuietSleepyPending" ] }
+		, { "dialog" : "QuietFriendCosplayIntro",      "requires" : [ "QuietCosplayPending" ] }
+		, { "dialog" : "QuietFriendPlaceholderIntro" }
 		]
 	},
 	{ "id"    : "Shady"
@@ -39,6 +41,10 @@
 	},
 	{ "id"    : "Hat"
 	, "name"  : "Шляпа"
+	, "queueConversation" :
+		[ { "dialog" : "HatDescriptionIntro",  "requires" : [ "HatIntro" ] }
+		, { "dialog" : "HatIntroductionIntro", "requires" : [ "HatIntroductionPending" ] }
+		]
 	},
 	{ "id"    : "Turtle"
 	, "name"  : "Черепашка"
@@ -143,6 +149,18 @@
 		]
 	, "queueEscape" :
 		[ { "dialog" : "VillainQueueEscape" } ]
+	, "homeArrival" :
+		[ { "dialog" : "VillainArrivalDoomIntro", "requires" : [ "VillainArrivalDoomPending" ] }
+		, { "dialog" : "VillainArrivalFearMeIntro" }
+		]
+	, "homeConversation" :
+		[ { "dialog" : "VillainHomeTv2Intro",       "requires" : [ "VillainHomeTv2Pending", "ActivityWatchingTv" ] }
+		, { "dialog" : "VillainHomeTv1Intro",       "requires" : [ "ActivityWatchingTv" ] }
+		, { "dialog" : "VillainHomeCommunityIntro", "requires" : [ "ActivityWatchingCommunity" ] }
+		, { "dialog" : "VillainHomeCivIntro",       "requires" : [ "ActivityPlayingCiv" ] }
+		, { "dialog" : "VillainHomeCookingIntro",   "requires" : [ "ActivityCooking" ] }
+		, { "dialog" : "VillainHomeGeneralIntro" }
+		]
 	},
 	{ "id"    : "Robochef"
 	, "name"  : "Робоповар"

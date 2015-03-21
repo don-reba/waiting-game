@@ -218,7 +218,7 @@ class HomeView implements IHomeView, IClientView
 			var a = activities[i];
 
 			var label = $("<label>");
-			label.text(Activity.GetName(a));
+			label.text(Activity.GetDescription(a));
 			label.addClass("fg-clickable");
 			label.addClass("a" + a);
 			label.click(a, OnClick.bind(this));

@@ -2,16 +2,19 @@ var Activity;
 (function (Activity) {
     Activity[Activity["None"] = 0] = "None";
     Activity[Activity["Stop"] = 1] = "Stop";
-    Activity[Activity["Community"] = 2] = "Community";
-    Activity[Activity["Monopoly"] = 3] = "Monopoly";
+    Activity[Activity["TV"] = 2] = "TV";
+    Activity[Activity["Community"] = 3] = "Community";
+    Activity[Activity["Monopoly"] = 4] = "Monopoly";
+    Activity[Activity["Civ"] = 5] = "Civ";
+    Activity[Activity["Cooking"] = 6] = "Cooking";
 })(Activity || (Activity = {}));
 var Activity;
 (function (Activity) {
-    var names = ["Убивать время", "Разойтись по домам", "Смотреть комьюнити", "Играть в Монополию"];
-    function GetName(activity) {
-        return names[activity];
+    var descriptions = ["Убивать время", "Разойтись по домам", "Смотреть телевизор", "Смотреть комьюнити", "Играть в Монополию", "Играть в Цивилизацию", "Готовить ужин"];
+    function GetDescription(activity) {
+        return descriptions[activity];
     }
-    Activity.GetName = GetName;
+    Activity.GetDescription = GetDescription;
 })(Activity || (Activity = {}));
 var Signal = (function () {
     function Signal() {
@@ -41,6 +44,7 @@ var Item;
     Item[Item["Community"] = 3] = "Community";
     Item[Item["Monopoly"] = 4] = "Monopoly";
     Item[Item["Stove"] = 5] = "Stove";
+    Item[Item["Civ"] = 6] = "Civ";
 })(Item || (Item = {}));
 var StagedItem = (function () {
     function StagedItem(name, descriptions, startingPrice, inflation, rateBonus) {
@@ -66,6 +70,7 @@ var Item;
         { name: "«Комьюнити»", description: "Испанский 101.", price: 20000, rateBonus: 5 },
         { name: "«Монополия»", description: "Отличный способ разрушить дружбу.", price: 20000, rateBonus: 5 },
         { name: "Кухонная плита", description: "+ 100 лучших блинных рецептов.", price: 200000, rateBonus: 10 },
+        { name: "«Цивилизация»", description: "Ещё один ход.", price: 20000, rateBonus: 10 },
     ];
     Item.Moustache = new StagedItem("Усы", ["Карандаш", "Зубная щётка", "Морж", "Фу Манчу", "Дали", "Венгерские", "Английские", "Шеврон", "Кручёные"], 1000, 2, 5);
     Item.Candy = new StagedItem("Конфеты", ["Трюфели", "Фундук «Петрович»", "Миндаль «Товарищ»", "Ириски", "Петербурженка", "Крыжовник в сахарной пудре", "Чайкины лапки", "Арахис в мармеладе", "Алёнушка", "Настенька", "со вкусом полуночных навтов", "со вкусом тюленья в одеяле", "со вкусом клёвых гостей", "со вкусом интересной работы", "M&M's без красных", "Бобы в шоколадной глазури", "Бобы в горьком шоколаде", "Бобы в белом шоколаде", "Бобы в молочном шоколаде", "Речные камешки", "Барбарис", "Марципановая картошка", "Моне", "Дали", "Ницше", "Фрейд", "Полудний Звон", "Запеченые яблоки Люкс", "Шоколадка им. Лёши", "Шоколадка+", "Шоколадка++", "Шоколадка+++", "Шоколадка++++", "Шоколадка+++", "Шоколадка++", "Шоколадка+", "Шоколадка", "Шоколадк", "Шоколад", "Шокола", "Шокол", "Шоко", "Шок", "Шо", "Ш"], 50, 1.3, 1);
@@ -151,6 +156,11 @@ var Player = (function () {
     Player.prototype.ResetComposure = function () {
         this.composure = 60;
     };
+    Player.prototype.RemoveItem = function (item) {
+        var i = this.items.indexOf(item);
+        if (i >= 0)
+            this.items.splice(i, 1);
+    };
     Player.prototype.SetHat = function (hat) {
         this.hat = hat;
         this.HatChanged.Call();
@@ -214,10 +224,15 @@ var ActivitiesMenuModel = (function () {
     // IActivitiesMenuModel implementation
     ActivitiesMenuModel.prototype.GetActivities = function () {
         var activities = [];
-        if (this.player.HasItem(3 /* Community */))
-            activities.push(2 /* Community */);
-        if (this.player.HasItem(4 /* Monopoly */))
-            activities.push(3 /* Monopoly */);
+        var AddItemActivity = function (item, activity) {
+            if (this.player.HasItem(item))
+                activities.push(activity);
+        }.bind(this);
+        AddItemActivity(1 /* TV */, 2 /* TV */);
+        AddItemActivity(3 /* Community */, 3 /* Community */);
+        AddItemActivity(6 /* Civ */, 5 /* Civ */);
+        AddItemActivity(4 /* Monopoly */, 4 /* Monopoly */);
+        AddItemActivity(5 /* Stove */, 6 /* Cooking */);
         activities.push(1 /* Stop */);
         return activities;
     };
@@ -525,7 +540,7 @@ var HomeItem;
     var info = [
         { graphic: ["  _________  ", "═════════════", "             ", "             ", "             ", "             ", "%   %   %   %"], x: 32, y: 0 },
         { graphic: ["        %        ", "  ┌─────▬─────┐  ", "  │  ╔═════╗  │  ", "% │▌ ║     ║ ▐│ %", "  │  ╚═════╝  │  ", "  └─────▬─────┘  ", "        %        "], x: 20, y: 14 },
-        { graphic: ["    ╓────┐", " %  ║○ ○ │", " %  ║○ ○ │", "    ╙────┘", "  %  %    "], x: 60, y: 8 },
+        { graphic: ["   ╓────┐", "%  ║○ ○ │", "%  ║○ ○ │", "   ╙────┘", " %  %    "], x: 60, y: 8 },
     ];
     function GetInfo(item) {
         return info[item];
@@ -640,10 +655,8 @@ var HomeModel = (function () {
         }
     };
     HomeModel.prototype.StartDialog = function (speaker) {
-        this.speakerID = speaker.id;
-        this.dialogID = this.characterManager.GetDialogID(speaker.id, 3 /* HomeConversation */);
+        this.ActivateDialog(speaker.id, this.characterManager.GetDialogID(speaker.id, 3 /* HomeConversation */));
         this.player.ResetComposure();
-        this.DialogChanged.Call();
     };
     HomeModel.prototype.SetDialog = function (ref) {
         if (ref) {
@@ -687,9 +700,7 @@ var HomeModel = (function () {
     HomeModel.prototype.OnAwkward = function () {
         if (!this.speakerID)
             return;
-        this.speakerID = "";
-        this.dialogID = "StdPterodactyl";
-        this.DialogChanged.Call();
+        this.ActivateDialog(null, "StdPterodactyl");
         this.guests = [];
         this.activity = 0 /* None */;
         this.GuestsChanged.Call();
@@ -708,9 +719,7 @@ var HomeModel = (function () {
         this.guests.push({ id: id, x: 2, y: 12 });
         this.atEntrance = true;
         this.GuestsChanged.Call();
-        this.speakerID = id;
-        this.dialogID = this.characterManager.GetDialogID(id, 2 /* HomeArrival */);
-        this.DialogChanged.Call();
+        this.ActivateDialog(id, this.characterManager.GetDialogID(id, 2 /* HomeArrival */));
     };
     // IPersistent implementation
     HomeModel.prototype.FromPersistentString = function (str) {
@@ -729,6 +738,12 @@ var HomeModel = (function () {
         return JSON.stringify(state);
     };
     // private implementation
+    HomeModel.prototype.ActivateDialog = function (speakerID, dialogID) {
+        this.speakerID = speakerID;
+        this.dialogID = dialogID;
+        this.dialogManager.ActivateDialog(dialogID);
+        this.DialogChanged.Call();
+    };
     HomeModel.prototype.Clear = function () {
         for (var y = 0; y != this.ny; ++y) {
             var line = this.canvas[y];
@@ -780,11 +795,16 @@ var HomeModel = (function () {
     HomeModel.prototype.UpdateActiveItem = function () {
         var item = null;
         switch (this.activity) {
-            case 2 /* Community */:
+            case 2 /* TV */:
+            case 3 /* Community */:
                 item = 0 /* TV */;
                 break;
-            case 3 /* Monopoly */:
+            case 5 /* Civ */:
+            case 4 /* Monopoly */:
                 item = 1 /* Table */;
+                break;
+            case 6 /* Cooking */:
+                item = 2 /* Stove */;
                 break;
         }
         // get the free positions for this activity
@@ -1128,7 +1148,7 @@ var HomeView = (function () {
         for (var i = 0; i != activities.length; ++i) {
             var a = activities[i];
             var label = $("<label>");
-            label.text(Activity.GetName(a));
+            label.text(Activity.GetDescription(a));
             label.addClass("fg-clickable");
             label.addClass("a" + a);
             label.click(a, OnClick.bind(this));
@@ -1530,7 +1550,7 @@ var Timer = (function () {
 var PersistentState = (function () {
     function PersistentState(items, timer) {
         this.items = items;
-        this.version = "17";
+        this.version = "18";
         timer.AddEvent(this.Save.bind(this), 20);
     }
     // get the state string from each item and store it in local storage
@@ -2103,6 +2123,9 @@ var StoreModel = (function () {
             this.AddStoreItem(2 /* Table */, this.player.AddItem.bind(this.player, 2 /* Table */));
         }
         else {
+            if (!this.player.HasItem(6 /* Civ */)) {
+                this.AddStoreItem(6 /* Civ */, this.player.AddItem.bind(this.player, 6 /* Civ */));
+            }
             if (!this.player.HasItem(4 /* Monopoly */)) {
                 this.AddStoreItem(4 /* Monopoly */, this.player.AddItem.bind(this.player, 4 /* Monopoly */));
             }
@@ -2316,7 +2339,7 @@ function MapCharacterNameFlags(flags, player, characterManager, queueModel) {
         flags.SetControl(c.id + "ExitQueue", queueModel.Remove.bind(queueModel, c));
     }
 }
-function MapPlayerStateFlags(flags, player) {
+function MapPlayerFlags(flags, player) {
     flags.SetCheck("MoustacheEquipped", function () {
         return player.GetMoustache() >= 0;
     });
@@ -2327,6 +2350,24 @@ function MapPlayerStateFlags(flags, player) {
         return player.GetHat() != 0 /* None */;
     });
     flags.SetControl("ReceiveFakeMoustache", player.SetMoustache.bind(player, 1, true));
+    flags.SetControl("DestroyCiv", player.RemoveItem.bind(player, 6 /* Civ */));
+}
+function MapActivityFlags(flags, homeModel) {
+    flags.SetCheck("ActivityWatchingTv", function () {
+        return homeModel.GetActivity() == 2 /* TV */;
+    });
+    flags.SetCheck("ActivityWatchingCommunity", function () {
+        return homeModel.GetActivity() == 3 /* Community */;
+    });
+    flags.SetCheck("ActivityPlayingMonopoly", function () {
+        return homeModel.GetActivity() == 4 /* Monopoly */;
+    });
+    flags.SetCheck("ActivityPlayingCiv", function () {
+        return homeModel.GetActivity() == 5 /* Civ */;
+    });
+    flags.SetCheck("ActivityCooking", function () {
+        return homeModel.GetActivity() == 6 /* Cooking */;
+    });
 }
 function Main(dialogs, characters) {
     var flags = new Flags();
@@ -2354,7 +2395,8 @@ function Main(dialogs, characters) {
     var persistentItems = [["activitiesMenu", activitiesModel], ["invitesMenu", invitesModel], ["home", homeModel], ["main", mainModel], ["player", player], ["queue", queueModel], ["store", storeModel], ["timer", timer], ["flags", flags]];
     var persistentState = new PersistentState(persistentItems, timer);
     MapCharacterNameFlags(flags, player, characterManager, queueModel);
-    MapPlayerStateFlags(flags, player);
+    MapPlayerFlags(flags, player);
+    MapActivityFlags(flags, homeModel);
     persistentState.Load();
     savePresenter.Load();
     mainPresenter.LightsCameraAction();

@@ -96,6 +96,16 @@ class StoreModel implements IStoreModel, IPersistent
 		}
 		else
 		{
+			if (!this.player.HasItem(Item.Civ))
+			{
+				this.AddStoreItem
+					( Item.Civ
+					, this.player.AddItem.bind
+						( this.player
+						, Item.Civ
+						)
+					);
+			}
 			if (!this.player.HasItem(Item.Monopoly))
 			{
 				this.AddStoreItem
