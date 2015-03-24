@@ -38,6 +38,17 @@
 		]
 	, "queueEscape" :
 		[ { "dialog" : "ShadyQueueEscapeIntro" } ]
+	, "homeArrival" :
+		[ { "dialog" : "ShadyArrivalMoleIntro",     "requires" : [ "ShadyMolePending" ] }
+		, { "dialog" : "ShadyArrivalDoorbellIntro" }
+		]
+	, "homeConversation" :
+		[ { "dialog" : "ShadyHomeTvIntro",        "requires" : [ "ActivityWatchingTv" ] }
+		, { "dialog" : "ShadyHomeCommunityIntro", "requires" : [ "ActivityWatchingCommunity" ] }
+		, { "dialog" : "ShadyHomeCivIntro",       "requires" : [ "ActivityPlayingCiv" ] }
+		, { "dialog" : "ShadyHomeCookingIntro",   "requires" : [ "ActivityCooking" ] }
+		, { "dialog" : "ShadyHomeGeneralIntro" }
+		]
 	},
 	{ "id"    : "Hat"
 	, "name"  : "Шляпа"
