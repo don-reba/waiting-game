@@ -29,10 +29,11 @@ aside {
 }
 em {
 	background-color : #7DB599;
-	display : block;
-	font-family : "Courier New";
-	letter-spacing : 0;
-	word-spacing   : 0;
+	box-shadow       : 0 0 16px #88C6AA;
+	display          : block;
+	font-family      : "Courier New";
+	letter-spacing   : 0;
+	word-spacing     : 0;
 }
 .bg-color {
 	background-color : #E6E6E6;

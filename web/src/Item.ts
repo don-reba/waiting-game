@@ -7,13 +7,13 @@ class ItemInfo
 }
 
 enum Item
-{ Tophat          = 0
-, TV              = 1
-, Table           = 2
-, Community       = 3
-, Monopoly        = 4
-, Stove           = 5
-, Civ             = 6
+{ Tophat    = 0
+, TV        = 1
+, Table     = 2
+, Community = 3
+, Monopoly  = 4
+, Stove     = 5
+, Civ       = 6
 }
 
 class StagedItem

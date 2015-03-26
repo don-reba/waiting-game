@@ -57,6 +57,7 @@
 		, { "dialog" : "HatIntroductionIntro", "requires" : [ "HatIntroductionPending" ] }
 		, { "dialog" : "HatRomanceIntro",      "requires" : [ "HatRomanceAvailable", "HatEquipped" ] }
 		, { "dialog" : "HatCapSocietyIntro",   "requires" : [ "HatCapSocietyPending" ] }
+		, { "dialog" : "HatIllnessIntro",      "requires" : [ "HatIllnessPending" ] }
 		, { "dialog" : "HatMoustacheIntro",    "requires" : [ "HatMoustachePending", "HatRomancePending" ] }
 		, { "dialog" : "HatMottoIntro",        "requires" : [ "HatPollPending" ] }
 		]
