@@ -14,6 +14,19 @@
 		, { "dialog" : "QuietFriendCosplayIntro",      "requires" : [ "QuietCosplayPending" ] }
 		, { "dialog" : "QuietFriendPlaceholderIntro" }
 		]
+	, "queueEscape" :
+		[ { "dialog" : "QuietFriendEscape" } ]
+	, "homeArrival" :
+		[ { "dialog" : "QuietFriendArrivalHm", "requires" : [ "QuietFriendHmPending" ] }
+		, { "dialog" : "QuietFriendArrivalGuitar" }
+		]
+	, "homeConversation" :
+		[ { "dialog" : "QuietFriendHomeTv2Intro",       "requires" : [ "ActivityWatchingTv", "QuietFriendProjectorPending" ] }
+		, { "dialog" : "QuietFriendHomeTv1Intro",       "requires" : [ "ActivityWatchingTv" ] }
+		, { "dialog" : "QuietFriendHomeCommunityIntro", "requires" : [ "ActivityWatchingCommunity" ] }
+		, { "dialog" : "QuietFriendHomeCivIntro",       "requires" : [ "ActivityPlayingCiv" ] }
+		, { "dialog" : "QuietFriendHomeGeneralIntro" }
+		]
 	},
 	{ "id"    : "Shady"
 	, "name"  : "Тёмная личность"
@@ -63,6 +76,17 @@
 		]
 	, "queueEscape" :
 		[ { "dialog" : "HatEscapeIntro" } ]
+	, "homeArrival" :
+		[ { "dialog" : "HatArrivalCapSpiesIntro", "requires" : [ "HatCapPending" ] }
+		, { "dialog" : "HatArrivalRomanticIntro" }
+		]
+	, "homeConversation" :
+		[ { "dialog" : "HatHomeTvIntro",        "requires" : [ "ActivityWatchingTv" ] }
+		, { "dialog" : "HatHomeCommunityIntro", "requires" : [ "ActivityWatchingCommunity" ] }
+		, { "dialog" : "HatHomeCivIntro",       "requires" : [ "ActivityPlayingCiv" ] }
+		, { "dialog" : "HatHomeCookingIntro",   "requires" : [ "ActivityCooking" ] }
+		, { "dialog" : "HatHomeGeneralIntro" }
+		]
 	},
 	{ "id"    : "Turtle"
 	, "name"  : "Черепашка"
@@ -83,6 +107,15 @@
 		]
 	, "queueEscape" :
 		[ { "dialog" : "MrMoustacheQueueEscape" } ]
+	, "homeArrival" :
+		[ { "dialog" : "MrMoustacheArrivalSaluteIntro", "requires" : [ "MrMoustacheSalutePending" ] }
+		, { "dialog" : "MrMoustacheArrivalMoustacheIntro" }
+		]
+	, "homeConversation" :
+		[ { "dialog" : "MrMoustacheHomeTVIntro",      "requires" : [ "ActivityWatchingTv" ] }
+		, { "dialog" : "MrMoustacheHomeCivIntro",     "requires" : [ "ActivityPlayingCiv" ] }
+		, { "dialog" : "MrMoustacheHomeCookingIntro", "requires" : [ "ActivityCooking" ] }
+		]
 	},
 	{ "id"    : "Poet"
 	, "name"  : "Поэт"
