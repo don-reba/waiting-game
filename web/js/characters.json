@@ -163,6 +163,16 @@
 	},
 	{ "id"    : "Cat"
 	, "name"  : "Кот"
+	, "queueConversation" :
+		[ { "dialog" : "CatDescriptionIntro",  "requires" : [ "CatIntro" ] }
+		, { "dialog" : "CatIntroductionIntro", "requires" : [ "CatIntroductionPending" ] }
+		, { "dialog" : "CatFiller1Intro",      "requires" : [ "CatFiller1Pending" ] }
+		, { "dialog" : "CatFiller2Intro",      "requires" : [ "CatFiller2Pending" ] }
+		, { "dialog" : "CatFiller3Intro",      "requires" : [ "CatFiller3Pending" ] }
+		, { "dialog" : "CatPlaceholderIntro" }
+		]
+	, "queueEscape" :
+		[ { "dialog" : "CatQueueEscape" } ]
 	},
 	{ "id"    : "Patient"
 	, "name"  : "Тяжелобольной"
