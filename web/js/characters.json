@@ -71,7 +71,7 @@
 		, { "dialog" : "HatRomanceIntro",      "requires" : [ "HatRomanceAvailable", "HatEquipped" ] }
 		, { "dialog" : "HatCapSocietyIntro",   "requires" : [ "HatCapSocietyPending" ] }
 		, { "dialog" : "HatIllnessIntro",      "requires" : [ "HatIllnessPending" ] }
-		, { "dialog" : "HatMoustacheIntro",    "requires" : [ "HatMoustachePending", "HatRomancePending" ] }
+		, { "dialog" : "HatMoustacheIntro",    "requires" : [ "HatMoustachePending" ] }
 		, { "dialog" : "HatMottoIntro",        "requires" : [ "HatPollPending" ] }
 		]
 	, "queueEscape" :
@@ -90,6 +90,13 @@
 	},
 	{ "id"    : "Turtle"
 	, "name"  : "Черепашка"
+	, "queueConversation" :
+		[ { "dialog" : "TurtleDescriptionIntro",  "requires" : [ "TurtleIntro" ] }
+		, { "dialog" : "TurtleIntroductionIntro", "requires" : [ "TurtleIntroductionPending" ] }
+		, { "dialog" : "TurtleGeneralIntro" }
+		]
+	, "queueEscape" :
+		[ { "dialog" : "TurtleQueueEscapeIntro" } ]
 	},
 	{ "id"    : "MrMoustache"
 	, "name"  : "Усач"
@@ -144,6 +151,8 @@
 		, { "dialog" : "AnnyMakingUpIntro",           "requires" : [ "MakeUpWithAnny" ] }
 		, { "dialog" : "AnnyVirginMachinationsIntro", "requires" : [ "VirginMachinationsPart1" ] }
 		, { "dialog" : "AnnyMonster",                 "requires" : [ "AnnyMarriage" ] }
+		, { "dialog" : "AnnyHatPlaceholder",          "requires" : [ "HatEquipped" ] }
+		, { "dialog" : "AnnyPlaceholder" }
 		]
 	, "queueEscape" :
 		[ { "dialog" : "AnnyQueueEscape" } ]
@@ -242,6 +251,17 @@
 	},
 	{ "id"    : "Prototype"
 	, "name"  : "Прототип"
+	, "queueConversation" :
+		[ { "dialog" : "PrototypeDescriptionIntro",  "requires" : [ "PrototypeIntro" ] }
+		, { "dialog" : "PrototypeIntroductionIntro", "requires" : [ "PrototypeIntroductionPending" ] }
+		, { "dialog" : "PrototypeInvitationIntro",   "requires" : [ "PrototypeInvitationPending" ] }
+		, { "dialog" : "PrototypeSlaveryIntro",      "requires" : [ "PrototypeSlaveryPending" ] }
+		, { "dialog" : "PrototypeHenchmanIntro",     "requires" : [ "PrototypeHenchmanPending" ] }
+		, { "dialog" : "PrototypeFrogsIntro",        "requires" : [ "PrototypeFrogsPending" ] }
+		, { "dialog" : "PrototypeScheduleIntro",     "requires" : [ "PrototypeSchedulePending" ] }
+		]
+	, "queueEscape" :
+		[ { "dialog" : "PrototypeQueueEscape" } ]
 	},
 	{ "id"    : "Monster"
 	, "name"  : "Хтоническое Чудовище"
