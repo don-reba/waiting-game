@@ -25,6 +25,7 @@
 		, { "dialog" : "QuietFriendHomeTv1Intro",       "requires" : [ "ActivityWatchingTv" ] }
 		, { "dialog" : "QuietFriendHomeCommunityIntro", "requires" : [ "ActivityWatchingCommunity" ] }
 		, { "dialog" : "QuietFriendHomeCivIntro",       "requires" : [ "ActivityPlayingCiv" ] }
+		, { "dialog" : "QuietFriendHomeCookingIntro",   "requires" : [ "ActivityCooking" ] }
 		, { "dialog" : "QuietFriendHomeGeneralIntro" }
 		]
 	},

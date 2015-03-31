@@ -559,6 +559,92 @@
 		, { "text" : "Предупреждаю, друг: я в совершенстве владею техникой гневного переворачивания стола.", "ref" : null }
 		]
 	},
+	{ "id"   : "QuietFriendHomeCookingIntro"
+	, "text" : "<aside> Молчаливый друг пытается спрятаться от вас за гитарой. Наверняка он просто застенчивый, а на самом деле безумно рад вас видеть. </aside>"
+	, "replies" :
+		[ { "text" : "Так вот, друг, блины! То есть, блины! Тьфу, я хотела сказать “привет”! Блины?", "ref" : "QuietFriendHomeCookingCrepes" }
+		, { "text" : "Привет, дорогой друг! Какой отличный день для, например, блинов!", "ref" : "QuietFriendHomeCookingCrepes" }
+		, { "text" : "Добрый день, мой умеющий готовить блины друг!", "ref" : "QuietFriendHomeCookingCrepes" }
+		, { "text" : "Хм, хотя, я не готова к блинам. Это слишком серьёзный шаг в отношениях.", "ref" : null }
+		]
+	},
+	{ "id"   : "QuietFriendHomeCookingCrepes"
+	, "text" : "<em>Я умею готовить блины.</em>"
+	, "replies" :
+		[ { "text" : "Докажи, друг, что не покупаешь их в магазине, как вареники! ", "ref" : "QuietFriendHomeCookingIngredients" }
+		, { "text" : "А точно не оладьи? Меня столько раз обманывали.", "ref" : "QuietFriendHomeCookingPankcakes" }
+		, { "text" : "Давай же скрепим нашу дружбу блинами, друг!", "ref" : "QuietFriendHomeCookingIngredients" }
+		]
+	},
+	{ "id"   : "QuietFriendHomeCookingPankcakes"
+	, "text" : "<em>Между блинами и оладьями буквально нет разницы!</em>"
+	, "replies" :
+		[ { "text" : "Оооокай, плохое начало.", "ref" : "QuietFriendHomeCookingFat" }
+		, { "text" : "Оладьи толстые.", "ref" : "QuietFriendHomeCookingFat" }
+		]
+	},
+	{ "id"   : "QuietFriendHomeCookingFat"
+	, "text" : "<em>Ты толстая.</em>"
+	, "replies" :
+		[ { "text" : "Я не толстая!", "ref" : "QuietFriendHomeCookingIngredients" }
+		, { "text" : "Не зли меня, когда я голодна!", "ref" : "QuietFriendHomeCookingIngredients" }
+		]
+	},
+	{ "id"   : "QuietFriendHomeCookingIngredients"
+	, "text" : "<em>Неси продукты.<br>- 2 яйца<br>- 3 ложки сметаны<br>- стакан молока<br>- стакан воды<br>- пакет муки<br>- соль и сахар<br>- разрыхлитель<br>- подсолнечное масло</em>"
+	, "replies" :
+		[ { "text" : "У меня есть макароны. А ты не мог бы сбегать в магазин? ", "ref" : "QuietFriendHomeCookingNoPasaran" } ]
+	},
+	{ "id"   : "QuietFriendHomeCookingNoPasaran"
+	, "text" : "<aside>Друг не двигается с места и молча смотрит на вас.</aside>"
+	, "replies" :
+		[ { "text" : "О чём я думала? Скоро вернусь!", "ref" : "QuietFriendHomeCookingMix" }
+		, { "text" : "И не ешь мои макароны!", "ref" : "QuietFriendHomeCookingMix" }
+		]
+	},
+	{ "id"   : "QuietFriendHomeCookingMix"
+	, "text" : "<aside>Вы возвращаетесь запыхавшись. Друг уже печатает вам новые инструкции.</aside><em>Взбей яйца со столовой ложкой сахара и немного соли. Добавь сметану, молоко и воду. Досыпь муки до нужной консистенции.</em>"
+	, "replies" :
+		[ { "text" : "<aside>Вы взбиваете смесь вилкой в миске, но в азарте разбрызгиваете содержимое по столу.</aside>", "ref" : "QuietFriendHomeCookingMixFailure" }
+		, { "text" : "<aside>Успешно взбив смесь, вы наклоняете пакет с мукой пока, о боже, она вся не вываливается в миску одним комом.</aside>", "ref" : "QuietFriendHomeCookingMixFailure" }
+		, { "text" : "<aside>Наконец, старательно выполнив инструкции, вы получаете чудесную блинную смесь.</aside>", "ref" : "QuietFriendHomeCookingRise" }
+		]
+	},
+	{ "id"   : "QuietFriendHomeCookingMixFailure"
+	, "text" : "<aside>Под строгим взглядом друга, вы прибираетесь, достаёте новые ингредиенты и снова перечитываете инструкцию.</aside><em>Взбей яйца со столовой ложкой сахара и немного соли. Добавь сметану, молоко и воду. Досыпь муки до нужной консистенции.</em>"
+	, "replies" :
+		[ { "text" : "<aside>Вы взбиваете смесь вилкой в миске, но в азарте распыляете содержимое по столу.</aside>", "ref" : "QuietFriendHomeCookingMixFailure" }
+		, { "text" : "<aside>Успешно взбив смесь, вы наклоняете пакет с мукой пока, о ужас, вся она не вываливается в миску одним комом.</aside>", "ref" : "QuietFriendHomeCookingMixFailure" }
+		, { "text" : "<aside>Наконец, старательно выполнив инструкции, вы получаете чудесную блинную смесь.</aside>", "ref" : "QuietFriendHomeCookingRise" }
+		]
+	},
+	{ "id"   : "QuietFriendHomeCookingRise"
+	, "text" : "<em>Для дырочек в блинах, добавь в смесь разрыхлитель, перемешай и поставь на 20 минут в холодильник.</em>"
+	, "replies" :
+		[ { "text" : "<aside>Вы следуете указаниям и закрываете дверцу холодильника.</aside>", "ref" : "QuietFriendHomeCookingBaking" }
+		, { "text" : "А теперь у нас есть 20 минут поболтать, друг.", "ref" : "QuietFriendHomeCookingBaking" }
+		, { "text" : "Как ты считаешь, не нарушает ли мгновенная телепортация принципы теории относительности?", "ref" : "QuietFriendHomeCookingBaking" }
+		]
+	},
+	{ "id"   : "QuietFriendHomeCookingBaking"
+	, "text" : "<em>Разогрей сковороду и перед самой выпечкой добавь в смесь столовую ложку подсолнечного масла.</em>"
+	, "replies" :
+		[ { "text" : "Ох, теперь выпечка займёт весь день!", "ref" : "QuietFriendHomeCookingTooLong" }
+		, { "text" : "Не могу дождаться!", "ref" : "QuietFriendHomeCookingDone" }
+		]
+	},
+	{ "id"   : "QuietFriendHomeCookingTooLong"
+	, "text" : "<em>Можно готовить на двух сковородах.</em>"
+	, "replies" :
+		[ { "text" : "Это… это гениально, друг!", "ref" : "QuietFriendHomeCookingDone" } ]
+	},
+	{ "id"   : "QuietFriendHomeCookingDone"
+	, "text" : "<aside>На столе стоит блюдо с величественно возвышающейся стопкой блинов. От них идёт тёплый пар и дурманящий запах.</aside><em>Пока мы едим, остальные блины можно держать тёплыми в духовке.</em>"
+	, "replies" :
+		[ { "text" : "Мы? Кто не работает, тот не ест! Хотя обычно я категорически против этой пословицы.", "ref" : null }
+		, { "text" : "А я все съела пока обдумывала, что сказать. ХОЧУ ЕЩЁ!", "ref" : null }
+		]
+	},
 	{ "id"   : "QuietFriendHomeGeneralIntro"
 	, "text" : "<aside> Молчаливый друг пытается притвориться геранью, но вы замечаете, что что-то не так, когда он отказывается есть мух. </aside> <em> Хм, я не умею ходить в гости. Что нужно делать? </em>"
 	, "replies" :
