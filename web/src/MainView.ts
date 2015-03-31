@@ -70,7 +70,7 @@ class MainView implements IMainView
 		var e = $("#moustache");
 		if (moustache >= 0)
 		{
-			e.text("nkytabdle".substring(moustache, moustache + 1));
+			e.text("nkytabdleo".substring(moustache, moustache + 1));
 			e.show();
 		}
 		else

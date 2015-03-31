@@ -1499,7 +1499,7 @@ var MainView = (function () {
     MainView.prototype.SetMoustache = function (moustache) {
         var e = $("#moustache");
         if (moustache >= 0) {
-            e.text("nkytabdle".substring(moustache, moustache + 1));
+            e.text("nkytabdleo".substring(moustache, moustache + 1));
             e.show();
         }
         else {
@@ -2351,6 +2351,26 @@ function MapCharacterNameFlags(flags, player, characterManager, homeModel, queue
     }
 }
 function MapPlayerFlags(flags, player) {
+    var ReceiveFakeMoustache = function () {
+        var price = 500;
+        var money = player.GetMoney();
+        if (money >= price) {
+            player.SetMoney(money - price);
+            player.SetMoustache(1, true);
+        }
+    };
+    var ReceiveBestMoustache = function () {
+        player.SetMoustache(9);
+        player.IncrementRate(50);
+    };
+    var ReceivePoetInheritance = function () {
+        var gain = 20000;
+        player.SetMoney(player.GetMoney() + gain);
+    };
+    var ReceiveEndOfTheLineBonus = function () {
+        var rate = player.GetRate();
+        player.IncrementRate(rate * 0.1); // +10%
+    };
     flags.SetCheck("MoustacheEquipped", function () {
         return player.GetMoustache() >= 0;
     });
@@ -2360,7 +2380,13 @@ function MapPlayerFlags(flags, player) {
     flags.SetCheck("HatEquipped", function () {
         return player.GetHat() != 0 /* None */;
     });
-    flags.SetControl("ReceiveFakeMoustache", player.SetMoustache.bind(player, 1, true));
+    flags.SetCheck("HasFakeMoustacheMoney", function () {
+        return player.GetMoney() >= 500;
+    });
+    flags.SetControl("ReceiveFakeMoustache", ReceiveFakeMoustache);
+    flags.SetControl("ReceiveBestMoustache", ReceiveBestMoustache);
+    flags.SetControl("ReceivePoetInheritance", ReceivePoetInheritance);
+    flags.SetControl("ReceiveEndOfTheLineBonus", ReceiveEndOfTheLineBonus);
     flags.SetControl("DestroyCiv", player.RemoveItem.bind(player, 6 /* Civ */));
 }
 function MapActivityFlags(flags, homeModel) {

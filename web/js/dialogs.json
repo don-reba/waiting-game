@@ -1188,9 +1188,9 @@
 		]
 	},
 	{ "id"   : "ShadyPurchaseMoustachePrice"
-	, "text" : "Цена смешная — всего N рублей! Вы же не сможете отказаться от такого безумно выгодного предложения!"
+	, "text" : "Цена смешная — всего 500 рублей! Вы же не сможете отказаться от такого безумно выгодного предложения!"
 	, "replies" :
-		[ { "text" : "Не смогу! Покупаю!", "ref" : "ShadyPurchaseMoustacheBuy" }
+		[ { "text" : "Не смогу! Покупаю!", "ref" : "ShadyPurchaseMoustacheBuy", "requires" : [ "HasFakeMoustacheMoney" ] }
 		, { "text" : "Пока я не могу позволить себе такую покупку. Эй, не смейтесь! У меня неоплачиваемая работа!", "ref" : "ShadyPurchaseMoustacheRefuse" }
 		]
 	},
@@ -2267,7 +2267,7 @@
 		, { "text" : "Мистер Усы, как вы похорошели! Сделали пластическую операцию? Нет? О, пойдёмте домой, вы расскажите мне за ужином.", "ref" : null }
 		, { "text" : "Благодарю! Мы с усами будем навещать вас, чтобы вам не было одиноко! До усвидания!", "ref" : null }
 		]
-	, "sets"   : [ "MoustacheUpgradeObtained", "MrMoustacheFriendship" ]
+	, "sets"   : [ "ReceiveBestMoustache", "MrMoustacheFriendship" ]
 	, "clears" : [ "MrMoustacheUpgradePending" ]
 	},
 	{ "id"   : "MrMoustacheMoustacheFillerIntro"
@@ -6466,7 +6466,7 @@
 	, "text" : "Здравствуйте."
 	, "replies" :
 		[ { "text" : "Кто вы такой?", "ref" : "EndOfTheLineMatrixArchitect" } ]
-	, "sets"   : [ "EndOfTheLineKittensPending", "EndOfTheLineMatrixBonus" ]
+	, "sets"   : [ "EndOfTheLineKittensPending", "ReceiveEndOfTheLineMatrixBonus" ]
 	, "clears" : [ "EndOfTheLineMatrixPending" ]
 	},
 	{ "id"   : "EndOfTheLineMatrixArchitect"
@@ -6510,7 +6510,7 @@
 	, "text" : "Мяу!"
 	, "replies" :
 		[ { "text" : "Оу, какой милый котёнок. Давай я тебя поглажу.", "ref" : "EndOfTheLineKittensPurr" } ]
-	, "sets"   : [ "EndOfTheLineKittensBonus" ]
+	, "sets"   : [ "ReceiveEndOfTheLineKittensBonus" ]
 	, "clears" : [ "EndOfTheLineKittensPending" ]
 	},
 	{ "id"   : "EndOfTheLineKittensPurr"
@@ -6534,7 +6534,7 @@
 		, { "text" : "И с хрустящей корочкой!", "ref" : "EndOfTheLineCrepesTopping" }
 		, { "text" : "Такие воздушные!", "ref" : "EndOfTheLineCrepesTopping" }
 		]
-	, "sets" : [ "EndOfTheLineMatrixPending", "EndOfTheLineCrepesBonus" ]
+	, "sets" : [ "EndOfTheLineMatrixPending", "ReceiveEndOfTheLineCrepesBonus" ]
 	},
 	{ "id"   : "EndOfTheLineCrepesTopping"
 	, "text" : "У нас есть мёд, малиновое варенье с целыми ягодами, вишнёвое, апельсиновое, сгущёнка, шоколадный мусс, ванильный сахар…"

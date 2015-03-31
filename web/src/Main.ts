@@ -46,11 +46,41 @@ function MapCharacterNameFlags
 
 function MapPlayerFlags(flags : Flags, player : Player) : void
 {
-	flags.SetCheck("MoustacheEquipped", () => { return player.GetMoustache() >= 0 });
-	flags.SetCheck("MoustacheAbsent",   () => { return player.GetMoustache() <  0 });
-	flags.SetCheck("HatEquipped",       () => { return player.GetHat() != Hat.None });
+	var ReceiveFakeMoustache = function()
+	{
+		var price = 500;
+		var money = player.GetMoney();
+		if (money >= price)
+		{
+			player.SetMoney(money - price);
+			player.SetMoustache(1, true);
+		}
+	}
+	var ReceiveBestMoustache = function()
+	{
+		player.SetMoustache(9);
+		player.IncrementRate(50);
+	}
+	var ReceivePoetInheritance = function()
+	{
+		var gain = 20000;
+		player.SetMoney(player.GetMoney() + gain);
+	}
+	var ReceiveEndOfTheLineBonus = function()
+	{
+		var rate = player.GetRate();
+		player.IncrementRate(rate * 0.1); // +10%
+	}
 
-	flags.SetControl("ReceiveFakeMoustache", player.SetMoustache.bind(player, 1, true));
+	flags.SetCheck("MoustacheEquipped",     () => { return player.GetMoustache() >= 0 });
+	flags.SetCheck("MoustacheAbsent",       () => { return player.GetMoustache() <  0 });
+	flags.SetCheck("HatEquipped",           () => { return player.GetHat() != Hat.None });
+	flags.SetCheck("HasFakeMoustacheMoney", () => { return player.GetMoney() >= 500 });
+
+	flags.SetControl("ReceiveFakeMoustache",     ReceiveFakeMoustache);
+	flags.SetControl("ReceiveBestMoustache",     ReceiveBestMoustache);
+	flags.SetControl("ReceivePoetInheritance",   ReceivePoetInheritance);
+	flags.SetControl("ReceiveEndOfTheLineBonus", ReceiveEndOfTheLineBonus);
 	flags.SetControl("DestroyCiv", player.RemoveItem.bind(player, Item.Civ));
 }
 
