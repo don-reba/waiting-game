@@ -48,7 +48,7 @@ function MapPlayerFlags(flags : Flags, player : Player) : void
 {
 	var ReceiveFakeMoustache = function()
 	{
-		var price = 500;
+		var price = 500; // remember to sync with the text
 		var money = player.GetMoney();
 		if (money >= price)
 		{

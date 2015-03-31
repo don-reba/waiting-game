@@ -3585,7 +3585,7 @@
 	{ "id"   : "CatDescriptionIntro"
 	, "text" : "<aside> Чёрный кот перебегает вам дорогу и становится в очередь перед вами. </aside>"
 	, "replies" :
-		[ { "text" : "Какая удача! “Коты клёвые” — одна из ваших жизненных заповедей.", "ref" : null }
+		[ { "text" : "Какая удача! “Коты клёвые” — одна из ваших жизненных заповедей.", "ref" : "CatIntroductionIntro" }
 		, { "text" : "Игнорировать кота. Возможно, из-за суеверий. Или расистских воззрений.", "ref" : null }
 		]
 	, "sets" : [ "CatIntroductionPending" ]
@@ -6466,7 +6466,7 @@
 	, "text" : "Здравствуйте."
 	, "replies" :
 		[ { "text" : "Кто вы такой?", "ref" : "EndOfTheLineMatrixArchitect" } ]
-	, "sets"   : [ "EndOfTheLineKittensPending", "ReceiveEndOfTheLineMatrixBonus" ]
+	, "sets"   : [ "EndOfTheLineKittensPending", "ReceiveEndOfTheLineBonus" ]
 	, "clears" : [ "EndOfTheLineMatrixPending" ]
 	},
 	{ "id"   : "EndOfTheLineMatrixArchitect"
@@ -6510,7 +6510,7 @@
 	, "text" : "Мяу!"
 	, "replies" :
 		[ { "text" : "Оу, какой милый котёнок. Давай я тебя поглажу.", "ref" : "EndOfTheLineKittensPurr" } ]
-	, "sets"   : [ "ReceiveEndOfTheLineKittensBonus" ]
+	, "sets"   : [ "ReceiveEndOfTheLineBonus" ]
 	, "clears" : [ "EndOfTheLineKittensPending" ]
 	},
 	{ "id"   : "EndOfTheLineKittensPurr"
@@ -6534,12 +6534,12 @@
 		, { "text" : "И с хрустящей корочкой!", "ref" : "EndOfTheLineCrepesTopping" }
 		, { "text" : "Такие воздушные!", "ref" : "EndOfTheLineCrepesTopping" }
 		]
-	, "sets" : [ "EndOfTheLineMatrixPending", "ReceiveEndOfTheLineCrepesBonus" ]
+	, "sets" : [ "EndOfTheLineMatrixPending", "ReceiveEndOfTheLineBonus" ]
 	},
 	{ "id"   : "EndOfTheLineCrepesTopping"
 	, "text" : "У нас есть мёд, малиновое варенье с целыми ягодами, вишнёвое, апельсиновое, сгущёнка, шоколадный мусс, ванильный сахар…"
 	, "replies" :
-		[ { "text" : "Это лучший день моей жизни!", "ref" : "EndOfTheLineCrepesBye" } ]
+		[ { "text" : "Поймите правильно, это слёзы счастья.", "ref" : "EndOfTheLineCrepesBye" } ]
 	},
 	{ "id"   : "EndOfTheLineCrepesBye"
 	, "text" : "Приходите ещё!"

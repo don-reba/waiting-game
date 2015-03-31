@@ -1771,7 +1771,7 @@ var QueueModel = (function () {
     };
     QueueModel.prototype.GenerateRemaining = function () {
         var min = 4;
-        var max = 16;
+        var max = 20;
         return min + Util.Random(max - min);
     };
     QueueModel.prototype.GetPosition = function (character) {
