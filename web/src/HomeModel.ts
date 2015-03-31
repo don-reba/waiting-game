@@ -72,6 +72,18 @@ class HomeModel implements IHomeModel, IPersistent
 			this.canvas.push(new Array<string>(this.nx));
 	}
 
+	Remove(character : ICharacter) : void
+	{
+		for (var i = 0; i != this.guests.length; ++i)
+		{
+			if (this.guests[i].id != character.id)
+				continue;
+			this.guests.splice(i, 1);
+			this.GuestsChanged.Call();
+			return;
+		}
+	}
+
 	// IHomeModel implementation
 
 	DialogChanged = new Signal();

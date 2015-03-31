@@ -154,7 +154,7 @@ var Player = (function () {
         return this.friends.indexOf(character.id) >= 0;
     };
     Player.prototype.ResetComposure = function () {
-        this.composure = 60;
+        this.composure = 120;
     };
     Player.prototype.RemoveItem = function (item) {
         var i = this.items.indexOf(item);
@@ -582,6 +582,15 @@ var HomeModel = (function () {
         for (var y = 0; y != this.ny; ++y)
             this.canvas.push(new Array(this.nx));
     }
+    HomeModel.prototype.Remove = function (character) {
+        for (var i = 0; i != this.guests.length; ++i) {
+            if (this.guests[i].id != character.id)
+                continue;
+            this.guests.splice(i, 1);
+            this.GuestsChanged.Call();
+            return;
+        }
+    };
     HomeModel.prototype.AreGuestsArriving = function () {
         return this.waitingGuests.length > 0;
     };
@@ -1761,7 +1770,7 @@ var QueueModel = (function () {
     };
     QueueModel.prototype.GenerateRemaining = function () {
         var min = 4;
-        var max = 12;
+        var max = 16;
         return min + Util.Random(max - min);
     };
     QueueModel.prototype.GetPosition = function (character) {
@@ -2329,7 +2338,7 @@ var StoreView = (function () {
 /// <reference path="StorePresenter.ts"      />
 /// <reference path="StoreView.ts"           />
 /// <reference path="Timer.ts"               />
-function MapCharacterNameFlags(flags, player, characterManager, queueModel) {
+function MapCharacterNameFlags(flags, player, characterManager, homeModel, queueModel) {
     var characters = characterManager.GetAllCharacters();
     for (var i = 0; i != characters.length; ++i) {
         var c = characters[i];
@@ -2337,6 +2346,7 @@ function MapCharacterNameFlags(flags, player, characterManager, queueModel) {
         flags.SetCheck(c.id + "Friendship", player.IsFriendsWith.bind(player, c));
         flags.SetControl(c.id + "Friendship", player.Befriend.bind(player, c));
         flags.SetControl(c.id + "ExitQueue", queueModel.Remove.bind(queueModel, c));
+        flags.SetControl(c.id + "ExitHome", homeModel.Remove.bind(homeModel, c));
     }
 }
 function MapPlayerFlags(flags, player) {
@@ -2394,7 +2404,7 @@ function Main(dialogs, characters) {
     var storePresenter = new StorePresenter(mainModel, storeModel, storeView);
     var persistentItems = [["activitiesMenu", activitiesModel], ["invitesMenu", invitesModel], ["home", homeModel], ["main", mainModel], ["player", player], ["queue", queueModel], ["store", storeModel], ["timer", timer], ["flags", flags]];
     var persistentState = new PersistentState(persistentItems, timer);
-    MapCharacterNameFlags(flags, player, characterManager, queueModel);
+    MapCharacterNameFlags(flags, player, characterManager, homeModel, queueModel);
     MapPlayerFlags(flags, player);
     MapActivityFlags(flags, homeModel);
     persistentState.Load();

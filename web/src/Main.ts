@@ -26,6 +26,7 @@ function MapCharacterNameFlags
 	( flags            : Flags
 	, player           : Player
 	, characterManager : CharacterManager
+	, homeModel        : HomeModel
 	, queueModel       : QueueModel
 	) : void
 {
@@ -34,11 +35,12 @@ function MapCharacterNameFlags
 	{
 		var c = characters[i]
 
-		flags.SetCheck(c.id + "Intro", player.HasNotMet.bind(player, c));
+		flags.SetCheck(c.id + "Intro",      player.HasNotMet.bind(player, c));
 		flags.SetCheck(c.id + "Friendship", player.IsFriendsWith.bind(player, c));
 
 		flags.SetControl(c.id + "Friendship", player.Befriend.bind(player, c));
-		flags.SetControl(c.id + "ExitQueue", queueModel.Remove.bind(queueModel, c));
+		flags.SetControl(c.id + "ExitQueue",  queueModel.Remove.bind(queueModel, c));
+		flags.SetControl(c.id + "ExitHome",   homeModel.Remove.bind(homeModel, c));
 	}
 }
 
@@ -106,7 +108,7 @@ function Main(dialogs : IDialog[], characters : ICharacter[])
 		];
 	var persistentState = new PersistentState(persistentItems, timer);
 
-	MapCharacterNameFlags(flags, player, characterManager, queueModel);
+	MapCharacterNameFlags(flags, player, characterManager, homeModel, queueModel);
 	MapPlayerFlags(flags, player);
 	MapActivityFlags(flags, homeModel);
 

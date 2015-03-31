@@ -116,7 +116,7 @@ class Player implements IPersistent
 
 	ResetComposure() : void
 	{
-		this.composure = 60;
+		this.composure = 120;
 	}
 
 	RemoveItem(item : Item) : void
