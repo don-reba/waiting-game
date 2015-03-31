@@ -878,6 +878,7 @@ var HomePresenter = (function () {
     }
     HomePresenter.prototype.OnActivityClicked = function () {
         this.homeModel.SetActivity(this.homeView.GetSelectedActivity());
+        this.homeModel.SetDialog(null);
         this.activitiesModel.SetVisibility(false);
     };
     HomePresenter.prototype.OnActivitiesClicked = function () {

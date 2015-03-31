@@ -43,6 +43,7 @@ class HomePresenter
 	private OnActivityClicked() : void
 	{
 		this.homeModel.SetActivity(this.homeView.GetSelectedActivity());
+		this.homeModel.SetDialog(null);
 		this.activitiesModel.SetVisibility(false);
 	}
 
