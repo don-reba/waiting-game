@@ -122,6 +122,7 @@
 		[ { "dialog" : "MrMoustacheHomeTVIntro",      "requires" : [ "ActivityWatchingTv" ] }
 		, { "dialog" : "MrMoustacheHomeCivIntro",     "requires" : [ "ActivityPlayingCiv" ] }
 		, { "dialog" : "MrMoustacheHomeCookingIntro", "requires" : [ "ActivityCooking" ] }
+		, { "dialog" : "MrMoustacheHomeGeneralIntro" }
 		]
 	},
 	{ "id"    : "Poet"
@@ -140,6 +141,17 @@
 		]
 	, "queueEscape" :
 		[ { "dialog" : "PoetQueueEscape" } ]
+	, "homeArrival" :
+		[ { "dialog" : "PoetArrivalFlowersIntro", "requires" : [ "PoetFlowersPending" ] }
+		, { "dialog" : "PoetArrivalTenetsIntro" }
+		]
+	, "homeConversation" :
+		[ { "dialog" : "PoetHomeTvIntro",        "requires" : [ "ActivityWatchingTv" ] }
+		, { "dialog" : "PoetHomeCommunityIntro", "requires" : [ "ActivityWatchingCommunity" ] }
+		, { "dialog" : "PoetHomeCooking",        "requires" : [ "ActivityCooking" ] }
+		, { "dialog" : "PoetHomeCivIntro",       "requires" : [ "ActivityPlayingCiv" ] }
+		, { "dialog" : "PoetHomeGeneralIntro" }
+		]
 	},
 	{ "id"    : "Anny"
 	, "name"  : "Настенька"
@@ -259,6 +271,7 @@
 		, { "dialog" : "PrototypeHenchmanIntro",     "requires" : [ "PrototypeHenchmanPending" ] }
 		, { "dialog" : "PrototypeFrogsIntro",        "requires" : [ "PrototypeFrogsPending" ] }
 		, { "dialog" : "PrototypeScheduleIntro",     "requires" : [ "PrototypeSchedulePending" ] }
+		, { "dialog" : "PrototypePlaceholderIntro" }
 		]
 	, "queueEscape" :
 		[ { "dialog" : "PrototypeQueueEscape" } ]
@@ -271,6 +284,26 @@
 		, { "dialog" : "MonsterScaredLiuIntro",            "requires" : [ "LiuIsScared"] }
 		, { "dialog" : "MonsterVirginMachinationsIntro",   "requires" : [ "VirginMacinationsPart2"] }
 		, { "dialog" : "MonsterVirginMachinationsPMIntro", "requires" : [ "VirginPostMortem"] }
+		, { "dialog" : "MonsterEmploymentIntro",           "requires" : [ "MonsterEmploymentPending"] }
+		, { "dialog" : "MonsterSurgeonIntro",              "requires" : [ "MonsterSurgeonPending"] }
+		, { "dialog" : "MonsterCookIntro",                 "requires" : [ "MonsterCookPending"] }
+		, { "dialog" : "MonsterReverendIntro",             "requires" : [ "MonsterReverendPending"] }
+		, { "dialog" : "MonsterFirefighterIntro",          "requires" : [ "MonsterFirefighterPending"] }
+		, { "dialog" : "MonsterEmploymentBriefIntro",      "requiresAny" : [ "MonsterSurgeonAvailable", "MonsterCookAvailable", "MonsterReverendAvailable", "MonsterFirefighterAvailable" ] }
+		, { "dialog" : "MonsterPlaceholderIntro" }
+		]
+	, "queueEscape" :
+		[ { "dialog" : "MonsterQueueEscape" } ]
+	, "homeArrival" :
+		[ { "dialog" : "MonsterArrivalParasolIntro", "requires" : [ "MonsterParasolPending" ] }
+		, { "dialog" : "MonsterArrivalSlippersIntro" }
+		]
+	, "homeConversation" :
+		[ { "dialog" : "MonsterHomeTvIntro",        "requires" : [ "ActivityWatchingTv" ] }
+		, { "dialog" : "MonsterHomeCommunityIntro", "requires" : [ "ActivityWatchingCommunity" ] }
+		, { "dialog" : "MonsterHomeCivIntro",       "requires" : [ "ActivityPlayingCiv" ] }
+		, { "dialog" : "MonsterHomeCookingIntro",   "requires" : [ "ActivityCooking" ] }
+		, { "dialog" : "MonsterHomeGeneralIntro" }
 		]
 	},
 	{ "id"    : "GlassEye"
