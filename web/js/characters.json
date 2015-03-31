@@ -206,6 +206,8 @@
 		, { "dialog" : "PatientFillerHatIntro",          "requires" : [ "PatientHatFillerPending", "HatEquipped" ] }
 		, { "dialog" : "PatientFiller1Intro",            "requires" : [ "PatientFiller1Pending" ] }
 		, { "dialog" : "PatientFiller2Intro",            "requires" : [ "PatientFiller2Pending" ] }
+		, { "dialog" : "PatientFiller3Intro",            "requires" : [ "PatientFiller3Pending" ] }
+		, { "dialog" : "PatientPlaceholderIntro" }
 		]
 	, "queueEscape" :
 		[ { "dialog" : "PatientQueueEscape" } ]
