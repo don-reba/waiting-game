@@ -1,5 +1,7 @@
 require 'sinatra'
 
+use Rack::Deflater
+
 #--------
 # routing
 #--------
