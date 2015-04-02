@@ -41,11 +41,13 @@ class ActivitiesMenuModel implements IActivitiesMenuModel, IPersistent
 
 	HasActivities() : boolean
 	{
-		if (this.player.HasItem(Item.Community))
-			return true;
-		if (this.player.HasItem(Item.Monopoly))
-			return true;
-		return false;
+		return
+			[ Item.Civ
+			, Item.Community
+			, Item.Monopoly
+			, Item.Stove
+			, Item.TV
+			].some(this.player.HasItem.bind(this.player));
 	}
 
 	IsVisible() : boolean
