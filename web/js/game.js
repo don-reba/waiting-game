@@ -237,8 +237,8 @@ var ActivitiesMenuModel = (function () {
         return activities;
     };
     ActivitiesMenuModel.prototype.HasActivities = function () {
-        return;
-        [6 /* Civ */, 3 /* Community */, 4 /* Monopoly */, 5 /* Stove */, 1 /* TV */].some(this.player.HasItem.bind(this.player));
+        var items = [6 /* Civ */, 3 /* Community */, 4 /* Monopoly */, 5 /* Stove */, 1 /* TV */];
+        return items.some(this.player.HasItem.bind(this.player));
     };
     ActivitiesMenuModel.prototype.IsVisible = function () {
         return this.isVisible;

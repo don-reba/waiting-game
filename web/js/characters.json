@@ -34,6 +34,8 @@
 	, "queueConversation" :
 		[ { "dialog" : "ShadyDescriptionIntro",                    "requires" : [ "ShadyIntro" ] }
 		, { "dialog" : "ShadyIntroductionIntro",                   "requires" : [ "ShadyIntroductionPending" ] }
+		, { "dialog" : "ShadyFakeMoustacheWarrantyIntro",          "requires" : [ "MoustacheAbsent", "FakeMoustacheReceived" ] }
+		, { "dialog" : "ShadyPurchaseMoustacheIntro",              "requires" : [ "MoustacheAbsent" ] }
 		, { "dialog" : "ShadyMachinationsRefusedIntro",            "requires" : [ "MachinationsRefused" ] }
 		, { "dialog" : "ShadyMoustacheMachinationsIntro",          "requires" : [ "MoustacheMachinationsPending" ] }
 		, { "dialog" : "ShadyFiller1Intro",                        "requires" : [ "MoustacheMachinations" ] }
@@ -46,8 +48,6 @@
 		, { "dialog" : "ShadyCatMachinationsReceiveIntro",         "requires" : [ "CatMachinationsDone" ] }
 		, { "dialog" : "ShadyFiller5Intro",                        "requires" : [ "VirginMachinations" ] }
 		, { "dialog" : "ShadyVirginMachinationsReceiveIntro",      "requires" : [ "VirginMachinationsDone" ] }
-		, { "dialog" : "ShadyFakeMoustacheWarrantyIntro",          "requires" : [ "MoustacheAbsent", "FakeMoustacheReceived" ] }
-		, { "dialog" : "ShadyPurchaseMoustacheIntro",              "requires" : [ "MoustacheAbsent" ] }
 		, { "dialog" : "ShadyPlaceholderIntro" }
 		]
 	, "queueEscape" :
@@ -229,8 +229,8 @@
 		, { "dialog" : "VillainAnnyQuestFillerIntro",      "requires" : [ "VillainAnnyQuest" ] }
 		, { "dialog" : "VillainAnnyQuestReceiveIntro",     "requires" : [ "VillainAnnyQuestReport" ] }
 		, { "dialog" : "VillainKostikQuestReceiveIntro",   "requires" : [ "VillainKostikQuestPending" ] }
-		, { "dialog" : "VillainEpilogueIntro",             "requires" : [ "VillainPostMortem" ] }
 		, { "dialog" : "VillainCatMachinationIntro",       "requires" : [ "CatMachinations" ] }
+		, { "dialog" : "VillainEpilogueIntro" }
 		]
 	, "queueEscape" :
 		[ { "dialog" : "VillainQueueEscape" } ]
