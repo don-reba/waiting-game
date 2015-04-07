@@ -205,7 +205,7 @@ var Player = (function () {
         if (this.glue > 0) {
             --this.glue;
             if (this.glue == 0) {
-                this.moustache = 0;
+                this.moustache = -1;
                 this.MoustacheChanged.Call();
             }
         }
@@ -1908,14 +1908,14 @@ var QueueView = (function () {
             if (character) {
                 button.text(character.name);
                 button.addClass("queue-character");
+                if (enabled) {
+                    button.addClass("enabled");
+                    button.click(character, OnClick.bind(this));
+                }
             }
             else {
                 button.text("\\o/");
                 button.addClass("queue-player");
-            }
-            if (enabled) {
-                button.addClass("enabled");
-                button.click(character, OnClick.bind(this));
             }
             people.append(button);
         }
@@ -2353,7 +2353,7 @@ function MapPlayerFlags(flags, player) {
         var money = player.GetMoney();
         if (money >= price) {
             player.SetMoney(money - price);
-            player.SetMoustache(1, true);
+            player.SetMoustache(0, true);
         }
     };
     var ReceiveBestMoustache = function () {
@@ -2367,6 +2367,10 @@ function MapPlayerFlags(flags, player) {
     var ReceiveEndOfTheLineBonus = function () {
         var rate = player.GetRate();
         player.IncrementRate(rate * 0.1); // +10%
+    };
+    var ReceiveVirginPay = function () {
+        var gain = 10000;
+        player.SetMoney(player.GetMoney() + gain);
     };
     flags.SetCheck("MoustacheEquipped", function () {
         return player.GetMoustache() >= 0;
@@ -2384,6 +2388,7 @@ function MapPlayerFlags(flags, player) {
     flags.SetControl("ReceiveBestMoustache", ReceiveBestMoustache);
     flags.SetControl("ReceivePoetInheritance", ReceivePoetInheritance);
     flags.SetControl("ReceiveEndOfTheLineBonus", ReceiveEndOfTheLineBonus);
+    flags.SetControl("ReceiveVirginPay", ReceiveVirginPay);
     flags.SetControl("DestroyCiv", player.RemoveItem.bind(player, 6 /* Civ */));
 }
 function MapActivityFlags(flags, homeModel) {

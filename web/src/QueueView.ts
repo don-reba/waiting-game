@@ -51,16 +51,16 @@ class QueueView implements IQueueView, IClientView
 			{
 				button.text(character.name);
 				button.addClass("queue-character");
+				if (enabled)
+				{
+					button.addClass("enabled");
+					button.click(character, OnClick.bind(this));
+				}
 			}
 			else
 			{
 				button.text("\\o/");
 				button.addClass("queue-player");
-			}
-			if (enabled)
-			{
-				button.addClass("enabled");
-				button.click(character, OnClick.bind(this));
 			}
 
 			people.append(button);

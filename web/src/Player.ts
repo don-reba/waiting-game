@@ -197,7 +197,7 @@ class Player implements IPersistent
 			--this.glue;
 			if (this.glue == 0)
 			{
-				this.moustache = 0;
+				this.moustache = -1;
 				this.MoustacheChanged.Call();
 			}
 		}

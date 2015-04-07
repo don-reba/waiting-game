@@ -53,7 +53,7 @@ function MapPlayerFlags(flags : Flags, player : Player) : void
 		if (money >= price)
 		{
 			player.SetMoney(money - price);
-			player.SetMoustache(1, true);
+			player.SetMoustache(0, true);
 		}
 	}
 	var ReceiveBestMoustache = function()
@@ -71,6 +71,11 @@ function MapPlayerFlags(flags : Flags, player : Player) : void
 		var rate = player.GetRate();
 		player.IncrementRate(rate * 0.1); // +10%
 	}
+	var ReceiveVirginPay = function()
+	{
+		var gain = 10000;
+		player.SetMoney(player.GetMoney() + gain);
+	}
 
 	flags.SetCheck("MoustacheEquipped",     () => { return player.GetMoustache() >= 0 });
 	flags.SetCheck("MoustacheAbsent",       () => { return player.GetMoustache() <  0 });
@@ -81,6 +86,7 @@ function MapPlayerFlags(flags : Flags, player : Player) : void
 	flags.SetControl("ReceiveBestMoustache",     ReceiveBestMoustache);
 	flags.SetControl("ReceivePoetInheritance",   ReceivePoetInheritance);
 	flags.SetControl("ReceiveEndOfTheLineBonus", ReceiveEndOfTheLineBonus);
+	flags.SetControl("ReceiveVirginPay",         ReceiveVirginPay);
 	flags.SetControl("DestroyCiv", player.RemoveItem.bind(player, Item.Civ));
 }
 

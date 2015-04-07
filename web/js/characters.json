@@ -43,7 +43,7 @@
 		, { "dialog" : "ShadyFiller2Intro",                        "requires" : [ "PanaceaMachinations" ] }
 		, { "dialog" : "ShadyPanaceaMachinationReceiveIntro",      "requires" : [ "PanaceaMachinationsDone" ] }
 		, { "dialog" : "ShadyFiller3Intro",                        "requires" : [ "InspirationMachinations" ] }
-		, { "dialog" : "ShadyInspriationMachinationsReceiveIntro", "requires" : [ "InspirationMachinationsDone" ] }
+		, { "dialog" : "ShadyInspirationMachinationsReceiveIntro", "requires" : [ "InspirationMachinationsDone" ] }
 		, { "dialog" : "ShadyFiller4Intro",                        "requires" : [ "CatMachinations" ] }
 		, { "dialog" : "ShadyCatMachinationsReceiveIntro",         "requires" : [ "CatMachinationsDone" ] }
 		, { "dialog" : "ShadyFiller5Intro",                        "requires" : [ "VirginMachinations" ] }
@@ -71,9 +71,10 @@
 		, { "dialog" : "HatIntroductionIntro", "requires" : [ "HatIntroductionPending" ] }
 		, { "dialog" : "HatRomanceIntro",      "requires" : [ "HatRomanceAvailable", "HatEquipped" ] }
 		, { "dialog" : "HatCapSocietyIntro",   "requires" : [ "HatCapSocietyPending" ] }
-		, { "dialog" : "HatIllnessIntro",      "requires" : [ "HatIllnessPending" ] }
+		, { "dialog" : "HatFiller1Intro",      "requires" : [ "HatIllnessPending" ] }
 		, { "dialog" : "HatMoustacheIntro",    "requires" : [ "HatMoustachePending" ] }
 		, { "dialog" : "HatMottoIntro",        "requires" : [ "HatPollPending" ] }
+		, { "dialog" : "HatPlaceholderIntro" }
 		]
 	, "queueEscape" :
 		[ { "dialog" : "HatEscapeIntro" } ]
@@ -138,7 +139,7 @@
 		, { "dialog" : "PoetFiller3Intro",                 "requires" : [ "PoetFiller3Pending" ] }
 		, { "dialog" : "PoetFiller4Intro",                 "requires" : [ "PoetFiller4Pending" ] }
 		, { "dialog" : "PoetPoetryIntro",                  "requires" : [ "PoetPoetryPlaceholder" ] }
-		, { "dialog" : "PoetLawIntro",                     "requires" : [ "PoetLawPlaceholder" ] }
+		, { "dialog" : "PoetPlaceholderIntro" }
 		]
 	, "queueEscape" :
 		[ { "dialog" : "PoetQueueEscape" } ]
@@ -159,12 +160,12 @@
 	, "queueConversation" :
 		[ { "dialog" : "AnnyDescriptionIntro",        "requires" : [ "AnnyIntro" ] }
 		, { "dialog" : "AnnyIntroductionIntro",       "requires" : [ "AnnyIntroductionPending" ] }
-		, { "dialog" : "AnnyVillainQuestIntro",       "requires" : [ "VillainAnnyQuest" ] }
+		, { "dialog" : "AnnyVillainQuestIntro",       "requires" : [ "AnnyQuest" ] }
 		, { "dialog" : "AnnyFiller1Intro",            "requires" : [ "AnnyFiller1Pending" ] }
 		, { "dialog" : "AnnyMakingUpIntro",           "requires" : [ "MakeUpWithAnny" ] }
 		, { "dialog" : "AnnyVirginMachinationsIntro", "requires" : [ "VirginMachinationsPart1" ] }
-		, { "dialog" : "AnnyMonster",                 "requires" : [ "AnnyMarriage" ] }
-		, { "dialog" : "AnnyHatPlaceholder",          "requires" : [ "HatEquipped" ] }
+		, { "dialog" : "AnnyMonsterIntro",                 "requires" : [ "AnnyMarriage" ] }
+		, { "dialog" : "AnnyHatPlaceholderIntro",     "requires" : [ "HatEquipped" ] }
 		, { "dialog" : "AnnyPlaceholder" }
 		]
 	, "queueEscape" :
@@ -219,16 +220,16 @@
 		[ { "dialog" : "VillainDescriptionIntro",          "requires" : [ "VillainIntro"] }
 		, { "dialog" : "VillainIntroductionIntro",         "requires" : [ "VillainIntroductionPending" ] }
 		, { "dialog" : "VillainOffendedIntro",             "requires" : [ "VillainOffended" ] }
-		, { "dialog" : "VillainDoomsdayQuestIntro",        "requires" : [ "VillainQuestPending" ] }
+		, { "dialog" : "VillainDoomsdayQuestIntro",        "requires" : [ "DoomsdayQuestPending" ] }
 		, { "dialog" : "VillainDoomsdayQuestFillerIntro",  "requires" : [ "DoomsdayQuest" ] }
-		, { "dialog" : "VillainDoomsdayQuestReceiveIntro", "requires" : [ "DoomsdayQuestReport" ] }
+		, { "dialog" : "VillainDoomsdayQuestReceiveIntro", "requires" : [ "DoomsdayQuestDone" ] }
 		, { "dialog" : "VillainRobochefQuestIntro",        "requires" : [ "MicrochipQuestPending" ] }
 		, { "dialog" : "VillainRobochefQuestFillerIntro",  "requires" : [ "MicrochipQuest" ] }
-		, { "dialog" : "VillainRobochefQuestReceiveIntro", "requires" : [ "MicrochipQuestReport" ] }
-		, { "dialog" : "VillainAnnyQuestIntro",            "requires" : [ "VillainAnnyQuestPending" ] }
-		, { "dialog" : "VillainAnnyQuestFillerIntro",      "requires" : [ "VillainAnnyQuest" ] }
-		, { "dialog" : "VillainAnnyQuestReceiveIntro",     "requires" : [ "VillainAnnyQuestReport" ] }
-		, { "dialog" : "VillainKostikQuestReceiveIntro",   "requires" : [ "VillainKostikQuestPending" ] }
+		, { "dialog" : "VillainRobochefQuestReceiveIntro", "requires" : [ "MicrochipQuestDone" ] }
+		, { "dialog" : "VillainAnnyQuestIntro",            "requires" : [ "AnnyQuestPending" ] }
+		, { "dialog" : "VillainAnnyQuestFillerIntro",      "requires" : [ "AnnyQuest" ] }
+		, { "dialog" : "VillainAnnyQuestReceiveIntro",     "requires" : [ "AnnyQuestDone" ] }
+		, { "dialog" : "VillainKostikQuestReceiveIntro",   "requires" : [ "KostikQuestPending" ] }
 		, { "dialog" : "VillainCatMachinationIntro",       "requires" : [ "CatMachinations" ] }
 		, { "dialog" : "VillainEpilogueIntro" }
 		]
@@ -270,8 +271,8 @@
 		[ { "dialog" : "PrototypeDescriptionIntro",  "requires" : [ "PrototypeIntro" ] }
 		, { "dialog" : "PrototypeIntroductionIntro", "requires" : [ "PrototypeIntroductionPending" ] }
 		, { "dialog" : "PrototypeInvitationIntro",   "requires" : [ "PrototypeInvitationPending" ] }
-		, { "dialog" : "PrototypeSlaveryIntro",      "requires" : [ "PrototypeSlaveryPending" ] }
-		, { "dialog" : "PrototypeHenchmanIntro",     "requires" : [ "PrototypeHenchmanPending" ] }
+		, { "dialog" : "PrototypeSlaveryIntro",      "requires" : [ "LiuIsSlaver" ] }
+		, { "dialog" : "PrototypeHenchmanIntro",     "requires" : [ "LiuIsHenchman" ] }
 		, { "dialog" : "PrototypeFrogsIntro",        "requires" : [ "PrototypeFrogsPending" ] }
 		, { "dialog" : "PrototypeScheduleIntro",     "requires" : [ "PrototypeSchedulePending" ] }
 		, { "dialog" : "PrototypePlaceholderIntro" }
@@ -285,7 +286,7 @@
 		[ { "dialog" : "MonsterDescriptionIntro",          "requires" : [ "MonsterIntro"] }
 		, { "dialog" : "MonsterIntroductionIntro",         "requires" : [ "MonsterIntroductionPending"] }
 		, { "dialog" : "MonsterScaredLiuIntro",            "requires" : [ "LiuIsScared"] }
-		, { "dialog" : "MonsterVirginMachinationsIntro",   "requires" : [ "VirginMacinationsPart2"] }
+		, { "dialog" : "MonsterVirginMachinationsIntro",   "requires" : [ "VirginMachinationsPart2"] }
 		, { "dialog" : "MonsterVirginMachinationsPMIntro", "requires" : [ "VirginPostMortem"] }
 		, { "dialog" : "MonsterEmploymentIntro",           "requires" : [ "MonsterEmploymentPending"] }
 		, { "dialog" : "MonsterSurgeonIntro",              "requires" : [ "MonsterSurgeonPending"] }

@@ -55,7 +55,10 @@ em {
 
 .fg-clickable       { cursor           : pointer; }
 .fg-clickable:hover { background-color : #B2D184; }
-.fg-clickable:hover em { background-color : #B2D184; }
+.fg-clickable:hover em {
+	background-color : #B2D184;
+	box-shadow       : none;
+}
 
 .top-exterior {
 	position : absolute;

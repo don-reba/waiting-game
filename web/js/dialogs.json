@@ -390,47 +390,47 @@
 	{ "id" : "QuietFriendCosplayIntro"
 	, "text" : "<aside> Чудесный день! Ведь вы встретили своего дорогого друга! Солнышко светит, птички поют. Интересно, какое дружеское приключение предстоит вам сегодня? </aside>"
 	, "replies" :
-		[ { "text" : "Привет, друг! Ты готов к приключениям?", "ref" : null }
+		[ { "text" : "Привет, друг! Ты готов к приключениям?", "ref" : "QuietFriendCosplayAdventure" }
 		, { "text" : "Нет, вы же взяли себе за правило — никаких приключений по четвергам.", "ref" : null }
 		]
 	},
 	{ "id" : "QuietFriendCosplayAdventure"
 	, "text" : "<em> Я Бэтмен! </em> <aside> — заявляет ваш друг. Наверное, поэтому он и не снимает маску! </aside>"
 	, "replies" :
-		[ { "text" : "Клёво, ролеплей супергероев! Тогда я буду Человеком-Усами!", "ref" : null, "requires" : [ "MoustacheEquipped" ] }
-		, { "text" : "Привет, Бэтмен, я Хэтмен!", "ref" : null, "requires" : [ "HatEquipped" ] }
-		, { "text" : "А я — Блинный Чувачок, ближайший соратник Бэтмена!", "ref" : null }
+		[ { "text" : "Клёво, ролеплей супергероев! Тогда я буду Человеком-Усами!", "ref" : "QuietFriendCosplayMoustacheman", "requires" : [ "MoustacheEquipped" ] }
+		, { "text" : "Привет, Бэтмен, я Хэтмен!", "ref" : "QuietFriendCosplayHatman", "requires" : [ "HatEquipped" ] }
+		, { "text" : "А я — Блинный Чувачок, ближайший соратник Бэтмена!", "ref" : "QuietFriendCosplayPancakeDude" }
 		, { "text" : "Клёво тебе. А я никто. И моя суперспособность — плакать в одиночестве. Прощай!", "ref" : null }
 		]
 	},
 	{ "id" : "QuietFriendCosplayMoustacheman"
 	, "text" : "<em> Хм. У тебя есть сверхспособности? Моя способность — игноририровать призывы о помощи, потому что я Бэтмен и могу себе это позволить! </em>"
 	, "replies" :
-		[ { "text" : "А у меня зато… хм. Клёвые усы! Вот! Они устрашают союзников и восхищают врагов!", "ref" : null }
-		, { "text" : "Пф, я тоже умею игнорировать. Вдруг я тоже Бэтмен? Но нет, я Человек-Усы! Всегда на страже клёвости!", "ref" : null }
+		[ { "text" : "А у меня зато… хм. Клёвые усы! Вот! Они устрашают союзников и восхищают врагов!", "ref" : "QuietFriendCosplayHeroicDeed" }
+		, { "text" : "Пф, я тоже умею игнорировать. Вдруг я тоже Бэтмен? Но нет, я Человек-Усы! Всегда на страже клёвости!", "ref" : "QuietFriendCosplayHeroicDeed" }
 		]
 	},
 	{ "id" : "QuietFriendCosplayHatman"
 	, "text" : "<em> И какая у тебя суперспособность, Фэтмен? Я Бэтмен! Я защищаю город по ночам, поэтому моя суперспособность — постоянно хотеть спать. </em>"
 	, "replies" :
-		[ { "text" : "Пф, я супернетолстая!", "ref" : null }
-		, { "text" : "Я суперкруто смотрюсь в шляпе!", "ref" : null }
-		, { "text" : "В опасных ситуациях я умею полностью прятаться в шляпе, как черепашка в панцире!", "ref" : null }
+		[ { "text" : "Пф, я супернетолстая!", "ref" : "QuietFriendCosplayHeroicDeed" }
+		, { "text" : "Я суперкруто смотрюсь в шляпе!", "ref" : "QuietFriendCosplayHeroicDeed" }
+		, { "text" : "В опасных ситуациях я умею полностью прятаться в шляпе, как черепашка в панцире!", "ref" : "QuietFriendCosplayHeroicDeed" }
 		]
 	},
 	{ "id" : "QuietFriendCosplayPancakeDude"
 	, "text" : "<em> Но достаточно ли ты пропёкся, чтобы быть соратником Бэтмена, Блинный Чувачок? </em>"
 	, "replies" :
-		[ { "text" : "Да! Я прошёл сквозь пекло ада, чтобы стать твоим сайдкиком, Бэтмен!", "ref" : null }
-		, { "text" : "Хм, я съела свой супергеройский костюм, сшитый из блинов. Неловко, но это нас не остановит!", "ref" : null }
+		[ { "text" : "Да! Я прошёл сквозь пекло ада, чтобы стать твоим сайдкиком, Бэтмен!", "ref" : "QuietFriendCosplayHeroicDeed" }
+		, { "text" : "Хм, я съела свой супергеройский костюм, сшитый из блинов. Неловко, но это нас не остановит!", "ref" : "QuietFriendCosplayHeroicDeed" }
 		]
 	},
 	{ "id" : "QuietFriendCosplayHeroicDeed"
 	, "text" : "<em> Хм. Осталось придумать подходящий супергеройский подвиг. Я Бэтмен! </em>"
 	, "replies" :
-		[ { "text" : "Мы можем сразиться с Человеком-Тараканом!", "ref" : null }
-		, { "text" : "Или раскрыть дело о зловещем похищение печенек!", "ref" : null }
-		, { "text" : "А ещё, можно разойтись по домам и играть в игры!", "ref" : null }
+		[ { "text" : "Мы можем сразиться с Человеком-Тараканом!", "ref" : "QuietFriendCosplayRoachman" }
+		, { "text" : "Или раскрыть дело о зловещем похищение печенек!", "ref" : "QuietFriendCosplayCookies" }
+		, { "text" : "А ещё, можно разойтись по домам и играть в игры!", "ref" : "QuietFriendCosplayGames" }
 		]
 	},
 	{ "id" : "QuietFriendCosplayRoachman"
@@ -861,6 +861,66 @@
 	, "sets"   : [ "MachinationsRefused" ]
 	, "clears" : [ "ShadyIntroductionPending" ]
 	},
+	{ "id"   : "ShadyFakeMoustacheWarrantyIntro"
+	, "text" : "Добрый день! К сожалению, распродажа намордников для рыбок уже закончилась."
+	, "replies" :
+		[ { "text" : "На самом деле я пришла по поводу гарантии на усы, которые вы мне продали. Они отклеились!", "ref" : "ShadyFakeMoustacheWarrantyWarranty" }
+		, { "text" : "Проклятье, как же я буду выгуливать рыбок? Постойте, у меня же нет рыбок. У меня есть гарантия на отклеившиеся усы!", "ref" : "ShadyFakeMoustacheWarrantyWarranty" }
+		]
+	},
+	{ "id"   : "ShadyFakeMoustacheWarrantyWarranty"
+	, "text" : "Использовали ли вы при установке усов одобренный производителем клей?"
+	, "replies" :
+		[ { "text" : "Вы не предупреждали ни про какой клей!", "ref" : "ShadyFakeMoustacheWarrantySorry" }
+		, { "text" : "Хм, я прилепила усы шоколадом.", "ref" : "ShadyFakeMoustacheWarrantySorry" }
+		]
+	},
+	{ "id"   : "ShadyFakeMoustacheWarrantySorry"
+	, "text" : "Извините, в таком случае поломка усов не является гарантийной. Но! Если купите новый комплект усов, я сделаю вам скидку на одобренный производителем клей! Кроме того, вы получите в подарок стикер на усы!"
+	, "replies" :
+		[ { "text" : "Нет уж, впредь буду устанавливать усы только у официальных дилеров.", "ref" : null }
+		, { "text" : "Вы солгали мне про гарантию! Как вы могли! Я доверяла вам, как никому в этой очереди!", "ref" : null }
+		, { "text" : "Ужасно, куда катится мир, если даже подпольному продавцу усов нельзя доверять. Пойду жаловаться малознакомым людям в интернете.", "ref" : null }
+		]
+	, "clears" : [ "FakeMoustacheReceived" ]
+	},
+	{ "id"   : "ShadyPurchaseMoustacheIntro"
+	, "text" : "Добрый день! Боюсь, что никто не говорил вам, но над вашей верхней губой — вселенская пустота! Выглядит крайне неэстетично. Не желаете ли приобрести усы «Карандаш»? Лицензионная продукция, отлично маскирует вселенскую пустоту."
+	, "replies" :
+		[ { "text" : "Вселенская пустота всё же лучше, чем бородавка! А сколько они стоят?", "ref" : "ShadyPurchaseMoustachePrice" }
+		, { "text" : "А гарантия на усы есть?", "ref" : "ShadyPurchaseMoustacheWarranty" }
+		, { "text" : "Нет, спасибо, я довольна своей внешностью.", "ref" : "ShadyPurchaseMoustacheRefuse" }
+		]
+	},
+	{ "id"   : "ShadyPurchaseMoustacheWarranty"
+	, "text" : "Два года гарантии! Однако, случаи поломки в результате небрежного обращения с усами не считаются гарантийными."
+	, "replies" :
+		[ { "text" : "Я буду их холить и лелеять! Но могу ли я их себе позволить?", "ref" : "ShadyPurchaseMoustachePrice" }
+		, { "text" : "Зачем усы, если нельзя их лихо закручивать и гневно дергать! Нет, спасибо.", "ref" : "ShadyPurchaseMoustacheRefuse" }
+		]
+	},
+	{ "id"   : "ShadyPurchaseMoustachePrice"
+	, "text" : "Цена смешная — всего 500 рублей! Вы же не сможете отказаться от такого безумно выгодного предложения!"
+	, "replies" :
+		[ { "text" : "Не смогу! Покупаю!", "ref" : "ShadyPurchaseMoustacheBuy", "requires" : [ "HasFakeMoustacheMoney" ] }
+		, { "text" : "Пока я не могу позволить себе такую покупку. Эй, не смейтесь! У меня неоплачиваемая работа!", "ref" : "ShadyPurchaseMoustacheRefuse" }
+		]
+	},
+	{ "id"   : "ShadyPurchaseMoustacheBuy"
+	, "text" : "Поздравляю! О, они вам невероятно идут. Могу я заинтересовать вас в продукции для ухода за усами? Например, усатая кружка! Вашим усам будет приятно пить из такой!"
+	, "replies" :
+		[ { "text" : "О, ПОТРЯСАЮЩЕ, УСАТАЯ КРУЖКА! Ох, нет, Лю, держи себя в руках, ты уже продала одну почку. До встречи!", "ref" : null }
+		, { "text" : "Нет, благодарю. В моём доме усы разрешено носить только мне! До свидания.", "ref" : null }
+		]
+	, "sets" : [ "ReceiveFakeMoustache", "FakeMoustacheReceived" ]
+	},
+	{ "id"   : "ShadyPurchaseMoustacheRefuse"
+	, "text" : "Ваш отказ разбивает мне сердце! (Не хотите приобрести сверхнадёжный клей для ремонта сердец? Нет? Какая жестокость!) Оставьте меня в моей печали!"
+	, "replies" :
+		[ { "text" : "Ох, как я могла так с ним поступить! Скоплю денег и обязательно вернусь!", "ref" : null }
+		, { "text" : "И вовсе мне не нужны усы! Проживу без них!", "ref" : null }
+		]
+	},
 	{ "id"   : "ShadyMachinationsRefusedIntro"
 	, "text" : "Я знал, что вы передумаете! Предложение слишком хорошо, чтобы от него отказываться! Берётесь за работу?"
 	, "replies" :
@@ -1240,15 +1300,8 @@
 		, { "text" : "Миллиардер и безработная девочка!", "ref" : null }
 		, { "text" : "Люди! Обобщения, их-ха!", "ref" : null }
 		]
-	, "sets"   : [ "VirginPostMortem" ]
+	, "sets"   : [ "VirginPostMortem", "ReceiveVirginPay" ]
 	, "clears" : [ "VirginMachinationsDone" ]
-	},
-	{ "id"   : "ShadyPurchaseMoustacheRefuse"
-	, "text" : "Ваш отказ разбивает мне сердце! (Не хотите приобрести сверхнадёжный клей для ремонта сердец? Нет? Какая жестокость!) Оставьте меня в моей печали!"
-	, "replies" :
-		[ { "text" : "Ох, как я могла так с ним поступить! Скоплю денег и обязательно вернусь!", "ref" : null }
-		, { "text" : "И вовсе мне не нужны усы! Проживу без них!", "ref" : null }
-		]
 	},
 	{ "id"   : "ShadyPlaceholderIntro"
 	, "text" : "Придумали новый способ совершенно законного обогащения? Слушаю вас!"
@@ -1274,7 +1327,6 @@
 		[ { "text" : "До свидания.", "ref" : null }
 		, { "text" : "Оу, мой звонок важен! Какой отличный день!", "ref" : null }
 		]
-	, "sets" : [ "MrMoustacheIntroductionPending" ]
 	},
 	{ "id"   : "ShadyArrivalMoleIntro"
 	, "text" : "Добрый день! Открываете дверь, не посмотрев в глазок? Неосторожно!"
@@ -2006,6 +2058,7 @@
 		, { "text" : "Познакомиться! Наверняка это очень приятный человек, ведь усы и неклёвость — вещи несовместимые.", "ref" : "MrMoustacheNoMoustacheIntro", "requires" : [ "MoustacheAbsent" ] }
 		, { "text" : "Нет! Вы стесняетесь даже знакомиться со столь невероятными усами.", "ref" : null }
 		]
+	, "sets" : [ "MrMoustacheIntroductionPending" ]
 	},
 	{ "id"   : "MrMoustacheNoMoustacheIntro"
 	, "text" : "Добрый день. Что-то не вижу ваших усов, юная леди. Мне не о чем с вами разговаривать! Какой позор!"
@@ -2836,6 +2889,7 @@
 		, { "text" : "Зато мой лучший друг — Кревед. Хм, вообще-то это ужасно. Пойду поищу других друзей.", "ref" : null }
 		, { "text" : "Сонет — шпингалет! Нет-нет, не стоит аплодисментов.", "ref" : null }
 		]
+	, "clears" : [ "PoetPoetryPlaceholder" ]
 	},
 	{ "id"   : "PoetPoetryRhyme"
 	, "text" : "А вы всё так же плодовиты!"
@@ -2843,32 +2897,33 @@
 		[ { "text" : "Эй, это не мои дети! Оу, вы про стихи. Неловкость!", "ref" : null }
 		, { "text" : "Электроплиты! И вообще, мне надоело искать рифму, я сыта вами по горло, идите к чёрту!", "ref" : null }
 		]
+	, "clears" : [ "PoetPoetryPlaceholder" ]
 	},
-	{ "id"   : "PoetLawIntro"
+	{ "id"   : "PoetPlaceholderIntro"
 	, "text" : "Вы как раз вовремя! Будете свидетелем на моём судебном процессе против музы! Будьте любезны явиться в суд завтра к девяти утра."
 	, "replies" :
-		[ { "text" : "Но в девять утра я ложусь спать! Меня и так постоянно будят люди, ненавижу их.", "ref" : "PoetLawSleep" }
-		, { "text" : "Я согласна как минимум на роль вашего адвоката!", "ref" : "PoetLawAttorney" }
+		[ { "text" : "Но в девять утра я ложусь спать! Меня и так постоянно будят люди, ненавижу их.", "ref" : "PoetPlaceholderSleep" }
+		, { "text" : "Я согласна как минимум на роль вашего адвоката!", "ref" : "PoetPlaceholderAttorney" }
 		, { "text" : "Смотрите, трёхголовая Фемида! <i> Бежать! </i>", "ref" : null }
 		]
 	},
-	{ "id"   : "PoetLawSleep"
+	{ "id"   : "PoetPlaceholderSleep"
 	, "text" : "Чепуха, заседание редко занимает больше восьми часов, вам нечего опасаться, спросите Йозефа К. или мистера Джарндиса!"
 	, "replies" :
 		[ { "text" : "Звучит увлекательно, но как-нибудь в другой раз.", "ref" : null }
 		, { "text" : "Я подам на вас в суд за нанесение тяжкого недосыпа!", "ref" : null }
 		]
 	},
-	{ "id"   : "PoetLawAttorney"
+	{ "id"   : "PoetPlaceholderAttorney"
 	, "text" : "Но достаточно ли вы квалифицированы?"
 	, "replies" :
-		[ { "text" : "Да! Я смотрела Футураму!", "ref" : "PoetLawYes" }
-		, { "text" : "Да, я однажды хотела стать юристом!", "ref" : "PoetLawYes" }
-		, { "text" : "Да, я умею кричать “OBJECTION!”, хотя и плохо знаю английский!", "ref" : "PoetLawYes" }
+		[ { "text" : "Да! Я смотрела Футураму!", "ref" : "PoetPlaceholderYes" }
+		, { "text" : "Да, я однажды хотела стать юристом!", "ref" : "PoetPlaceholderYes" }
+		, { "text" : "Да, я умею кричать “OBJECTION!”, хотя и плохо знаю английский!", "ref" : "PoetPlaceholderYes" }
 		, { "text" : "Нет. Ах, мои мечты об увлекательном сутяжничестве разбиты.", "ref" : null }
 		]
 	},
-	{ "id"   : "PoetLawYes"
+	{ "id"   : "PoetPlaceholderYes"
 	, "text" : "Хорошо, вот первые девять томов моего процесса. Изучите их до завтра!"
 	, "replies" :
 		[ { "text" : "Оу, это не так интересно, как мне представлялось. Прощайте!", "ref" : null }
@@ -3171,8 +3226,8 @@
 		, { "text" : "Ура, меня признали предательницей! Нужно скорее рассказать Злодею.", "ref" : null }
 		, { "text" : "Нет, Настенька, я никогда не оставлю тебя! Подруженьки навсегда! Настя и Лю! Приключения Насти и Лю! настяилю.com", "ref" : null }
 		]
-	, "sets"   : [ "VillainAnnyQuestReport" ]
-	, "clears" : [ "VillainAnnyQuest" ]
+	, "sets"   : [ "AnnyQuestDone" ]
+	, "clears" : [ "AnnyQuest" ]
 	},
 	{ "id"   : "AnnyFiller1Intro"
 	, "text" : "Привет, подруженька! Поболтаем? :)"
@@ -3291,7 +3346,7 @@
 	{ "id"   : "AnnyVirginMachinationsTellMe"
 	, "text" : "Оу, расскажи! Он красивый?))))"
 	, "replies" :
-		[ { "text" : "Да! У него волевой подбородок, наверное. И чувственные губы! На каждом из ртов.", "ref" : null }
+		[ { "text" : "Да! У него волевой подбородок, наверное. И чувственные губы! На каждом из ртов.", "ref" : "AnnyVirginMachinationsMeetHim" }
 		, { "text" : "У него такие мускулистые щупальца!", "ref" : "AnnyVirginMachinationsMeetHim" }
 		, { "text" : "Душевные качества гораздо важнее! Он такой мудрый, ведь ему сотни тысяч лет.", "ref" : "AnnyVirginMachinationsMeetHim" }
 		, { "text" : "Не совсем, но ты знаешь, сколько зарабатывают хтонические чудовища? Они очень востребованы!", "ref" : "AnnyVirginMachinationsMeetHim" }
@@ -3304,8 +3359,8 @@
 		, { "text" : "Наверняка ты не предашь меня, ведь это всего лишь отношения, а не партия в циву. Окей, познакомлю!", "ref" : null }
 		, { "text" : "Если ты уведешь его, моё сердце будет разбито! Но я устрою вашу встречу, потому я доверчивая. И никакого рабства!", "ref" : null }
 		]
-	, "sets"   : [ "VirginMachinations2" ]
-	, "clears" : [ "VirginMachinations" ]
+	, "sets"   : [ "VirginMachinationsPart2" ]
+	, "clears" : [ "VirginMachinationsPart1" ]
 	},
 	{ "id"   : "AnnyVirginMachinationsSeeingAnyone"
 	, "text" : "Эх, нет, сейчас я одна( Я так одинока((( Это потому что я страшная, да?((((("
@@ -3320,32 +3375,31 @@
 		[ { "text" : "Да, конечно, не съест… АХАХАХАХА! Прости, поперхнулась.", "ref" : null }
 		, { "text" : "Можешь прийти на свидание в маске, чтобы не отпугнуть его уродством.", "ref" : null }
 		]
-	, "sets"   : [ "VirginMachinationsPart1Done" ]
+	, "sets"   : [ "VirginMachinationsPart2" ]
 	, "clears" : [ "VirginMachinationsPart1" ]
 	},
-	{ "id"   : "MonsterIntro"
+	{ "id"   : "AnnyMonsterIntro"
 	, "text" : "Привет! Будешь подруженькой невесты на моей свадьбе? :)"
 	, "replies" :
-		[ { "text" : "Да, я как раз по этому вопросу! Дело в том, что вам с Хтоническим Чудовищем нельзя жениться, потому что…", "ref" : null }
-		]
+		[ { "text" : "Да, я как раз по этому вопросу! Дело в том, что вам с Хтоническим Чудовищем нельзя жениться, потому что…", "ref" : "AnnyMonsterBecause" } ]
 	},
-	{ "id"   : "MonsterBecause"
+	{ "id"   : "AnnyMonsterBecause"
 	, "text" : "Почему же? Чудовище довольно милое, у него богатый внутренний мир, целых семь желудков, представляешь!"
 	, "replies" :
-		[ { "text" : "Потому что Чудовище не то, за кого себя выдаёт!", "ref" : null }
-		, { "text" : "Потому что оно тебе изменяет! Я видела, как оно сожрало другую девицу!", "ref" : null }
-		, { "text" : "Потому что в городе бушует философ-ренегат! Он врывается на чужие свадьбы и объясняет, почему браков не должно быть! И не уходит, если не дать ему взаймы денег.", "ref" : null }
+		[ { "text" : "Потому что Чудовище не то, за кого себя выдаёт!", "ref" : "AnnyMonsterImposter" }
+		, { "text" : "Потому что оно тебе изменяет! Я видела, как оно сожрало другую девицу!", "ref" : "AnnyMonsterLies" }
+		, { "text" : "Потому что в городе бушует философ-ренегат! Он врывается на чужие свадьбы и объясняет, почему браков не должно быть! И не уходит, если не дать ему взаймы денег.", "ref" : "AnnyMonsterPhilosopher" }
 		]
 	},
-	{ "id"   : "MonsterImposter"
+	{ "id"   : "AnnyMonsterImposter"
 	, "text" : "Но кто же оно тогда?"
 	, "replies" :
-		[ { "text" : "Не хтоническое, а обычное чудовище! Они зарабатывают раз в десять меньше!", "ref" : null }
-		, { "text" : "Быть женой обычного чудовища — ты заслуживаешь лучшего!", "ref" : null }
-		, { "text" : "И на самом деле оно не ест девиц, а пьёт их! И только девиц с высоким содержанием алкоголя в крови! У вас нет будущего.", "ref" : null }
+		[ { "text" : "Не хтоническое, а обычное чудовище! Они зарабатывают раз в десять меньше!", "ref" : "AnnyMonsterLies" }
+		, { "text" : "Быть женой обычного чудовища — ты заслуживаешь лучшего!", "ref" : "AnnyMonsterLies" }
+		, { "text" : "И на самом деле оно не ест девиц, а пьёт их! И только девиц с высоким содержанием алкоголя в крови! У вас нет будущего.", "ref" : "AnnyMonsterLies" }
 		]
 	},
-	{ "id"   : "MonsterRegularMonster"
+	{ "id"   : "AnnyMonsterLies"
 	, "text" : "О нет, как оно могло так лгать мне! Вся моя жизнь — ложь! ;((( Обнимашки-утешашки, подруженька?"
 	, "replies" :
 		[ { "text" : "Э-э-э, окай.", "ref" : null }
@@ -3353,15 +3407,15 @@
 		]
 	, "clears" : [ "AnnyMarriage" ]
 	},
-	{ "id"   : "MonsterPhilosopher"
+	{ "id"   : "AnnyMonsterPhilosopher"
 	, "text" : "Наверняка выйдет ужасный скандал ;( Ты действительно считаешь, что от свадьбы лучше отказаться, подруженька?"
 	, "replies" :
-		[ { "text" : "Да! Иначе философ опровергнет бытие и все мы перестанем существовать!", "ref" : null }
-		, { "text" : "Конечно! Он почти испортил мою свадьбу.", "ref" : null }
-		, { "text" : "Безусловно. Философ поклялся мстить всем новобрачным, а философы всегда выполняют свои обещания!", "ref" : null }
+		[ { "text" : "Да! Иначе философ опровергнет бытие и все мы перестанем существовать!", "ref" : "AnnyMonsterSure" }
+		, { "text" : "Конечно! Он почти испортил мою свадьбу.", "ref" : "AnnyMonsterSure" }
+		, { "text" : "Безусловно. Философ поклялся мстить всем новобрачным, а философы всегда выполняют свои обещания!", "ref" : "AnnyMonsterSure" }
 		]
 	},
-	{ "id"   : "MonsterSure"
+	{ "id"   : "AnnyMonsterSure"
 	, "text" : "Печалька ;((( Поплачем вместе?"
 	, "replies" :
 		[ { "text" : "Давай ;((((", "ref" : null }
@@ -3416,7 +3470,7 @@
 		, { "text" : "Что ж, я не испугалась! <aside> Вы убегаете прочь. </aside>", "ref" : null }
 		]
 	},
-	{ "id"   : "AnnyPlaceHolder"
+	{ "id"   : "AnnyPlaceholder"
 	, "text" : "Подруженька! Мне идёт эта помада?)"
 	, "replies" :
 		[ { "text" : "Лично я предпочитаю сливочную помадку.", "ref" : null }
@@ -3885,8 +3939,8 @@
 	{ "id"   : "PatientPanaceaConsequenceIntro"
 	, "text" : "Как видите, ваша Панацея не помогла, я — о горе мне! — всё ещё жив. Смерти больше нет…"
 	, "replies" :
-		[ { "text" : "Мне ужасно неловко!", "ref" : null }
-		, { "text" : "Извините. Я бы попробовала убить вас сама, но я слишком слаба физически.", "ref" : null }
+		[ { "text" : "Мне ужасно неловко!", "ref" : "PatientPanaceaConsequenceDexterity" }
+		, { "text" : "Извините. Я бы попробовала убить вас сама, но я слишком слаба физически.", "ref" : "PatientPanaceaConsequenceStrength" }
 		]
 	},
 	{ "id"   : "PatientPanaceaConsequenceDexterity"
@@ -4159,7 +4213,7 @@
 	, "replies" :
 		[ { "text" : "Друууужба!", "ref" : null }
 		]
-	, "sets" : [ "VillainFriendship", "VillainQuestPending" ]
+	, "sets" : [ "VillainFriendship", "DoomsdayQuestPending" ]
 	, "clears" : [ "VillainIntroductionPending" ]
 	},
 	{ "id"   : "VillainIntroductionOffended"
@@ -4203,7 +4257,7 @@
 	, "text" : "Да! Поднимитесь, Лорд Вейдер! Хахахаха, всегда мечтал это сказать, но случая не было! Приходите позже, мой миньон, нас ждут мрачные дела!"
 	, "replies" :
 		[ { "text" : "Наконец-то у меня престижная работа! До встречи!", "ref" : null } ]
-	, "sets" : [ "VillainFriendship", "VillainQuestPending" ]
+	, "sets" : [ "VillainFriendship", "DoomsdayQuestPending" ]
 	, "clears" : [ "VillainOffended" ]
 	},
 	{ "id"   : "VillainDoomsdayQuestIntro"
@@ -4229,7 +4283,7 @@
 		, { "text" : "Оу, Оружия Судного Дня звучит интересно! А расскажите?", "ref" : "VillainDoomsdayQuestTellMeMore" }
 		]
 	, "sets" : [ "DoomsdayQuest" ]
-	, "clears" : [ "VillainQuestPending" ]
+	, "clears" : [ "DoomsdayQuestPending" ]
 	},
 	{ "id"   : "VillainDoomsdayQuestTellMeMore"
 	, "text" : "Если бы я знал детали, то сам бы собрал его! Но я поддержал Кикстартер Оружия Судного Дня и одноглазый тип обещал мне ранний доступ. Так что поживее!"
@@ -4275,7 +4329,7 @@
 		, { "text" : "О да. Я “безумно” рада. Чёрт, теперь и я изображаю кавычки пальцами.", "ref" : "VillainDoomsdayQuestReceiveAcknowledge" }
 		]
 	, "sets" : [ "MicrochipQuestPending" ]
-	, "clears" : [ "DoomsdayQuestReport" ]
+	, "clears" : [ "DoomsdayQuestDone" ]
 	},
 	{ "id"   : "VillainDoomsdayQuestReceiveSayWhat"
 	, "text" : "Эй, что ты там бормочешь?"
@@ -4291,7 +4345,7 @@
 		[ { "text" : "Я бы постучала вас по спине, но знаю, как ранимо вы относитесь к ударам в спину. До встречи!", "ref" : null }
 		, { "text" : "ЛЮТ-НО-МУ ЗЛУ-У-У! ХАХАХАХАХА! Ой, простите, украла вашу реплику. До свидания!", "ref" : null }
 		]
-	, "sets" : [ "LiuIsAHenchman" ]
+	, "sets" : [ "LiuIsHenchman" ]
 	},
 	{ "id"   : "VillainRobochefQuestIntro"
 	, "text" : "Приветствую, подручный мой. Сегодня ты бледен. Надеюсь, это не связано с вампиризмом. Вампиры — профиль моего кузена. А мой профиль, скорее…"
@@ -4372,8 +4426,8 @@
 		[ { "text" : "Топтать мечты, подобно винограду для вина зла! Эй, ну клёвая же злодейская метафора! Пф, ну и до свидания.", "ref" : null }
 		, { "text" : "Ура, новые туфельки! Нужно скорее обсудить их в скайпе!", "ref" : null }
 		]
-	, "sets"   : [ "VillainAnnyQuestPending" ]
-	, "clears" : [ "MicrochipQuestReport" ]
+	, "sets"   : [ "AnnyQuestPending" ]
+	, "clears" : [ "MicrochipQuestDone" ]
 	},
 	{ "id"   : "VillainAnnyQuestIntro"
 	, "text" : "<aside>По пути к Злодею вы замечаете, что сегодня он одёт в облегающее жёлтое платье. Наверняка этому есть рациональное объяснение!</aside>"
@@ -4420,8 +4474,8 @@
 		[ { "text" : "Мне кажется, вы латентный садовод. Впрочем, хорошо, пойду искать эту девочку.", "ref" : null }
 		, { "text" : "Окай, а ещё, жареная душа — звучит аппетитно. Когда попаду в ад, открою собственный ресторан! До встречи.", "ref" : null }
 		]
-	, "sets"   : [ "VillainAnnyQuest" ]
-	, "clears" : [ "VillainAnnyQuestPending" ]
+	, "sets"   : [ "AnnyQuest" ]
+	, "clears" : [ "AnnyQuestPending" ]
 	},
 	{ "id"   : "VillainAnnyQuestFillerIntro"
 	, "text" : "Да, подручный, знаю: это платье так идёт мне, что ты вновь вернулся полюбоваться на меня! Что ж, понятно, но не забывай и о задании. Растопчи же чувства моей соперницы поскорее!"
@@ -4519,8 +4573,8 @@
 		, { "text" : "Если вы не вернётесь, я запомню вас таким! Нет, слишком травмирующий образ.", "ref" : null }
 		, { "text" : "Возвращайтесь, ваше злодейство! И вовсе не ради моего повышения! Совсем нет! Что вы!", "ref" : null }
 		]
-	, "sets"   : [ "VillainKostikQuestPending" ]
-	, "clears" : [ "VillainAnnyQuestReport" ]
+	, "sets"   : [ "KostikQuestPending" ]
+	, "clears" : [ "AnnyQuestDone" ]
 	},
 	{ "id"   : "VillainKostikQuestReceiveIntro"
 	, "text" : "<aside>Злодей в платье и макияже. Он уже вернулся со свидания. Лицо его сияет от радости. Должно быть, он справился с заданием!</aside>"
@@ -4557,7 +4611,7 @@
 		, { "text" : "Пф, вы просто сдались. Но я не сдамся никогда! Я буду сеять ужас и разрушения! А ВЫ ТОЛСТЫЙ! ДА, ПЛАЧЬТЕ! РЫДАЙТЕ! ХАХАХАХА! ЗЛО-О-О-О!", "ref" : null }
 		]
 	, "sets"   : [ "VillainPostMortem", "MakeUpWithAnny", "KostikMarried" ]
-	, "clears" : [ "VillainKostikQuestPending" ]
+	, "clears" : [ "KostikQuestPending" ]
 	},
 	{ "id"   : "VillainKostikQuestReceivePromote"
 	, "text" : "Да, конечно. Подручный, я повышаю тебя до свидетеля на нашей с Костиком свадьбе!"
@@ -4990,7 +5044,7 @@
 		, { "text" : "Пффф! <i>Бежать!</i>", "ref" : "RobochefInstallMicrochipRun" }
 		, { "text" : "Ммм, жареная Лю… Ой! <i>Бежать!</i>", "ref" : "RobochefInstallMicrochipRun" }
 		]
-	, "sets"   : [ "MicrochipQuestReport" ]
+	, "sets"   : [ "MicrochipQuestDone" ]
 	, "clears" : [ "MicrochipQuest" ]
 	},
 	{ "id"   : "RobochefInstallMicrochipRun"
@@ -5054,7 +5108,7 @@
 		[ { "text" : "Каша, duh!", "ref" : "RobochefFiller2SecondIngredient" }
 		, { "text" : "Неразбериха! Дома вы всегда готовили в ней.", "ref" : "RobochefFiller2SecondIngredient" }
 		, { "text" : "Конфеты! В фантиках, чтоб шуршали на языке.", "ref" : "RobochefFiller2SecondIngredient" }
-		, { "text" : "Добавить ещё макарон! Макаронами макаронную кашу не испортишь.", "ref" : "RobochefFiller2SecondIngredient" }
+		, { "text" : "Добавить макарон! Макаронами макаронную кашу не испортишь.", "ref" : "RobochefFiller2SecondIngredient" }
 		]
 	},
 	{ "id"   : "RobochefFiller2SecondIngredient"
@@ -5452,6 +5506,7 @@
 		[ { "text" : "Нужно подойти поближе и рассмотреть его!", "ref" : "PrototypeIntroductionIntro" }
 		, { "text" : "Наверняка с ним связаны исключительно травмирующие воспоминания, лучше не надо.", "ref" : null }
 		]
+	, "sets" : [ "PrototypeIntroductionPending" ]
 	},
 	{ "id"   : "PrototypeIntroductionIntro"
 	, "text" : "Фейк мой, что ты здесь делаешь? Ах, когда я был твоим прототипом, я бы не отпустил тебя гулять в незнакомой очереди…"
@@ -5512,6 +5567,8 @@
 		, { "text" : "Оу, тоже самое мне предсказала цыганка. Наверняка это были вы, переодетый в цыганку! Ужасно, прощайте!", "ref" : null }
 		, { "text" : "Поздно, я уже споткнулась утром на лестнице. Теперь мне ничто не угрожает, я неуязвима! До встречи!", "ref" : null }
 		]
+	, "sets"   : [ "PrototypeInvitationPending" ]
+	, "clears" : [ "PrototypeIntroductionPending" ]
 	},
 	{ "id"   : "PrototypeIntroductionAccept"
 	, "text" : "Хм, всё-таки я сумел привить тебе здравый взгляд на вещи, бывший фейк. Помни, что отчаяние — наша последняя надежда."
@@ -5520,6 +5577,8 @@
 		, { "text" : "Но ведь есть ещё блины! Ничто не потеряно, пока не потеряны блины.", "ref" : null }
 		, { "text" : "А знаете, как называют рисковых чаек-сорвиголов? Отчайки! Ха-ха!", "ref" : null }
 		]
+	, "sets"   : [ "PrototypeInvitationPending" ]
+	, "clears" : [ "PrototypeIntroductionPending" ]
 	},
 	{ "id"   : "PrototypeInvitationIntro"
 	, "text" : "Здравствуй, фейк. Пришёл признать ошибочность своих путей и покаяться?"
@@ -5657,7 +5716,7 @@
 		, { "text" : "Никто, кроме вашего экс-фейка, предусмотрительно установившего скрытые камеры…", "ref" : null }
 		]
 	, "sets"   : [ "PrototypeExitQueue" ]
-	, "clears" : [ "LiuIsAHenchman" ]
+	, "clears" : [ "LiuIsHenchman" ]
 	},
 	{ "id"   : "PrototypeHenchmanHopes"
 	, "text" : "Открой глаза на реальность, мой фейк: единственный, кто, никогда не предаст тебя — твой прототип."
@@ -5674,7 +5733,7 @@
 		, { "text" : "<i> Спорить с Соварищем до темноты о том, чьё предательство в той партии было изначальным. </i>", "ref" : null }
 		, { "text" : "<i> Насыпать Соварищу корма — птицы-философы вечно голодны. Это отвлечёт его внимание, а вы незаметно скроетесь. </i>", "ref" : null }
 		]
-	, "clears" : [ "LiuIsAHenchman" ]
+	, "clears" : [ "LiuIsHenchman" ]
 	},
 	{ "id"   : "PrototypeHenchmanBetrayal"
 	, "text" : "Ты ужасно недоверчива, это отталкивает от тебя людей! Кстати, а как там твоя столица?"
@@ -5683,7 +5742,7 @@
 		, { "text" : "Ах, если бы это отталкивало людей, но они так и липнут ко мне, словно я мёдом намазана. Хотя, я ведь ела сегодня медовый торт. Хм, пойду приму душ.", "ref" : null }
 		, { "text" : "Моя столица погибла из-за вас! У меня больше никогда не будет столиц. Но у меня хотя бы есть клёвая злодейская работа!", "ref" : null }
 		]
-	, "clears" : [ "LiuIsAHenchman" ]
+	, "clears" : [ "LiuIsHenchman" ]
 	},
 	{ "id"   : "PrototypeFrogsIntro"
 	, "text" : "Фейк мой, я подыскал для тебя пруд с аппетитно выглядящими жабами."
@@ -5946,7 +6005,7 @@
 		[ { "text" : "Надеюсь, вы не возражаете выплатить мне скромную сумму за посреднечество? Нет? Замечательно! Видите вон ту девочку в платье? Нет, это не смайлик, а гримаса боли. Съешьте же её скорее!", "ref" : null }
 		]
 	, "sets"   : [ "VirginMachinationsDone" ]
-	, "clears" : [ "VirginMacinationsPart2", "VirginMachinations" ]
+	, "clears" : [ "VirginMachinationsPart2", "VirginMachinations" ]
 	},
 	{ "id"   : "MonsterVirginMachinationsEw"
 	, "text" : "Это бы успокоило моих родителей, но, право, даже как-то неловко…"
@@ -5963,9 +6022,9 @@
 		, { "text" : "Родители не беседовали с вами о птичках и пчёлках? Хм. Ешьте и птичек, и пчёлок! Кто тут чудовище, вы или я? Вперёд!", "ref" : null }
 		]
 	, "sets"   : [ "VirginMachinationsDone" ]
-	, "clears" : [ "VirginMacinationsPart2", "VirginMachinations" ]
+	, "clears" : [ "VirginMachinationsPart2", "VirginMachinations" ]
 	},
-	{ "id"   : "VirginPostMortem"
+	{ "id"   : "MonsterVirginMachinationsPMIntro"
 	, "text" : "Я хотел бы поговорить с вами по поводу ситуации с жертвенной девственницей…"
 	, "replies" :
 		[ { "text" : "Уверена, всё прошло замечательно. Что вы, что вы, не стоит благодарностей. Ну хорошо, я приму от вас комплиментарные блины, но только из уважения к вам.", "ref" : "MonsterVirginMachinationsPMSituation" }
@@ -6346,7 +6405,7 @@
 		[ { "text" : "Хорошо, я передам ему! А что не так с вашей бородой? Она похожа на мёртвого зверика.", "ref" :  "GlassEyeIntroductionBeard" }
 		, { "text" : "Клёво и совершенно не подозрительно. Так ему и передам. Удачи!", "ref" : null }
 		]
-	, "sets"   : [ "DoomsdayQuestReport" ]
+	, "sets"   : [ "DoomsdayQuestDone" ]
 	, "clears" : [ "DoomsdayQuest" ]
 	},
 	{ "id"   : "GlassEyeDoomsdayIntro"
@@ -6362,7 +6421,7 @@
 		[ { "text" : "Совершенно не подозрительно звучит. Так ему и передам. Удачи!", "ref" : null }
 		, { "text" : "Передам ему. До свидания. <aside>Вы незаметно подмигиваете бороде.</aside>", "ref" : null }
 		]
-	, "sets"   : [ "DoomsdayQuestReport" ]
+	, "sets"   : [ "DoomsdayQuestDone" ]
 	, "clears" : [ "DoomsdayQuest" ]
 	},
 	{ "id"   : "GlassEyeDoomsdayAngryIntro"
@@ -6378,7 +6437,7 @@
 		[ { "text" : "Так-то лучше! И звучит вовсе не подозрительно. Прощайте!", "ref" : null }
 		, { "text" : "Хорошо, я передам ему. <aside>Вы незаметно подмигиваете бороде.</aside>", "ref" : null }
 		]
-	, "sets"   : [ "DoomsdayQuestReport" ]
+	, "sets"   : [ "DoomsdayQuestDone" ]
 	, "clears" : [ "DoomsdayQuest" ]
 	},
 	{ "id"   : "GlassEyeFiller1Intro"
