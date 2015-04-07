@@ -1060,36 +1060,36 @@
 		, { "text" : "Нет! Я буду жить вечно! Пойду домой, проверю, как там моя филактерия.", "ref" : null }
 		]
 	},
-	{ "id"   : "ShadyInspriationMachinationsReceiveIntro"
+	{ "id"   : "ShadyInspirationMachinationsReceiveIntro"
 	, "text" : "Добрый день! Продали вдохновение? Замечательно. Оно вызывает привыкание? Тем лучше! Кстати, следующей в продажу предполагаю выпустить совесть."
 	, "replies" :
-		[ { "text" : "Да, я бы купила её в подарок всем, кто отказывается печь мне блины!", "ref" : "ShadyInspriationMachinationsReceiveSlaver" }
-		, { "text" : "Пф, да кому она нужна!", "ref" : "ShadyInspriationMachinationsReceiveSlaver" }
+		[ { "text" : "Да, я бы купила её в подарок всем, кто отказывается печь мне блины!", "ref" : "ShadyInspirationMachinationsReceiveSlaver" }
+		, { "text" : "Пф, да кому она нужна!", "ref" : "ShadyInspirationMachinationsReceiveSlaver" }
 		]
 	},
-	{ "id"   : "ShadyInspriationMachinationsReceiveSlaver"
+	{ "id"   : "ShadyInspirationMachinationsReceiveSlaver"
 	, "text" : "Как бы там ни было, вы отлично справляетесь! За время вашей работы, оборот фирмы увеличился вдвое! Настало время вынести вам благодарность и повысить до… менеджера по продажам рабов!"
 	, "replies" :
-		[ { "text" : "Работорговля, их-ха! А мне дадут кнут? ", "ref" : "ShadyInspriationMachinationsReceiveWhip" }
-		, { "text" : "Наконец-то престижная работа! Посмотрим, как теперь запоёт Прототип! Хотя, наверняка у него нет слуха.", "ref" : "ShadyInspriationMachinationsReceiveCat" }
-		, { "text" : "А вы уверены, что это законно?", "ref" : "ShadyInspriationMachinationsReceiveCat" }
+		[ { "text" : "Работорговля, их-ха! А мне дадут кнут? ", "ref" : "ShadyInspirationMachinationsReceiveWhip" }
+		, { "text" : "Наконец-то престижная работа! Посмотрим, как теперь запоёт Прототип! Хотя, наверняка у него нет слуха.", "ref" : "ShadyInspirationMachinationsReceiveCat" }
+		, { "text" : "А вы уверены, что это законно?", "ref" : "ShadyInspirationMachinationsReceiveCat" }
 		]
 	},
-	{ "id"   : "ShadyInspriationMachinationsReceiveWhip"
+	{ "id"   : "ShadyInspirationMachinationsReceiveWhip"
 	, "text" : "Вы можете приобрести кнут со скидкой для сотрудников! Какой желаете: респектабельная семихвостка или модная нагайка? Или вы хотите роскоши? Рёбропересчитыватель 3000 — последнее слово в сфере кнутов! Подогрев ручки, автоматическое просаливание ран, плеер с закачанной злодейской музыкой!"
 	, "replies" :
-		[ { "text" : "Хм, заманчиво, но насколько легально наше рабовладельческое предприятие?", "ref" : "ShadyInspriationMachinationsReceiveLegal" }
-		, { "text" : "Семихвостка напомнила мне о двухвостках, вы балансируете на тонкой грани шуток о насекомых, берегитесь!", "ref" : "ShadyInspriationMachinationsReceiveCat" }
+		[ { "text" : "Хм, заманчиво, но насколько легально наше рабовладельческое предприятие?", "ref" : "ShadyInspirationMachinationsReceiveLegal" }
+		, { "text" : "Семихвостка напомнила мне о двухвостках, вы балансируете на тонкой грани шуток о насекомых, берегитесь!", "ref" : "ShadyInspirationMachinationsReceiveCat" }
 		]
 	},
-	{ "id"   : "ShadyInspriationMachinationsReceiveLegal"
+	{ "id"   : "ShadyInspirationMachinationsReceiveLegal"
 	, "text" : "Всё законно! Если рабы не знают, что они рабы, а акт продажи — добровольное пожертвование, мы не работорговцы, а служба занятости!"
 	, "replies" :
-		[ { "text" : "Служба занятости? Надеюсь, мы будем не слишком заняты, у меня ведь ещё несколько воображаемых работ.", "ref" : "ShadyInspriationMachinationsReceiveCat" }
-		, { "text" : "Хорошо, но если меня примут за рыботорговца, я сразу же уволюсь!", "ref" : "ShadyInspriationMachinationsReceiveCat" }
+		[ { "text" : "Служба занятости? Надеюсь, мы будем не слишком заняты, у меня ведь ещё несколько воображаемых работ.", "ref" : "ShadyInspirationMachinationsReceiveCat" }
+		, { "text" : "Хорошо, но если меня примут за рыботорговца, я сразу же уволюсь!", "ref" : "ShadyInspirationMachinationsReceiveCat" }
 		]
 	},
-	{ "id"   : "ShadyInspriationMachinationsReceiveCat"
+	{ "id"   : "ShadyInspirationMachinationsReceiveCat"
 	, "text" : "Начнём с простого: где-то в очереди стоит кот, найдите ему нового хозяина! Коту об этом знать не обязательно. Затруднений возникнуть не должно, коты продаются, как горячие пирожки!"
 	, "replies" :
 		[ { "text" : "Пирожки с котами, фу, как можно. Хорошо же.", "ref" : null }

@@ -109,14 +109,14 @@ em {
 	height   : 3em;
 }
 .buttons > button {
-	margin-right : 0.5em;
 	background-color : #83B572;
 	border           : 1px solid black;
 	cursor           : pointer;
 	display          : inline-block;
+	font-size        : 1em;
 	height           : 1.6em;
 	line-height      : 1.0em;
-	font-size        : 1em;
+	margin-right     : 0.5em;
 	padding          : 0.2em 1em;
 }
 .buttons > button:hover {
@@ -160,11 +160,14 @@ em {
 	color : #444;
 }
 .game {
-	margin          : 0em auto;
+	margin          : 0em;
 	border-collapse : separate;
 	border-spacing  : 0.5em;
-	margin-top      : 4em;
-	position        : relative;
+	position        : absolute;
+
+	left           : 50%;
+	top            : 4em;
+	transform      : translateX(-50%);
 
 	width           : 49em;
 	height          : 30em;
@@ -321,7 +324,7 @@ em {
 	margin      : 0;
 	padding     : 0;
 	position    : relative;
-	text-align : center;
+	text-align  : center;
 }
 #home-view .character:hover {
 	background-color : #B2D184;
