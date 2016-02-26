@@ -7,13 +7,15 @@ class ItemInfo
 }
 
 enum Item
-{ Tophat    = 0
-, TV        = 1
-, Table     = 2
-, Community = 3
-, Monopoly  = 4
-, Stove     = 5
-, Civ       = 6
+{ Tophat       = 0
+, TV           = 1
+, Table        = 2
+, Community    = 3
+, Monopoly     = 4
+, Stove        = 5
+, Civ          = 6
+, GreenBananas = 7
+, RipeBananas  = 8
 }
 
 class StagedItem
@@ -91,6 +93,16 @@ module Item
 		, price       : 20000
 		, rateBonus   : 10
 		}, // 6
+		{ name        : "Зелёные бананы"
+		, description : "Возьмите лучше спелые…"
+		, price       : 1000000
+		, rateBonus   : 0
+		}, // 7
+		{ name        : "Спелые бананы"
+		, description : "Выбирайте эти!"
+		, price       : 1000
+		, rateBonus   : 0
+		}, // 8
 	];
 
 	export var Moustache = new StagedItem

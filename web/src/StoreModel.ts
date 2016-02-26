@@ -118,6 +118,22 @@ class StoreModel implements IStoreModel, IPersistent
 			}
 		}
 
+		this.AddStoreItem
+			( Item.GreenBananas
+			, this.player.AddItem.bind
+				( this.player
+				, Item.GreenBananas
+				)
+			);
+
+		this.AddStoreItem
+			( Item.RipeBananas
+			, this.player.AddItem.bind
+				( this.player
+				, Item.RipeBananas
+				)
+			);
+
 		var moustache = Item.Moustache.GetInfo(this.player.GetMoustache() + 1);
 		if (moustache)
 		{

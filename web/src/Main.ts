@@ -81,13 +81,16 @@ function MapPlayerFlags(flags : Flags, player : Player) : void
 	flags.SetCheck("MoustacheAbsent",       () => { return player.GetMoustache() <  0 });
 	flags.SetCheck("HatEquipped",           () => { return player.GetHat() != Hat.None });
 	flags.SetCheck("HasFakeMoustacheMoney", () => { return player.GetMoney() >= 500 });
+	flags.SetCheck("HasGreenBananas",       () => { return player.HasItem(Item.GreenBananas) });
 
 	flags.SetControl("ReceiveFakeMoustache",     ReceiveFakeMoustache);
 	flags.SetControl("ReceiveBestMoustache",     ReceiveBestMoustache);
 	flags.SetControl("ReceivePoetInheritance",   ReceivePoetInheritance);
 	flags.SetControl("ReceiveEndOfTheLineBonus", ReceiveEndOfTheLineBonus);
 	flags.SetControl("ReceiveVirginPay",         ReceiveVirginPay);
-	flags.SetControl("DestroyCiv", player.RemoveItem.bind(player, Item.Civ));
+
+	flags.SetControl("DestroyCiv",          player.RemoveItem.bind(player, Item.Civ));
+	flags.SetControl("DestroyGreenBananas", player.RemoveItem.bind(player, Item.GreenBananas))
 }
 
 function MapActivityFlags(flags : Flags, homeModel : HomeModel)
