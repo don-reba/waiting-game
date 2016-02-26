@@ -1,7 +1,4 @@
 [
-	{ "id"    : "Queueologist"
-	, "name"  : "Учёный-очередолог"
-	},
 	{ "id"    : "QuietFriend"
 	, "name"  : "Молчаливый друг"
 	, "queueConversation" :
@@ -220,6 +217,7 @@
 		[ { "dialog" : "VillainDescriptionIntro",          "requires" : [ "VillainIntro"] }
 		, { "dialog" : "VillainIntroductionIntro",         "requires" : [ "VillainIntroductionPending" ] }
 		, { "dialog" : "VillainOffendedIntro",             "requires" : [ "VillainOffended" ] }
+		, { "dialog" : "VillainGreenBananaIntro",          "requires" : [ "HasGreenBananas" ] }
 		, { "dialog" : "VillainDoomsdayQuestIntro",        "requires" : [ "DoomsdayQuestPending" ] }
 		, { "dialog" : "VillainDoomsdayQuestFillerIntro",  "requires" : [ "DoomsdayQuest" ] }
 		, { "dialog" : "VillainDoomsdayQuestReceiveIntro", "requires" : [ "DoomsdayQuestDone" ] }

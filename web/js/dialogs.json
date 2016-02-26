@@ -4260,6 +4260,11 @@
 	, "sets" : [ "VillainFriendship", "DoomsdayQuestPending" ]
 	, "clears" : [ "VillainOffended" ]
 	},
+	{ "id"   : "VillainGreenBananaIntro"
+	, "text" : "Фу, миньон, фу! <aside>Злодей выбивает у вас из рук зелёный банан.</aside>"
+	, "replies" : [ { "text" : "Плохой злодей, плохой! :(", "ref" : null } ]
+	, "sets" : [ "DestroyGreenBananas" ]
+	},
 	{ "id"   : "VillainDoomsdayQuestIntro"
 	, "text" : "А, вот и ты, миньон мой! Чудесный денёк для леденящих кровь злодеяний! Готов ли ты окунуть мир в непроглядные пучины мрачного ужаса?"
 	, "replies" :
