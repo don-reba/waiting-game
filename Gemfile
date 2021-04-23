@@ -1,3 +1,3 @@
 source 'https://rubygems.org'
-ruby '1.9.3'
+ruby '3.0.0'
 gem 'sinatra'
