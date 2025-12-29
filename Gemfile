@@ -1,4 +1,6 @@
 source 'https://rubygems.org'
-ruby '3.2.2'
-gem 'sinatra'
+ruby '4.0.0'
+gem 'ostruct'
 gem 'puma'
+gem 'sinatra'
+gem 'rackup'
